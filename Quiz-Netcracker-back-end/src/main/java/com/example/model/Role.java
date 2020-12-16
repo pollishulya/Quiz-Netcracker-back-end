@@ -1,5 +1,6 @@
 package com.example.model;
 
+import com.example.enums.Roles;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,7 +27,7 @@ public class Role implements Externalizable {
 
     @Column(name = "title")
     @Enumerated(EnumType.STRING)
-    private com.example.enums.Roles title;
+    private Roles title;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "userRole",
