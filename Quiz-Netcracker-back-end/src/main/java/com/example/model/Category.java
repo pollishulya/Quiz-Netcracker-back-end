@@ -5,19 +5,24 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "category")
+@Table(name = "categories")
 @Getter
 @Setter
-public class Category {
+public class Category implements Externalizable {
     @Id
-    @GeneratedValue(generator = "category_generator")
+    @GeneratedValue(generator = "categoryGenerator")
     @SequenceGenerator(
-            name = "category_generator",
-            sequenceName = "category_sequence"
+            name = "categoryGenerator",
+            sequenceName = "categorySequence",
+            initialValue = 1
     )
     private Long id;
 
@@ -33,7 +38,44 @@ public class Category {
 
     @JsonIgnore
     @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE},mappedBy = "category",fetch = FetchType.LAZY)
-    private Set<Question> questions = new HashSet<>();
+    private Set<Question> question = new HashSet<>();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Category category = (Category) o;
+
+        if (id != null ? !id.equals(category.id) : category.id != null) return false;
+        if (name != null ? !name.equals(category.name) : category.name != null) return false;
+        return description != null ? description.equals(category.description) : category.description == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput objectOutput) throws IOException {
+
+    }
+
+    @Override
+    public void readExternal(ObjectInput objectInput) throws IOException, ClassNotFoundException {
+
+    }
 }

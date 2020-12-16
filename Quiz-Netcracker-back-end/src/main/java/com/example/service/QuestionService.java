@@ -21,7 +21,7 @@ public class QuestionService {
 
     public Question updateQuestion(Long questionId, Question questionRequest) {
         return questionRepository.findById(questionId).map(question -> {
-            question.setName(questionRequest.getName());
+            question.setTitle(questionRequest.getTitle());
             question.setDescription(questionRequest.getDescription());
             question.setCategory(questionRequest.getCategory());
             question.setLevel(questionRequest.getLevel());
