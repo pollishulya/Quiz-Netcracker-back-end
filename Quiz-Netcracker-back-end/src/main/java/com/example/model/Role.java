@@ -1,21 +1,10 @@
+/*
 package com.example.model;
 
 import com.example.enums.Roles;
-import com.fasterxml.jackson.annotation.JsonIgnore;;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Cascade;
 
-
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,8 +18,7 @@ public class Role extends BaseEntity {
     @GeneratedValue(generator = "role_generator")
     @SequenceGenerator(
             name = "role_generator",
-            sequenceName = "role_sequence",
-            initialValue = 1000
+            sequenceName = "role_sequence"
     )
     private Long id;
 
@@ -44,4 +32,4 @@ public class Role extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> userSet = new HashSet<>();
 
-}
+}*/

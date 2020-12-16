@@ -1,13 +1,10 @@
 package com.example.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,8 +17,7 @@ public class Question extends AuditModel {
     @GeneratedValue(generator = "question_generator")
     @SequenceGenerator(
             name = "question_generator",
-            sequenceName = "question_sequence",
-            initialValue = 1000
+            sequenceName = "question_sequence"
     )
     private Long id;
 
@@ -29,26 +25,25 @@ public class Question extends AuditModel {
 //    @Size(min = 3, max = 100)
 //    private String title;
 
-    @Column(columnDefinition = "name")
+    @Column(name = "name")
     private String name;
 
-    @Column(columnDefinition = "description")
+    @Column(name = "description")
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(columnDefinition = "category_id")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(columnDefinition = "level_id")
+    @JoinColumn(name = "level_id")
     private Lev level;
 
-    @JsonIgnore
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinTable(name = "question_to_answer",
             joinColumns = @JoinColumn(columnDefinition = "question_id"),
             inverseJoinColumns = @JoinColumn(columnDefinition  = "answer_id"))
-    private Set<Question> questionsSet = new HashSet<>();
+    private Set<Answer> answerSet = new HashSet<>();
 
     @JsonIgnore
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)

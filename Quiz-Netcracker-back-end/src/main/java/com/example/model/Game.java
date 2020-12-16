@@ -1,13 +1,9 @@
 package com.example.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,8 +16,7 @@ public class Game {
     @GeneratedValue(generator = "game_generator")
     @SequenceGenerator(
             name = "game_generator",
-            sequenceName = "game_sequence",
-            initialValue = 1000
+            sequenceName = "game_sequence"
     )
     private Long id;
 
@@ -29,14 +24,14 @@ public class Game {
 //    @Size(min = 3, max = 100)
 //    private String title;
 
-    @Column(columnDefinition = "name")
+    @Column(name = "name")
     private String name;
 
-    @Column(columnDefinition = "description")
+    @Column(name = "description")
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(columnDefinition = "user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)

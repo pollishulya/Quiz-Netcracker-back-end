@@ -1,13 +1,10 @@
 package com.example.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,8 +17,7 @@ public class Category {
     @GeneratedValue(generator = "category_generator")
     @SequenceGenerator(
             name = "category_generator",
-            sequenceName = "category_sequence",
-            initialValue = 1000
+            sequenceName = "category_sequence"
     )
     private Long id;
 
@@ -29,10 +25,10 @@ public class Category {
 //    @Size(min = 3, max = 100)
 //    private String title;
 
-    @Column(columnDefinition = "name")
+    @Column(name = "name")
     private String name;
 
-    @Column(columnDefinition = "description")
+    @Column(name = "description")
     private String description;
 
     @JsonIgnore
