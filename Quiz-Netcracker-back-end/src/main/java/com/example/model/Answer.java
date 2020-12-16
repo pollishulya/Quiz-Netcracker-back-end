@@ -16,7 +16,7 @@ public class Answer extends AuditModel {
     @Column(name = "text")
     private String text;
 
-    @Column(name = "right")
+    @Column(name = "answer_right")
     private boolean right;
 
 //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
