@@ -37,15 +37,16 @@ public class Question {
     @JoinColumn(name = "levelId")
     private Level level;
 
-    @JsonIgnore
-    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER,
+            orphanRemoval = true) //удаление сирот, т.е. при удалении вопроса удаляются и ответы
     @JoinTable(name = "questionAnswer",
             joinColumns = @JoinColumn(name = "questionId"),
             inverseJoinColumns = @JoinColumn(name  = "answerId"))
     private Set<Answer> answersSet = new HashSet<>();
 
     @JsonIgnore
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinTable(name = "questionGame",
             joinColumns = @JoinColumn(columnDefinition = "questionId"),
             inverseJoinColumns = @JoinColumn(columnDefinition = "gameId"))
