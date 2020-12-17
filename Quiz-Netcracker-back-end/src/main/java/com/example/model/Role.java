@@ -5,10 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,7 +12,7 @@ import java.util.Set;
 @Table(name = "roles")
 @Getter
 @Setter
-public class Role implements Externalizable {
+public class Role {
     @Id
     @GeneratedValue(generator = "role_generator")
     @SequenceGenerator(
@@ -61,15 +57,5 @@ public class Role implements Externalizable {
                 "id=" + id +
                 ", title=" + title +
                 '}';
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput objectOutput) throws IOException {
-
-    }
-
-    @Override
-    public void readExternal(ObjectInput objectInput) throws IOException, ClassNotFoundException {
-
     }
 }

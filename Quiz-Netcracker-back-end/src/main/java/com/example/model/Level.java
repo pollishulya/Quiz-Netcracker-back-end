@@ -1,28 +1,21 @@
 package com.example.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.*;
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "levels")
-@Getter
-@Setter
-public class Lev implements Externalizable {
+@Data
+public class Level {
     @Id
     @GeneratedValue(generator = "levelGenerator")
     @SequenceGenerator(
             name = "levelGenerator",
-            sequenceName = "levelSequence",
-            initialValue = 1
+            sequenceName = "levelSequence"
     )
     private Long id;
 
@@ -45,11 +38,11 @@ public class Lev implements Externalizable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Lev lev = (Lev) o;
+        Level level = (Level) o;
 
-        if (id != null ? !id.equals(lev.id) : lev.id != null) return false;
-        if (title != null ? !title.equals(lev.title) : lev.title != null) return false;
-        return description != null ? description.equals(lev.description) : lev.description == null;
+        if (id != null ? !id.equals(level.id) : level.id != null) return false;
+        if (title != null ? !title.equals(level.title) : level.title != null) return false;
+        return description != null ? description.equals(level.description) : level.description == null;
     }
 
     @Override
@@ -67,15 +60,5 @@ public class Lev implements Externalizable {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 '}';
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput objectOutput) throws IOException {
-
-    }
-
-    @Override
-    public void readExternal(ObjectInput objectInput) throws IOException, ClassNotFoundException {
-
     }
 }

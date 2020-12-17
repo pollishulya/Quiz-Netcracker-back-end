@@ -1,21 +1,15 @@
 package com.example.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.*;
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "game")
-@Getter
-@Setter
-public class Game implements Externalizable {
+@Data
+public class Game {
     @Id
     @GeneratedValue(generator = "game_generator")
     @SequenceGenerator(
@@ -74,15 +68,5 @@ public class Game implements Externalizable {
                 ", description='" + description + '\'' +
                 ", user=" + user +
                 '}';
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput objectOutput) throws IOException {
-
-    }
-
-    @Override
-    public void readExternal(ObjectInput objectInput) throws IOException, ClassNotFoundException {
-
     }
 }

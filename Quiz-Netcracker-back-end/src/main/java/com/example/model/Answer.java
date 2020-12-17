@@ -1,16 +1,15 @@
 package com.example.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Data
 @Table(name = "answers")
-public class Answer extends AuditModel implements Externalizable {
+public class Answer {
     @Id
     @GeneratedValue(generator = "answerGenerator")
     @SequenceGenerator(
@@ -33,8 +32,8 @@ public class Answer extends AuditModel implements Externalizable {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "questionAnswer",
-            joinColumns = @JoinColumn(columnDefinition= "answerId"),
-            inverseJoinColumns = @JoinColumn(columnDefinition = "questionId"))
+            joinColumns = @JoinColumn(name= "answerId"),
+            inverseJoinColumns = @JoinColumn(name = "questionId"))
     private Set<Question> questionsSet = new HashSet<>();
 
     @Override
@@ -64,15 +63,5 @@ public class Answer extends AuditModel implements Externalizable {
                 ", title='" + title + '\'' +
                 ", right=" + right +
                 '}';
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput objectOutput) throws IOException {
-
-    }
-
-    @Override
-    public void readExternal(ObjectInput objectInput) throws IOException, ClassNotFoundException {
-
     }
 }

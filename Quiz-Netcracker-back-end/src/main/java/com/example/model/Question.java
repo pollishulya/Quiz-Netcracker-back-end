@@ -1,22 +1,16 @@
 package com.example.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.*;
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "questions")
-@Getter
-@Setter
-public class Question extends AuditModel implements Externalizable {
+@Data
+public class Question {
     @Id
     @GeneratedValue(generator = "questionGenerator")
     @SequenceGenerator(
@@ -41,13 +35,13 @@ public class Question extends AuditModel implements Externalizable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "levelId")
-    private Lev level;
+    private Level level;
 
-    @JsonIgnore
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "questionAnswer",
-            joinColumns = @JoinColumn(columnDefinition = "questionId"),
-            inverseJoinColumns = @JoinColumn(columnDefinition  = "answerId"))
+            joinColumns = @JoinColumn(name = "questionId"),
+            inverseJoinColumns = @JoinColumn(name  = "answerId"))
     private Set<Answer> answersSet = new HashSet<>();
 
     @JsonIgnore
@@ -88,15 +82,5 @@ public class Question extends AuditModel implements Externalizable {
                 ", category=" + category +
                 ", level=" + level +
                 '}';
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-
     }
 }

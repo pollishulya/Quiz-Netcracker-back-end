@@ -9,20 +9,31 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 public class QuestionController {
 
-    private QuestionService questionService;
+    private final QuestionService questionService;
+
+    @Autowired
+    public QuestionController(QuestionService questionService) {
+        this.questionService = questionService;
+    }
 
     @GetMapping("/questions")
     public Page<Question> getQuestions(Pageable pageable) {
-        return questionService.findAll(pageable);
+        return questionService.findAllQuestion(pageable);
+    }
+
+    @GetMapping("/questions/{questionId}")
+    public Optional<Question> getQuestions(@PathVariable Long questionId) {
+        return questionService.getQuestionById(questionId);
     }
 
     @PostMapping("/questions")
     public Question createQuestion(@Valid @RequestBody Question question) {
-        return questionService.save(question);
+        return questionService.saveQuestion(question);
     }
 
     @PutMapping("/questions/{questionId}")
@@ -33,13 +44,8 @@ public class QuestionController {
 
     @DeleteMapping("/questions/{questionId}")
     public ResponseEntity<?> deleteQuestion(@PathVariable Long questionId) {
-        questionService.delete(questionId);
+        questionService.deleteQuestion(questionId);
         return ResponseEntity.ok().build();
-    }
-
-    @Autowired
-    public void setQuestionService(QuestionService questionService) {
-        this.questionService = questionService;
     }
 }
 
