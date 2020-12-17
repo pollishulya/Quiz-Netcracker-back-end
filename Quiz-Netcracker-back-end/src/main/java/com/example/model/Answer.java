@@ -35,33 +35,4 @@ public class Answer {
             joinColumns = @JoinColumn(name= "answerId"),
             inverseJoinColumns = @JoinColumn(name = "questionId"))
     private Set<Question> questionsSet = new HashSet<>();
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Answer answer = (Answer) o;
-
-        if (right != answer.right) return false;
-        if (id != null ? !id.equals(answer.id) : answer.id != null) return false;
-        return title != null ? title.equals(answer.title) : answer.title == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (right ? 1 : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Answer{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", right=" + right +
-                '}';
-    }
 }
