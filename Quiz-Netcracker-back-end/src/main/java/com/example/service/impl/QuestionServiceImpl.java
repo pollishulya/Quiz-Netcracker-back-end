@@ -5,10 +5,9 @@ import com.example.model.Question;
 import com.example.repository.QuestionRepository;
 import com.example.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,14 +19,17 @@ public class QuestionServiceImpl implements QuestionService {
         this.questionRepository = questionRepository;
     }
 
-    public Page<Question> findAllQuestion(Pageable pageable) {
-        return questionRepository.findAll(pageable);
+    @Override
+    public List<Question> findAllQuestion() {
+        return questionRepository.findAll();
     }
 
+    @Override
     public Question saveQuestion(Question question) {
         return questionRepository.save(question);
     }
 
+    @Override
     public Question updateQuestion(Long questionId, Question questionRequest) {
         return questionRepository.findById(questionId).map(question -> {
             question.setTitle(questionRequest.getTitle());
@@ -38,10 +40,12 @@ public class QuestionServiceImpl implements QuestionService {
         }).orElseThrow(() -> new ResourceNotFoundException("Question not found with id " + questionId));
     }
 
+    @Override
     public void deleteQuestion(Long questionId) {
         questionRepository.deleteById(questionId);
     }
 
+    @Override
     public Optional<Question> getQuestionById(Long questionId){
         return questionRepository.findById(questionId);
     }

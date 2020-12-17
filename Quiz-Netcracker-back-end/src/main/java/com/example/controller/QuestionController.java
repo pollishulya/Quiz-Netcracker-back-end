@@ -2,9 +2,8 @@ package com.example.controller;
 
 import com.example.model.Question;
 import com.example.service.QuestionService;
+import com.example.wrapper.CollectionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +21,8 @@ public class QuestionController {
     }
 
     @GetMapping("/questions")
-    public Page<Question> getQuestions(Pageable pageable) {
-        return questionService.findAllQuestion(pageable);
+    public CollectionWrapper<Question> getQuestions() {
+        return new CollectionWrapper<>(questionService.findAllQuestion());
     }
 
     @GetMapping("/questions/{questionId}")

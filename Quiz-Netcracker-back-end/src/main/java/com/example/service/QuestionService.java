@@ -1,13 +1,12 @@
 package com.example.service;
 
 import com.example.model.Question;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface QuestionService {
-    Page<Question> findAllQuestion(Pageable pageable);
+    List<Question> findAllQuestion();
     Question saveQuestion(Question question);
     Question updateQuestion(Long questionId, Question questionRequest);
     void deleteQuestion(Long questionId);
