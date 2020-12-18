@@ -30,32 +30,4 @@ public class Role {
             joinColumns = @JoinColumn(name = "roleId"),
             inverseJoinColumns = @JoinColumn(name = "userId"))
     private Set<User> userSet = new HashSet<>();
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Role role1 = (Role) o;
-
-        if (id != null ? !id.equals(role1.id) : role1.id != null) return false;
-        if (title != null ? !title.equals(role1.title) : role1.title != null) return false;
-        return userSet != null ? userSet.equals(role1.userSet) : role1.userSet == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (userSet != null ? userSet.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id=" + id +
-                ", title=" + title +
-                '}';
-    }
 }
