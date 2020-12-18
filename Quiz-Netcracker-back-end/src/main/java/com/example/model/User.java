@@ -1,5 +1,6 @@
 package com.example.model;
 
+import com.example.enums.Roles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +31,9 @@ public class User {
     @JsonIgnore
     @Column(name = "password")
     private String password;
+
+    @Column(name = "role")
+    private Roles role;
 
     /*@ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinTable(name = "userRole",
