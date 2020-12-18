@@ -3,10 +3,12 @@ package com.example.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -14,12 +16,10 @@ import java.util.Set;
 @Setter
 public class User {
     @Id
-    @GeneratedValue(generator = "userGenerator")
-    @SequenceGenerator(
-            name = "userGenerator",
-            sequenceName = "userSequence"
-    )
-    private Long id;
+    @GeneratedValue
+    @Type(type = "pg-uuid")
+    @Column(name = "id")
+    private UUID id;
 
     @Column(name = "mail")
     private String mail;

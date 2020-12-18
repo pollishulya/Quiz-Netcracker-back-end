@@ -3,10 +3,12 @@ package com.example.model;
 import com.example.enums.Roles;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "roles")
@@ -14,12 +16,10 @@ import java.util.Set;
 @Setter
 public class Role {
     @Id
-    @GeneratedValue(generator = "role_generator")
-    @SequenceGenerator(
-            name = "role_generator",
-            sequenceName = "role_sequence"
-    )
-    private Long id;
+    @GeneratedValue
+    @Type(type = "pg-uuid")
+    @Column(name = "id")
+    private UUID id;
 
     @Column(name = "title")
     @Enumerated(EnumType.STRING)

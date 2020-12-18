@@ -5,6 +5,8 @@ import com.example.repository.AnswerRepository;
 import com.example.service.AnswerService;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class AnswerServiceImpl implements AnswerService {
     private final AnswerRepository answerRepository;
@@ -19,12 +21,12 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public void deleteAnswer(Long id) {
+    public void deleteAnswer(UUID id) {
         answerRepository.deleteById(id);
     }
 
     @Override
-    public Answer updateAnswer(Long id, Answer answerReq)
+    public Answer updateAnswer(UUID id, Answer answerReq)
     {
         return answerRepository.findById(id).map(answer->{
             answer.setTitle(answerReq.getTitle());
@@ -34,7 +36,7 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public Answer getAnswerById(Long id) {
+    public Answer getAnswerById(UUID id) {
         return answerRepository.findAnswerById(id);
     }
 }

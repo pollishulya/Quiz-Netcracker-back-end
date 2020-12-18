@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 public class QuestionController {
@@ -26,7 +27,7 @@ public class QuestionController {
     }
 
     @GetMapping("/questions/{questionId}")
-    public Optional<Question> getQuestions(@PathVariable Long questionId) {
+    public Optional<Question> getQuestions(@PathVariable UUID questionId) {
         return questionService.getQuestionById(questionId);
     }
 
@@ -36,13 +37,13 @@ public class QuestionController {
     }
 
     @PutMapping("/questions/{questionId}")
-    public Question updateQuestion(@PathVariable Long questionId,
+    public Question updateQuestion(@PathVariable UUID questionId,
                                    @Valid @RequestBody Question questionRequest) {
         return questionService.updateQuestion(questionId, questionRequest);
     }
 
     @DeleteMapping("/questions/{questionId}")
-    public ResponseEntity<?> deleteQuestion(@PathVariable Long questionId) {
+    public ResponseEntity<?> deleteQuestion(@PathVariable UUID questionId) {
         questionService.deleteQuestion(questionId);
         return ResponseEntity.ok().build();
     }

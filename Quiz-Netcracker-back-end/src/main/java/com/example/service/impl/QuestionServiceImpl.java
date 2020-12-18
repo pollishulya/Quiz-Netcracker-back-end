@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
@@ -30,7 +31,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Question updateQuestion(Long questionId, Question questionRequest) {
+    public Question updateQuestion(UUID questionId, Question questionRequest) {
         return questionRepository.findById(questionId).map(question -> {
             question.setTitle(questionRequest.getTitle());
             question.setDescription(questionRequest.getDescription());
@@ -41,12 +42,12 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public void deleteQuestion(Long questionId) {
+    public void deleteQuestion(UUID questionId) {
         questionRepository.deleteById(questionId);
     }
 
     @Override
-    public Optional<Question> getQuestionById(Long questionId){
+    public Optional<Question> getQuestionById(UUID questionId){
         return questionRepository.findById(questionId);
     }
 }

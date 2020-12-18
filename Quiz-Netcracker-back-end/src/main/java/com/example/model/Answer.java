@@ -1,22 +1,22 @@
 package com.example.model;
 
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Data
 @Table(name = "answers")
 public class Answer {
     @Id
-    @GeneratedValue(generator = "answerGenerator")
-    @SequenceGenerator(
-            name = "answerGenerator",
-            sequenceName = "answerSequence"
-    )
-    private Long id;
+    @GeneratedValue
+    @Type(type = "pg-uuid")
+    @Column(name = "id")
+    private UUID id;
 
     @Column(name = "title")
     private String title;
