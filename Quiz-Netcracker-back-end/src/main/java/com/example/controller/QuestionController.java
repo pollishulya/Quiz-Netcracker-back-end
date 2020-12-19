@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin(origins = {"http://localhost:4200"})
 @RequestMapping("/question")
 public class QuestionController {
 
