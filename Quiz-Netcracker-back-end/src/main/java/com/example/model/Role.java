@@ -21,11 +21,22 @@ public class Role {
 
     @Column(name = "title")
     @Enumerated(EnumType.STRING)
-    private Roles title;
+    private String title;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "userRole",
             joinColumns = @JoinColumn(name = "roleId"),
             inverseJoinColumns = @JoinColumn(name = "userId"))
     private Set<User> userSet = new HashSet<>();
+
+    private Role(String title) {
+        this.title = title;
+    }
+
+    public static Role USER = new Role("ROLE_USER");
+    public static Role ADMIN = new Role("ROLE_ADMIN");
+    public static Role GUEST = new Role("ROLE_MANAGER");
+
 }
+
+
