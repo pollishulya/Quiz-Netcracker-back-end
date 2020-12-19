@@ -38,8 +38,8 @@ public class Question {
     private Level level;
 
 
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER,
-            orphanRemoval = true) //удаление сирот, т.е. при удалении вопроса удаляются и ответы
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+            //orphanRemoval = true)
     @JoinTable(name = "questionAnswer",
             joinColumns = @JoinColumn(name = "questionId"),
             inverseJoinColumns = @JoinColumn(name  = "answerId"))

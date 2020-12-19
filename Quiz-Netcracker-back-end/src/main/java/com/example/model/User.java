@@ -2,8 +2,7 @@ package com.example.model;
 
 import com.example.enums.Roles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -13,8 +12,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
+@Data
 public class User {
     @Id
     @GeneratedValue
@@ -42,6 +40,8 @@ public class User {
     private Set<Role> roleSet = new HashSet<>();*/
 
     @JsonIgnore
-    @OneToMany(cascade = {CascadeType.ALL},orphanRemoval=true, mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(cascade = {CascadeType.ALL},
+            //orphanRemoval=true,
+            mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Game> game = new HashSet<>();
 }

@@ -1,8 +1,7 @@
 package com.example.model;
 
 import com.example.enums.Roles;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -12,8 +11,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "roles")
-@Getter
-@Setter
+@Data
 public class Role {
     @Id
     @GeneratedValue

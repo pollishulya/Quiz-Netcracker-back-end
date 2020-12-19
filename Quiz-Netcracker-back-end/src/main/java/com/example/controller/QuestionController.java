@@ -5,13 +5,7 @@ import com.example.service.QuestionService;
 import com.example.wrapper.CollectionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 import javax.validation.Valid;
@@ -19,6 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/question")
 public class QuestionController {
 
     private final QuestionService questionService;
@@ -28,28 +23,28 @@ public class QuestionController {
         this.questionService = questionService;
     }
 
-    @GetMapping("/questions")
+    @GetMapping("/findAllQuestions")
     public CollectionWrapper<Question> getQuestions() {
         return new CollectionWrapper<>(questionService.findAllQuestion());
     }
 
-    @GetMapping("/questions/{questionId}")
+    @GetMapping("/findQuestion/{questionId}")
     public Optional<Question> getQuestions(@PathVariable UUID questionId) {
         return questionService.getQuestionById(questionId);
     }
 
-    @PostMapping("/questions")
+    @PostMapping("/save")
     public Question createQuestion(@Valid @RequestBody Question question) {
         return questionService.saveQuestion(question);
     }
 
-    @PutMapping("/questions/{questionId}")
+    @PutMapping("/update/{questionId}")
     public Question updateQuestion(@PathVariable UUID questionId,
                                    @Valid @RequestBody Question questionRequest) {
         return questionService.updateQuestion(questionId, questionRequest);
     }
 
-    @DeleteMapping("/questions/{questionId}")
+    @DeleteMapping("/delete/{questionId}")
     public ResponseEntity<?> deleteQuestion(@PathVariable UUID questionId) {
         questionService.deleteQuestion(questionId);
         return ResponseEntity.ok().build();
