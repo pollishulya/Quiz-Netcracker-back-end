@@ -5,6 +5,7 @@ import com.example.repository.AnswerRepository;
 import com.example.service.AnswerService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -38,5 +39,10 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     public Answer getAnswerById(UUID id) {
         return answerRepository.findAnswerById(id);
+    }
+
+    @Override
+    public List<Answer> getALL() {
+        return answerRepository.findAll();
     }
 }
