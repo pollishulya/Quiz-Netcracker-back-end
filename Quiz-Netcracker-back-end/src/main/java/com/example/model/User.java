@@ -1,6 +1,5 @@
 package com.example.model;
 
-import com.example.enums.Roles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.Type;
@@ -31,7 +30,7 @@ public class User {
     private String password;
 
     @Column(name = "role")
-    private Roles role;
+    private Role role;
 
     /*@ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinTable(name = "userRole",

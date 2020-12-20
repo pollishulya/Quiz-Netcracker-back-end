@@ -13,4 +13,5 @@ public interface QuestionService {
     void deleteQuestion(UUID questionId);
 
     Optional<Question> getQuestionById(UUID questionId);
+    List<Question> getQuestionsByCategoryId(UUID category);
 }

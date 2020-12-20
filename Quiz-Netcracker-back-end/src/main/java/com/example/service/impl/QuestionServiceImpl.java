@@ -51,4 +51,9 @@ public class QuestionServiceImpl implements QuestionService {
     public Optional<Question> getQuestionById(UUID questionId){
         return questionRepository.findById(questionId);
     }
+
+    @Override
+    public List<Question> getQuestionsByCategoryId(UUID categoryId) {
+        return questionRepository.getQuestionByCategoryId(categoryId);
+    }
 }

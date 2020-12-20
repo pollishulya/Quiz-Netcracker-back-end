@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import com.example.exception.ResourceNotFoundException;
 import com.example.model.Answer;
 import com.example.repository.AnswerRepository;
 import com.example.service.AnswerService;
@@ -33,7 +34,7 @@ public class AnswerServiceImpl implements AnswerService {
             answer.setTitle(answerReq.getTitle());
             answer.setRight(answerReq.isRight());
             return  answerRepository.save(answer);
-        }).orElseThrow(()-> new NullPointerException("Object not found"));
+        }).orElseThrow(()-> new ResourceNotFoundException("Object not found"));
     }
 
     @Override
