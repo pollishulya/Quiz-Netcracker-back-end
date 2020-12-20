@@ -1,6 +1,5 @@
 package com.example.model;
 
-import com.example.enums.Roles;
 import lombok.Data;
 import org.hibernate.annotations.Type;
 
