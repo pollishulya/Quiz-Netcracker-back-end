@@ -1,15 +1,17 @@
 package com.example.controller;
 
+import com.example.dto.UserDto;
 import com.example.model.User;
-import com.example.service.UserService;
-import com.example.wrapper.CollectionWrapper;
+import com.example.service.interfaces.UserService;
+import com.example.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -17,31 +19,34 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
-
+    private final UserMapper userMapper;
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @GetMapping("/findAllUsers")
-    public CollectionWrapper<User> getUsers() {
-        return new CollectionWrapper<>(userService.findAllUser());
+    public List<UserDto> getUsers() {
+        return userService.findAllUser().stream().map(userMapper :: toShortDto).collect(Collectors.toList());
     }
 
     @GetMapping("/findUser/{userId}")
-    public Optional<User> getUsers(@PathVariable UUID userId) {
-        return userService.getUserById(userId);
+    public UserDto getUsers(@PathVariable UUID userId) {
+        return userMapper.toShortDto(userService.getUserById(userId));
     }
 
     @PostMapping("/save")
-    public User createUser(@Valid @RequestBody User user) {
-        return userService.saveUser(user);
+    public UserDto createUser(@Valid @RequestBody UserDto userDto) {
+        User user=userMapper.fromUserDto(userDto);
+        return userMapper.toUserDto(userService.saveUser(user));
     }
 
     @PutMapping("/update/{userId}")
-    public User updateUser(@PathVariable UUID userId,
-                                   @Valid @RequestBody User userRequest) {
-        return userService.updateUser(userId, userRequest);
+    public UserDto updateUser(@PathVariable UUID userId,
+                                   @Valid @RequestBody UserDto userDto) {
+        User user=userMapper.fromUserDto(userDto);
+        return userMapper.toUserDto(userService.updateUser(userId, user));
     }
 
     @DeleteMapping("/delete/{userId}")

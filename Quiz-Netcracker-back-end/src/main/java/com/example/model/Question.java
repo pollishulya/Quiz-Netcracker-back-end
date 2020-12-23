@@ -1,7 +1,9 @@
 package com.example.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Data;
+import lombok.Value;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -12,6 +14,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "questions")
 @Data
+@Builder
 public class Question {
     @Id
     @GeneratedValue
@@ -51,4 +54,14 @@ public class Question {
             joinColumns = @JoinColumn(columnDefinition = "questionId"),
             inverseJoinColumns = @JoinColumn(columnDefinition = "gameId"))
     private Set<Game> gamesSet = new HashSet<>();
+    @Builder
+    public Question(UUID id, String title, String description, Category category, Level level, Set<Answer> answersSet, Set<Game> gamesSet) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.category = category;
+        this.level = level;
+        this.answersSet = answersSet;
+        this.gamesSet = gamesSet;
+    }
 }

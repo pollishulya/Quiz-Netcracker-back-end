@@ -3,7 +3,7 @@ package com.example.service.impl;
 import com.example.exception.ResourceNotFoundException;
 import com.example.model.User;
 import com.example.repository.UserRepository;
-import com.example.service.UserService;
+import com.example.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +33,6 @@ public class UserServiceImpl implements UserService {
 //        }
 //        user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
 //        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
         return  userRepository.save(user);
     }
 
@@ -55,7 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getUserById(UUID userId){
-        return userRepository.findById(userId);
+    public User getUserById(UUID userId){
+        return userRepository.findUserById(userId);
     }
 }

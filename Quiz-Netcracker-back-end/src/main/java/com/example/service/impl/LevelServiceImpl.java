@@ -3,7 +3,7 @@ package com.example.service.impl;
 import com.example.exception.ResourceNotFoundException;
 import com.example.model.Level;
 import com.example.repository.LevelRepository;
-import com.example.service.LevelService;
+import com.example.service.interfaces.LevelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +26,8 @@ public class LevelServiceImpl implements LevelService {
     }
 
     @Override
-    public Optional<Level> findById(UUID id) {
-        return levelRepository.findById(id);
+    public Level findLevelById(UUID id) {
+        return levelRepository.findLevelById(id);
     }
 
     @Override

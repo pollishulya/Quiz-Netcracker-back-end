@@ -1,4 +1,4 @@
-package com.example.service;
+package com.example.service.interfaces;
 
 import com.example.dto.CategoryDto;
 import com.example.model.Category;

@@ -3,7 +3,7 @@ package com.example.service.impl;
 import com.example.exception.ResourceNotFoundException;
 import com.example.model.Answer;
 import com.example.repository.AnswerRepository;
-import com.example.service.AnswerService;
+import com.example.service.interfaces.AnswerService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

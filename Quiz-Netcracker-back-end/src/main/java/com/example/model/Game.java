@@ -1,5 +1,6 @@
 package com.example.model;
 
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.Type;
 
@@ -37,4 +38,13 @@ public class Game {
             joinColumns = @JoinColumn(columnDefinition = "gameId"),
             inverseJoinColumns = @JoinColumn(columnDefinition = "questionId"))
     private Set<Question> questionsSet = new HashSet<>();
+
+    @Builder
+    public Game(UUID id, String name, String description, User user, Set<Question> questionsSet) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.user = user;
+        this.questionsSet = questionsSet;
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.service;
+package com.example.service.interfaces;
 
 import com.example.model.User;
 import org.springframework.ui.Model;
@@ -14,5 +14,5 @@ public interface UserService {
     User updateUser(UUID userId, User userRequest);
     void deleteUser(UUID userId);
 
-    Optional<User> getUserById(UUID userId);
+    User getUserById(UUID userId);
 }

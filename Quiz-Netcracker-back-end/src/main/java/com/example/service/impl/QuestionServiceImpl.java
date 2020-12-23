@@ -3,7 +3,7 @@ package com.example.service.impl;
 import com.example.exception.ResourceNotFoundException;
 import com.example.model.Question;
 import com.example.repository.QuestionRepository;
-import com.example.service.QuestionService;
+import com.example.service.interfaces.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,8 +48,8 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Optional<Question> getQuestionById(UUID questionId){
-        return questionRepository.findById(questionId);
+    public Question getQuestionById(UUID questionId){
+        return questionRepository.getQuestionById(questionId);
     }
 
     @Override
