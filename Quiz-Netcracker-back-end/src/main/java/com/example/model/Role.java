@@ -1,6 +1,7 @@
 package com.example.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "roles")
 @Data
+@NoArgsConstructor
 public class Role {
     @Id
     @GeneratedValue
@@ -19,7 +21,7 @@ public class Role {
     private UUID id;
 
     @Column(name = "title")
-    @Enumerated(EnumType.STRING)
+//    @Enumerated(EnumType.STRING)
     private String title;
 
     @ManyToMany(fetch = FetchType.LAZY)

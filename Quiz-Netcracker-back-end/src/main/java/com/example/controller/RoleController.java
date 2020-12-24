@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import com.example.dto.RoleDto;
+import com.example.dto.conerters.RoleConverter;
 import com.example.model.Role;
 import com.example.service.RoleService;
 import com.example.wrapper.CollectionWrapper;
@@ -8,10 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/roles")
 @CrossOrigin(origins = {"http://localhost:4200"})
 public class RoleController {
     private final RoleService roleService;
@@ -21,28 +24,33 @@ public class RoleController {
         this.roleService = roleService;
     }
 
-    @GetMapping("/roles")
-    public CollectionWrapper<Role> getRoles() {
-        return new CollectionWrapper<>(roleService.findAll());
+    @GetMapping("/all")
+    public CollectionWrapper<RoleDto> getRoles() {
+        return new CollectionWrapper<>(roleService.findAll()
+                                                  .stream()
+                                                  .map(RoleConverter::fromRoleToRoleDto)
+                                                  .collect(Collectors.toList()));
     }
 
-    @GetMapping("/roles/{roleId}")
-    public Optional<Role> getRole(@PathVariable UUID roleId) {
-        return roleService.findById(roleId);
+    @GetMapping("/{roleId}")
+    public RoleDto getRole(@PathVariable UUID roleId) {
+        return RoleConverter.fromRoleToRoleDto(roleService.findById(roleId));
     }
 
-    @PostMapping("/roles")
-    public Role createRole(@Valid @RequestBody Role role) {
-        return roleService.save(role);
+    @PostMapping("/save")
+    public RoleDto createRole(@Valid @RequestBody RoleDto roleDto) {
+        Role role = RoleConverter.fromRoleDtoToRole(roleDto);
+        return RoleConverter.fromRoleToRoleDto(roleService.save(role));
     }
 
-    @PutMapping("/roles/{roleId}")
-    public Role updateRole(@PathVariable UUID roleId,
-                           @Valid @RequestBody Role role) {
-        return roleService.update(roleId, role);
+    @PutMapping("/{roleId}")
+    public RoleDto updateRole(@PathVariable UUID roleId,
+                           @Valid @RequestBody RoleDto roleDto) {
+        Role role = RoleConverter.fromRoleDtoToRole(roleDto);
+        return RoleConverter.fromRoleToRoleDto(roleService.update(roleId, role));
     }
 
-    @DeleteMapping("/roles/{roleId}")
+    @DeleteMapping("/{roleId}")
     public ResponseEntity<?> deleteRole(@PathVariable UUID roleId) {
         roleService.delete(roleId);
         return ResponseEntity.ok().build();

@@ -23,7 +23,6 @@ public class Answer {
     @Column(name = "answerIsRight")
     private boolean right;
 
-    @JsonIgnore
     public boolean isRight() {
         return right;
     }
