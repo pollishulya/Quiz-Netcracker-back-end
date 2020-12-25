@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -26,8 +25,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Optional<Role> findById(UUID id) {
-        return roleRepository.findById(id);
+    public Role findById(UUID id) {
+        return roleRepository.findById(id).orElse(null);
     }
 
     @Override

@@ -20,13 +20,8 @@ public class Answer {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "answerIsRight")
     private boolean right;
 
-    @JsonIgnore
-    public boolean isRight() {
-        return right;
-    }
 
     public void setRight(boolean right) {
         this.right = right;

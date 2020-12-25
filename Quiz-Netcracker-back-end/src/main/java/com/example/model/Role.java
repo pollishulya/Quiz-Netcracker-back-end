@@ -11,6 +11,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "roles")
 @Data
+@NoArgsConstructor
 public class Role {
     @Id
     @GeneratedValue
@@ -19,7 +20,6 @@ public class Role {
     private UUID id;
 
     @Column(name = "title")
-    @Enumerated(EnumType.STRING)
     private String title;
 
     @ManyToMany(fetch = FetchType.LAZY)
