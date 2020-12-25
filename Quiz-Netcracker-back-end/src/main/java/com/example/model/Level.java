@@ -1,6 +1,7 @@
 package com.example.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.Type;
 
@@ -32,4 +33,12 @@ public class Level {
     @JsonIgnore
     @OneToMany(cascade = {CascadeType.ALL},mappedBy = "level",fetch = FetchType.LAZY)
     private Set<Question> questions = new HashSet<>();
+
+    @Builder
+    public Level(UUID id, String title, String description, Set<Question> questions) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.questions = questions;
+    }
 }

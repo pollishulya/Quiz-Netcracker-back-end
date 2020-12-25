@@ -1,23 +1,20 @@
 package com.example.dto;
 
-import lombok.Data;
+import com.example.model.Category;
+import com.example.model.Game;
+import com.example.model.Level;
+import lombok.Builder;
+import lombok.Value;
 
 import java.util.UUID;
 
-@Data
+@Value
+@Builder
 public class QuestionDto {
-
-    private UUID id;
-    private String title;
-    private String description;
-    private CategoryDto category;
-
-    // TODO add LevelConverters an so on...
-    // private LevelDto level;
-
-    //TODO add AnswerConverters an so on...
-    //private Set<Answer> answersSet;
-
-    //TODO add GameConverters an so on...
-    //private Set<Game> gamesSet;
+    UUID id;
+    String title;
+    String description;
+    Category category;
+    Level level;
+    Game game;
 }

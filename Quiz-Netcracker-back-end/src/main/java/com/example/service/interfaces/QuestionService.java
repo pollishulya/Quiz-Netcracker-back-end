@@ -1,9 +1,8 @@
-package com.example.service;
+package com.example.service.interfaces;
 
 import com.example.model.Question;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface QuestionService {
@@ -12,6 +11,6 @@ public interface QuestionService {
     Question updateQuestion(UUID questionId, Question questionRequest);
     void deleteQuestion(UUID questionId);
 
-    Optional<Question> getQuestionById(UUID questionId);
+    Question getQuestionById(UUID questionId);
     List<Question> getQuestionsByCategoryId(UUID category);
 }

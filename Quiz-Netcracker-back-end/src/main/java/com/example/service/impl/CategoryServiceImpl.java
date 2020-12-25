@@ -1,17 +1,14 @@
 package com.example.service.impl;
 
-import com.example.dto.CategoryDto;
-import com.example.dto.conerters.CategoryConverters;
 import com.example.exception.ResourceNotFoundException;
 import com.example.model.Category;
 import com.example.repository.CategoryRepository;
-import com.example.service.CategoryService;
+import com.example.service.interfaces.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {

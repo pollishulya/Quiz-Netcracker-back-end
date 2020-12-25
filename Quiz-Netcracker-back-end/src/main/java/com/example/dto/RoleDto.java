@@ -1,13 +1,16 @@
 package com.example.dto;
 
-import lombok.Data;
+import com.example.model.User;
+import lombok.Builder;
+import lombok.Value;
 
+import java.util.Set;
 import java.util.UUID;
 
-@Data
+@Value
+@Builder
 public class RoleDto {
-    private UUID id;
-    private String title;
-
-//    private Set<UserDto> usersSet;
+    UUID id;
+    String title;
+    Set<User> users;
 }

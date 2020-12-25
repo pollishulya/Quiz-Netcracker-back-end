@@ -3,24 +3,17 @@ package com.example.controller;
 import com.example.dto.CategoryDto;
 import com.example.dto.conerters.CategoryConverters;
 import com.example.model.Category;
-import com.example.model.Question;
-import com.example.service.CategoryService;
-import com.example.service.QuestionService;
-import com.example.service.impl.CategoryServiceImpl;
-import com.example.wrapper.CollectionWrapper;
+import com.example.service.interfaces.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Controller
+@RestController
 public class CategoryController {
 
     private final CategoryService categoryService;

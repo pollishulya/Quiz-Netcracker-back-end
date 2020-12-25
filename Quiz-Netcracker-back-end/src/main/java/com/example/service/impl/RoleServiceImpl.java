@@ -3,7 +3,7 @@ package com.example.service.impl;
 import com.example.exception.ResourceNotFoundException;
 import com.example.model.Role;
 import com.example.repository.RoleRepository;
-import com.example.service.RoleService;
+import com.example.service.interfaces.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role findById(UUID id) {
-        return roleRepository.findById(id).orElse(null);
+        return roleRepository.getRoleById(id);
     }
 
     @Override

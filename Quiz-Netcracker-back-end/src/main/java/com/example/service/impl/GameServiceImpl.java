@@ -3,7 +3,7 @@ package com.example.service.impl;
 import com.example.exception.ResourceNotFoundException;
 import com.example.model.Game;
 import com.example.repository.GameRepository;
-import com.example.service.GameService;
+import com.example.service.interfaces.GameService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

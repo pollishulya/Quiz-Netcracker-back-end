@@ -1,5 +1,6 @@
 package com.example.model;
 
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.Type;
 
@@ -20,6 +21,7 @@ public class Role {
     private UUID id;
 
     @Column(name = "title")
+
     private String title;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -36,6 +38,12 @@ public class Role {
     public static Role ADMIN = new Role("ROLE_ADMIN");
     public static Role GUEST = new Role("ROLE_MANAGER");
 
+    @Builder
+    public Role(UUID id, String title, Set<User> userSet) {
+        this.id = id;
+        this.title = title;
+        this.userSet = userSet;
+    }
 }
 
 

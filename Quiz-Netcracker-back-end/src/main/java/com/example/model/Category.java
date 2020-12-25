@@ -19,10 +19,6 @@ public class Category {
     @Column(name = "id")
     private UUID id;
 
-//    @NotBlank
-//    @Size(min = 3, max = 100)
-//    private String title;
-
     @Column(name = "name")
     private String name;
 

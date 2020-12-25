@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, UUID> {
     List<Question> getQuestionByCategoryId(UUID categoryId);
+    Question getQuestionById(UUID id);
 }

@@ -1,46 +1,53 @@
 package com.example.controller;
 
+import com.example.dto.AnswerDto;
 import com.example.model.Answer;
-import com.example.model.Level;
-import com.example.service.AnswerService;
-import com.example.wrapper.CollectionWrapper;
+import com.example.service.interfaces.AnswerService;
+import com.example.service.mapper.AnswerMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/answer")
 @CrossOrigin(origins = {"http://localhost:4200"})
+
 public class AnswerController {
     public final AnswerService answerService;
+    public final AnswerMapper answerMapper;
 
-    public AnswerController(AnswerService answerService) {
+    public AnswerController(AnswerService answerService, AnswerMapper answerMapper) {
         this.answerService = answerService;
+        this.answerMapper = answerMapper;
     }
 
     @GetMapping("/{id}")
-    public Answer getAnswer(@PathVariable UUID id) {
-        return answerService.getAnswerById(id);
+    public AnswerDto getAnswer(@PathVariable UUID id) {
+        return answerMapper.toShortAnswerDto(answerService.getAnswerById(id)); //???тут есть 2 способа, но нужно уточнять
     }
 
     @GetMapping("/all")
-    public List<Answer> getAnswer() {
-        return answerService.getALL();
+    public List<AnswerDto> getAnswer() {
+        return answerService.getALL().stream()
+                .map(answerMapper :: toShortAnswerDto)//???????
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/answer")
-    public Answer createAnswer(@Valid @RequestBody Answer answer) {
-        return answerService.createAnswer(answer);
+    public AnswerDto createAnswer(@Valid @RequestBody AnswerDto answerDto) {
+        Answer answer=answerMapper.fromAnswerDto(answerDto);
+        return answerMapper.toAnswerDto(answerService.createAnswer(answer));
     }
 
     @PutMapping("/{id}")
-    public Answer updateAnswer(@PathVariable UUID id,
-                             @Valid @RequestBody Answer answer) {
-        return answerService.updateAnswer(id,answer);
+    public AnswerDto updateAnswer(@PathVariable UUID id,
+                             @Valid @RequestBody AnswerDto answerDto) {
+        Answer answer=answerMapper.fromAnswerDto(answerDto);
+        return answerMapper.toAnswerDto(answerService.updateAnswer(id,answer));
     }
 
     @DeleteMapping("/{id}")
