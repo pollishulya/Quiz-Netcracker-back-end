@@ -32,7 +32,7 @@ public class AnswerServiceImpl implements AnswerService {
     {
         return answerRepository.findById(id).map(answer->{
             answer.setTitle(answerReq.getTitle());
-            answer.setRight(answerReq.isRight());
+            answer.setRight(answerReq.getRight());
             return  answerRepository.save(answer);
         }).orElseThrow(()-> new ResourceNotFoundException("Object not found"));
     }

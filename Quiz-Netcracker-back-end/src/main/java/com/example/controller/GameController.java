@@ -3,7 +3,7 @@ package com.example.controller;
 import com.example.dto.GameDto;
 import com.example.model.Game;
 import com.example.service.interfaces.GameService;
-import com.example.service.mapper.GameMapper;
+import com.example.service.mapper.Mapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,41 +17,41 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = {"http://localhost:4200"})
 public class GameController {
     public final GameService gameService;
-    public final GameMapper gameMapper;
+    public final Mapper mapper;
 
-    public GameController(GameService gameService, GameMapper gameMapper) {
+    public GameController(GameService gameService, Mapper mapper) {
         this.gameService = gameService;
-        this.gameMapper = gameMapper;
+        this.mapper = mapper;
     }
 
     @GetMapping("/{id}")
     public GameDto getGame(@PathVariable UUID id) {
-        return gameMapper.toShortGameDto(gameService.findGameById(id));
+        return mapper.toShortGameDto(gameService.findGameById(id));
     }
 
     @GetMapping("/{name}")
     public GameDto getGameByName(@PathVariable String name) {
-        return gameMapper.toGameDto(gameService.findGameByName(name));
+        return mapper.toGameDto(gameService.findGameByName(name));
     }
 
     @GetMapping("/all")
     public List<GameDto> getGames() {
         return gameService.findAllGames().stream()
-                .map(gameMapper :: toShortGameDto)
+                .map(mapper:: toShortGameDto)
                 .collect(Collectors.toList());
     }
 
     @PostMapping("/game")
     public GameDto createGame(@Valid @RequestBody GameDto gameDto) {
-        Game game=gameMapper.fromGameDto(gameDto);
-        return gameMapper.toGameDto(gameService.createGame(game));
+        Game game= mapper.fromGameDto(gameDto);
+        return mapper.toGameDto(gameService.createGame(game));
     }
 
     @PutMapping("/{id}")
     public GameDto updateGame(@PathVariable UUID id,
                                @Valid @RequestBody GameDto gameDto) {
-        Game game=gameMapper.fromGameDto(gameDto);
-        return gameMapper.toGameDto(gameService.updateGame(id,game));
+        Game game= mapper.fromGameDto(gameDto);
+        return mapper.toGameDto(gameService.updateGame(id,game));
     }
 
     @DeleteMapping("/{id}")

@@ -3,8 +3,7 @@ package com.example.controller;
 import com.example.dto.QuestionDto;
 import com.example.model.Question;
 import com.example.service.interfaces.QuestionService;
-import com.example.service.mapper.QuestionMapper;
-import com.example.wrapper.CollectionWrapper;
+import com.example.service.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,37 +19,37 @@ import java.util.stream.Collectors;
 public class QuestionController {
 
     private final QuestionService questionService;
-    private final QuestionMapper questionMapper;
+    private final Mapper mapper;
 
     @Autowired
-    public QuestionController(QuestionService questionService, QuestionMapper questionMapper) {
+    public QuestionController(QuestionService questionService,Mapper mapper) {
         this.questionService = questionService;
-        this.questionMapper = questionMapper;
+        this.mapper = mapper;
     }
 
     @GetMapping("/findAllQuestions")
     public List<QuestionDto> getQuestions() {
         return questionService.findAllQuestion().stream()
-                .map(questionMapper::toShortQuestionDto)
+                .map(mapper::toShortQuestionDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/findQuestion/{questionId}")
     public QuestionDto getQuestions(@PathVariable UUID questionId) {
-        return questionMapper.toShortQuestionDto(questionService.getQuestionById(questionId));
+        return mapper.toShortQuestionDto(questionService.getQuestionById(questionId));
     }
 
     @PostMapping("/save")
     public QuestionDto createQuestion(@Valid @RequestBody QuestionDto questionDto) {
-        Question question = questionMapper.fromQuestionDto(questionDto);
-        return questionMapper.toQuestionDto(questionService.saveQuestion(question));
+        Question question = mapper.fromQuestionDto(questionDto);
+        return mapper.toQuestionDto(questionService.saveQuestion(question));
     }
 
     @PutMapping("/update/{questionId}")
     public QuestionDto updateQuestion(@PathVariable UUID questionId,
                                       @Valid @RequestBody QuestionDto questionRequest) {
-        Question question = questionMapper.fromQuestionDto(questionRequest);
-        return questionMapper.toQuestionDto(questionService.updateQuestion(questionId, question));
+        Question question = mapper.fromQuestionDto(questionRequest);
+        return mapper.toQuestionDto(questionService.updateQuestion(questionId, question));
     }
 
     @DeleteMapping("/delete/{questionId}")

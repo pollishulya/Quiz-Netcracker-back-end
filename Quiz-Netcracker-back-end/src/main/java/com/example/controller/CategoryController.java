@@ -1,9 +1,9 @@
 package com.example.controller;
 
 import com.example.dto.CategoryDto;
-import com.example.dto.conerters.CategoryConverters;
 import com.example.model.Category;
 import com.example.service.interfaces.CategoryService;
+import com.example.service.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,38 +17,38 @@ import java.util.stream.Collectors;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final Mapper mapper;
 
     @Autowired
-    public CategoryController(CategoryService categoryService) {
+    public CategoryController(CategoryService categoryService, Mapper mapper) {
         this.categoryService = categoryService;
+        this.mapper = mapper;
     }
 
     @GetMapping("/categories")
     public List<CategoryDto> getCategories() {
         return categoryService.findAllCategory()
                 .stream()
-                .map(CategoryConverters::convert)
+                .map(mapper::toShortCategoryDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/categories/{categoryId}")
     public CategoryDto getQuestions(@PathVariable UUID categoryId) {
-        return CategoryConverters.convert(categoryService.findCategoryById(categoryId));
+        return mapper.toCategoryDto(categoryService.findCategoryById(categoryId));
     }
 
     @PostMapping("/category")
     public CategoryDto createCategory(@Valid @RequestBody CategoryDto categoryDto) {
-        Category category = CategoryConverters.convert(categoryDto);
-        Category savedCategory = categoryService.saveCategory(category);
-        return CategoryConverters.convert(savedCategory);
+        Category category = mapper.fromCategoryDro(categoryDto);
+        return mapper.toCategoryDto(categoryService.saveCategory(category));
     }
 
     @PutMapping("/category/{categoryId}")
     public CategoryDto updateCategory(@PathVariable UUID categoryId,
                                    @Valid @RequestBody CategoryDto categoryDto) {
-        Category category = CategoryConverters.convert(categoryDto);
-        Category updatedCategory = categoryService.updateCategory(categoryId, category);
-        return CategoryConverters.convert(updatedCategory);
+        Category category = mapper.fromCategoryDro(categoryDto);
+        return mapper.toCategoryDto(categoryService.updateCategory(categoryId, category));
     }
 
     @DeleteMapping("/category/{categoryId}")

@@ -1,13 +1,20 @@
 package com.example.dto;
 
+import com.example.model.Question;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
 import lombok.Data;
+import lombok.Value;
+
+import java.util.Set;
 import java.util.UUID;
 
-@Data
+@Value
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryDto {
-
-    private UUID id;
-    private String name;
-    private String description;
-
+    UUID id;
+    String name;
+    String description;
+    Set<Question> question;
 }

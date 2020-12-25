@@ -1,6 +1,7 @@
 package com.example.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
@@ -30,4 +31,12 @@ public class Category {
     @JsonIgnore
     @OneToMany(cascade = {CascadeType.ALL},mappedBy = "category",fetch = FetchType.LAZY)
     private Set<Question> question = new HashSet<>();
+
+    @Builder
+    public Category(UUID id, String name, String description, Set<Question> question) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.question = question;
+    }
 }

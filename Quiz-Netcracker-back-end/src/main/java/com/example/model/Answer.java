@@ -23,13 +23,13 @@ public class Answer {
     @Column(name = "title")
     private String title;
     @Column(name="answerIsRight" )
-    private boolean right;
+    private Boolean right;
 
     @ManyToOne(cascade = {CascadeType.ALL},fetch = FetchType.LAZY)
     private Question question;
 
     @Builder
-    public Answer(UUID id, String title, boolean right, Question question) {
+    public Answer(UUID id, String title, Boolean right, Question question) {
         this.id = id;
         this.title = title;
         this.right = right;

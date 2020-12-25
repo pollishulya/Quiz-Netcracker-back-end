@@ -3,7 +3,7 @@ package com.example.controller;
 import com.example.dto.UserDto;
 import com.example.model.User;
 import com.example.service.interfaces.UserService;
-import com.example.service.mapper.UserMapper;
+import com.example.service.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,34 +19,34 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserService userService;
-    private final UserMapper userMapper;
+    private final Mapper mapper;
     @Autowired
-    public UserController(UserService userService, UserMapper userMapper) {
+    public UserController(UserService userService, Mapper mapper) {
         this.userService = userService;
-        this.userMapper = userMapper;
+        this.mapper = mapper;
     }
 
     @GetMapping("/findAllUsers")
     public List<UserDto> getUsers() {
-        return userService.findAllUser().stream().map(userMapper :: toShortDto).collect(Collectors.toList());
+        return userService.findAllUser().stream().map(mapper:: toShortDto).collect(Collectors.toList());
     }
 
     @GetMapping("/findUser/{userId}")
     public UserDto getUsers(@PathVariable UUID userId) {
-        return userMapper.toShortDto(userService.getUserById(userId));
+        return mapper.toShortDto(userService.getUserById(userId));
     }
 
     @PostMapping("/save")
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
-        User user=userMapper.fromUserDto(userDto);
-        return userMapper.toUserDto(userService.saveUser(user));
+        User user= mapper.fromUserDto(userDto);
+        return mapper.toUserDto(userService.saveUser(user));
     }
 
     @PutMapping("/update/{userId}")
     public UserDto updateUser(@PathVariable UUID userId,
                                    @Valid @RequestBody UserDto userDto) {
-        User user=userMapper.fromUserDto(userDto);
-        return userMapper.toUserDto(userService.updateUser(userId, user));
+        User user= mapper.fromUserDto(userDto);
+        return mapper.toUserDto(userService.updateUser(userId, user));
     }
 
     @DeleteMapping("/delete/{userId}")
