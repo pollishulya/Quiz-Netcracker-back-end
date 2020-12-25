@@ -43,6 +43,7 @@ public class User {
             //orphanRemoval=true,
             mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Game> game = new HashSet<>();
+
     @Builder
     public User(UUID id, String mail, String login, String password, String role, Set<Game> game) {
         this.id = id;

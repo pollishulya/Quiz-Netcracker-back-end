@@ -4,7 +4,6 @@ import com.example.dto.AnswerDto;
 import com.example.model.Answer;
 import com.example.service.interfaces.AnswerService;
 import com.example.service.mapper.AnswerMapper;
-import lombok.Builder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

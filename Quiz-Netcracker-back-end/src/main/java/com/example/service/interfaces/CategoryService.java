@@ -1,10 +1,6 @@
 package com.example.service.interfaces;
 
-import com.example.dto.CategoryDto;
 import com.example.model.Category;
-import com.example.model.Question;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;

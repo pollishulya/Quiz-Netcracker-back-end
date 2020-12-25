@@ -9,10 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -23,6 +21,7 @@ public class QuestionController {
 
     private final QuestionService questionService;
     private final QuestionMapper questionMapper;
+
     @Autowired
     public QuestionController(QuestionService questionService, QuestionMapper questionMapper) {
         this.questionService = questionService;
@@ -32,7 +31,7 @@ public class QuestionController {
     @GetMapping("/findAllQuestions")
     public List<QuestionDto> getQuestions() {
         return questionService.findAllQuestion().stream()
-                .map(questionMapper :: toShortQuestionDto)
+                .map(questionMapper::toShortQuestionDto)
                 .collect(Collectors.toList());
     }
 
@@ -43,15 +42,15 @@ public class QuestionController {
 
     @PostMapping("/save")
     public QuestionDto createQuestion(@Valid @RequestBody QuestionDto questionDto) {
-        Question question=questionMapper.fromQuestionDto(questionDto);
+        Question question = questionMapper.fromQuestionDto(questionDto);
         return questionMapper.toQuestionDto(questionService.saveQuestion(question));
     }
 
     @PutMapping("/update/{questionId}")
-    public QuestionDto  updateQuestion(@PathVariable UUID questionId,
-                                   @Valid @RequestBody QuestionDto questionRequest) {
-        Question question=questionMapper.fromQuestionDto(questionRequest);
-        return questionMapper.toQuestionDto(questionService.updateQuestion(questionId,question));
+    public QuestionDto updateQuestion(@PathVariable UUID questionId,
+                                      @Valid @RequestBody QuestionDto questionRequest) {
+        Question question = questionMapper.fromQuestionDto(questionRequest);
+        return questionMapper.toQuestionDto(questionService.updateQuestion(questionId, question));
     }
 
     @DeleteMapping("/delete/{questionId}")

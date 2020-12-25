@@ -36,6 +36,7 @@ public class Role {
     public static Role USER = new Role("ROLE_USER");
     public static Role ADMIN = new Role("ROLE_ADMIN");
     public static Role GUEST = new Role("ROLE_MANAGER");
+
     @Builder
     public Role(UUID id, String title, Set<User> userSet) {
         this.id = id;

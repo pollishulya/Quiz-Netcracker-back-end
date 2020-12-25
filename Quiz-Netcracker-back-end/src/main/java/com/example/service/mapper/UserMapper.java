@@ -4,8 +4,6 @@ import com.example.dto.UserDto;
 import com.example.model.User;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
 public class UserMapper {
     public UserDto toUserDto(final User user){

@@ -4,15 +4,12 @@ import com.example.dto.RoleDto;
 import com.example.model.Role;
 import com.example.service.interfaces.RoleService;
 import com.example.service.mapper.RoleMapper;
-import com.example.wrapper.CollectionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 

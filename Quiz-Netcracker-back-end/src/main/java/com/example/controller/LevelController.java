@@ -4,14 +4,12 @@ import com.example.dto.LevelDto;
 import com.example.model.Level;
 import com.example.service.interfaces.LevelService;
 import com.example.service.mapper.LevelMapper;
-import com.example.wrapper.CollectionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 

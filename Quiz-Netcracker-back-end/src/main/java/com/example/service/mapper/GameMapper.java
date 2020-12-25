@@ -2,12 +2,7 @@ package com.example.service.mapper;
 
 import com.example.dto.GameDto;
 import com.example.model.Game;
-import com.example.model.Question;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 public class GameMapper {
@@ -17,7 +12,6 @@ public class GameMapper {
                 .description(game.getDescription())
                 .name(game.getName())
                 .user(game.getUser())
-                .questions(game.getQuestionsSet())
                 .build();
     }
 
@@ -27,7 +21,6 @@ public class GameMapper {
                 .description(gameDto.getDescription())
                 .name(gameDto.getName())
                 .user(gameDto.getUser())
-                .questionsSet(gameDto.getQuestions())
                 .build();
     }
 

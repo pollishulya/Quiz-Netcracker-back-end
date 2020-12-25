@@ -13,7 +13,6 @@ public class QuestionMapper {
                 .description(question.getDescription())
                 .category(question.getCategory())
                 .level(question.getLevel())
-                .answers(question.getAnswersSet())
                 .build();
 
     }
@@ -25,18 +24,17 @@ public class QuestionMapper {
                 .description(questionDto.getDescription())
                 .category(questionDto.getCategory())
                 .level(questionDto.getLevel())
-                .answersSet(questionDto.getAnswers())
-                .gamesSet(questionDto.getGames())
+                .game(questionDto.getGame())
                 .build();
     }
 
     public  QuestionDto toShortQuestionDto(final Question question){
         return QuestionDto.builder()
+                .id(question.getId())
                 .title(question.getTitle())
                 .description(question.getDescription())
                 .category(question.getCategory())
                 .level(question.getLevel())
-                .answers(question.getAnswersSet())
                 .build();
     }
 }

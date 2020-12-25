@@ -3,7 +3,6 @@ package com.example.service.interfaces;
 import com.example.model.Level;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface LevelService {

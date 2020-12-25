@@ -5,16 +5,13 @@ import com.example.model.User;
 import lombok.Builder;
 import lombok.Value;
 
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Builder
 @Value
 public class GameDto {
-    private UUID id;
-    private String name;
-    private String description;
-    private User user;
-    private Set<Question> questions;
+    UUID id;
+    String name;
+    String description;
+    User user;
 }

@@ -22,10 +22,6 @@ public class Question {
     @Column(name = "id")
     private UUID id;
 
-//    @NotBlank
-//    @Size(min = 3, max = 100)
-//    private String title;
-
     @Column(name = "title")
     private String title;
 
@@ -40,28 +36,19 @@ public class Question {
     @JoinColumn(name = "levelId")
     private Level level;
 
+    @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    private Game game;
 
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-            //orphanRemoval = true)
-    @JoinTable(name = "questionAnswer",
-            joinColumns = @JoinColumn(name = "questionId"),
-            inverseJoinColumns = @JoinColumn(name  = "answerId"))
-    private Set<Answer> answersSet = new HashSet<>();
+    public Question() {
+    }
 
-    @JsonIgnore
-    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinTable(name = "questionGame",
-            joinColumns = @JoinColumn(columnDefinition = "questionId"),
-            inverseJoinColumns = @JoinColumn(columnDefinition = "gameId"))
-    private Set<Game> gamesSet = new HashSet<>();
     @Builder
-    public Question(UUID id, String title, String description, Category category, Level level, Set<Answer> answersSet, Set<Game> gamesSet) {
+    public Question(UUID id, String title, String description, Category category, Level level, Game game) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.category = category;
         this.level = level;
-        this.answersSet = answersSet;
-        this.gamesSet = gamesSet;
+        this.game = game;
     }
 }

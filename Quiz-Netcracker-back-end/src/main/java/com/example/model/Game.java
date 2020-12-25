@@ -5,7 +5,6 @@ import lombok.Data;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -19,10 +18,6 @@ public class Game {
     @Column(name = "id")
     private UUID id;
 
-//    @NotBlank
-//    @Size(min = 3, max = 100)
-//    private String title;
-
     @Column(name = "name")
     private String name;
 
@@ -33,18 +28,11 @@ public class Game {
     @JoinColumn(name = "userId")
     private User user;
 
-    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinTable(name = "questionGame",
-            joinColumns = @JoinColumn(columnDefinition = "gameId"),
-            inverseJoinColumns = @JoinColumn(columnDefinition = "questionId"))
-    private Set<Question> questionsSet = new HashSet<>();
-
     @Builder
     public Game(UUID id, String name, String description, User user, Set<Question> questionsSet) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.user = user;
-        this.questionsSet = questionsSet;
     }
 }

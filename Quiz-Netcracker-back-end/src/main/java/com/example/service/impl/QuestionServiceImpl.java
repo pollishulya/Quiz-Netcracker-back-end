@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -37,7 +36,6 @@ public class QuestionServiceImpl implements QuestionService {
             question.setDescription(questionRequest.getDescription());
             question.setCategory(questionRequest.getCategory());
             question.setLevel(questionRequest.getLevel());
-            question.setAnswersSet(questionRequest.getAnswersSet());
             return questionRepository.save(question);
         }).orElseThrow(() -> new ResourceNotFoundException("Question not found with id " + questionId));
     }

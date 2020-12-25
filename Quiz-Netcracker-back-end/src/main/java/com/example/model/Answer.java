@@ -1,6 +1,5 @@
 package com.example.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,19 +25,14 @@ public class Answer {
     @Column(name = "answerIsRight")
     private boolean right;
 
-    @JsonIgnore
-    public boolean isRight() {
-        return right;
-    }
-
-    public void setRight(boolean right) {
-        this.right = right;
-    }
+    @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    private Question question;
 
     @Builder
-    public Answer(UUID id, String title, boolean right) {
+    public Answer(UUID id, String title, boolean right, Question question) {
         this.id = id;
         this.title = title;
         this.right = right;
+        this.question = question;
     }
 }
