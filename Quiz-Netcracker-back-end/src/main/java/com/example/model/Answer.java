@@ -6,11 +6,12 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Data
-@Table(name = "answers")
+@Table(name = "ans")
 @NoArgsConstructor
 public class Answer {
     @Id
@@ -23,11 +24,11 @@ public class Answer {
     private String title;
 
     private boolean right;
-    @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    private Question question;
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    private Set<Question> question;
 
     @Builder
-    public Answer(UUID id, String title, boolean right, Question question) {
+    public Answer(UUID id, String title, boolean right, Set<Question> question) {
         this.id = id;
         this.title = title;
         this.right = right;

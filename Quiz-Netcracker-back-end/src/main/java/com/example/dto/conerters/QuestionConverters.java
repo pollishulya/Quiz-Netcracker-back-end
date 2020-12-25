@@ -1,4 +1,4 @@
-package com.example.dto.conerters;
+/*package com.example.dto.conerters;
 
 import com.example.dto.QuestionDto;
 import com.example.model.Question;
@@ -29,4 +29,4 @@ public class QuestionConverters {
         question.setId(questionDto.getId());
         return question;
     }
-}
+}*/

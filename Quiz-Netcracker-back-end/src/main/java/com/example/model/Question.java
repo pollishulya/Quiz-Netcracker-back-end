@@ -39,16 +39,21 @@ public class Question {
     @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     private Game game;
 
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    private Set<Answer> answer;
+
+
     public Question() {
     }
 
     @Builder
-    public Question(UUID id, String title, String description, Category category, Level level, Game game) {
+    public Question(UUID id, String title, String description, Category category, Level level, Game game , Set<Answer> answer) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.category = category;
         this.level = level;
         this.game = game;
+        this.answer=answer;
     }
 }

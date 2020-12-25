@@ -1,9 +1,11 @@
 package com.example.controller;
 
 import com.example.dto.RoleDto;
+//import com.example.dto.conerters.RoleConverter;
 import com.example.model.Role;
 import com.example.service.interfaces.RoleService;
 import com.example.service.mapper.RoleMapper;
+import com.example.wrapper.CollectionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,12 +29,12 @@ public class RoleController {
     @GetMapping("/roles")
     public List<RoleDto>  getRoles() {
         return roleService.findAll().stream().map(roleMapper :: toShortRoleDto ).collect(Collectors.toList());
-    @GetMapping("/all")
-    public CollectionWrapper<RoleDto> getRoles() {
-        return new CollectionWrapper<>(roleService.findAll()
-                                                  .stream()
-                                                  .map(RoleConverter::fromRoleToRoleDto)
-                                                  .collect(Collectors.toList()));
+    //@GetMapping("/all")
+    //public CollectionWrapper<RoleDto> getRoles() {
+        //return new CollectionWrapper<>(roleService.findAll()
+       //                                           .stream()
+         //                                         .map(RoleConverter::fromRoleToRoleDto)
+     //                                             .collect(Collectors.toList()));
     }
     @GetMapping("/{roleId}")
     public RoleDto getRole(@PathVariable UUID roleId) {
@@ -55,6 +57,6 @@ public class RoleController {
     @DeleteMapping("/{roleId}")
     public ResponseEntity<?> deleteRole(@PathVariable UUID roleId) {
         roleService.delete(roleId);
-        return ResponseEntity.ok().build();
+        return (ResponseEntity<?>) ResponseEntity.ok().build();
     }
 }

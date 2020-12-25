@@ -1,8 +1,10 @@
-package com.example.dto.conerters;
+/*package com.example.dto.conerters;
 
 import com.example.dto.GameDto;
 import com.example.model.Game;
+import lombok.Data;
 
+@Data
 public class GameConverters {
     public static GameDto convert(Game game) {
         GameDto gameDto = null;
@@ -27,4 +29,4 @@ public class GameConverters {
         }
         return game;
     }
-}
+}*/

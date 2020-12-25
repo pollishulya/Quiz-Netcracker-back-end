@@ -1,4 +1,4 @@
-package com.example.dto.conerters;
+/*package com.example.dto.conerters;
 
 import com.example.dto.RoleDto;
 import com.example.model.Role;
@@ -25,4 +25,4 @@ public class RoleConverter {
 //        role.setUserSet(roleDto.getUserSet());
         return role;
     }
-}
+}*/
