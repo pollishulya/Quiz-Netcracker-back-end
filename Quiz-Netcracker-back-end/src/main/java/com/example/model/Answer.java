@@ -1,7 +1,10 @@
 package com.example.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
@@ -25,7 +28,9 @@ public class Answer {
     @Column(name="answerIsRight" )
     private Boolean right;
 
-    @ManyToOne(cascade = {CascadeType.ALL},fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @JsonBackReference
+    @ManyToOne
     private Question question;
 
     @Builder

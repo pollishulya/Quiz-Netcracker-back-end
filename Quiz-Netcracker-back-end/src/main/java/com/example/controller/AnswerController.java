@@ -27,13 +27,13 @@ public class AnswerController {
 
     @GetMapping("/{id}")
     public AnswerDto getAnswer(@PathVariable UUID id) {
-        return mapper.toShortAnswerDto(answerService.getAnswerById(id)); //???тут есть 2 способа, но нужно уточнять
+        return mapper.toAnswerDto(answerService.getAnswerById(id)); //???тут есть 2 способа, но нужно уточнять
     }
 
     @GetMapping("/all")
     public List<AnswerDto> getAnswer() {
         return answerService.getALL().stream()
-                .map(mapper:: toShortAnswerDto)//???????
+                .map(mapper:: toAnswerDto)//???????
                 .collect(Collectors.toList());
     }
 

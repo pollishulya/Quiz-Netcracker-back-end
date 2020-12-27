@@ -4,6 +4,9 @@ import com.example.dto.*;
 import com.example.model.*;
 
 public interface MapperService {
+//    E fromDto (D dto);
+//    D toDto(E entity);
+//    D toShortDto(E entity);
     AnswerDto toAnswerDto(final Answer answer);
     Answer fromAnswerDto(final AnswerDto answerDto);
     AnswerDto toShortAnswerDto(final Answer answer);
