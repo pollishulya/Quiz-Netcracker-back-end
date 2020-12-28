@@ -29,7 +29,7 @@ public class Answer {
     private Boolean right;
 
     @EqualsAndHashCode.Exclude
-    @JsonBackReference
+//    @JsonBackReference
     @ManyToOne
     private Question question;
 

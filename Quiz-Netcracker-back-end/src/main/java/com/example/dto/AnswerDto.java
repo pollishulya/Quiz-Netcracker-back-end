@@ -15,6 +15,6 @@ public class AnswerDto {
     UUID id;
     String title;
     Boolean right;
-    Question question;
+    UUID question;
 
 }

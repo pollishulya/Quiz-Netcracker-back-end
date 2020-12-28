@@ -41,7 +41,7 @@ public class Question {
     @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     private Game game;
 
-    @JsonManagedReference
+//    @JsonManagedReference
     @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "question_id", referencedColumnName = "id")
     private Set<Answer> answersSet;
@@ -50,13 +50,13 @@ public class Question {
     }
 
     @Builder
-    public Question(UUID id, String title, String description, Category category, Level level, Game game, Set<Answer> answerSet) {
+    public Question(UUID id, String title, String description, Category category, Level level, Game game, Set<Answer> answersSet) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.category = category;
         this.level = level;
         this.game = game;
-        this.answersSet = answerSet;
+        this.answersSet = answersSet;
     }
 }

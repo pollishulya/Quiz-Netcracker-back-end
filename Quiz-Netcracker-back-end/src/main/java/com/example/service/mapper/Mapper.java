@@ -16,7 +16,7 @@ public class Mapper implements MapperService {
                 .id(answer.getId())
                 .title(answer.getTitle())
                 .right(answer.getRight())
-                .question(answer.getQuestion())
+                .question(answer.getQuestion().getId())
                 .build();
     }
 
@@ -26,7 +26,7 @@ public class Mapper implements MapperService {
                 .id(answerDto.getId())
                 .title(answerDto.getTitle())
                 .right(answerDto.getRight())
-                .question(answerDto.getQuestion())
+//                .question(answerDto.getQuestion())
                 .build();
     }
 
@@ -34,7 +34,7 @@ public class Mapper implements MapperService {
     public AnswerDto toShortAnswerDto(Answer answer) {
         return AnswerDto.builder()
                 .title(answer.getTitle())
-                .question(answer.getQuestion())
+                .question(answer.getQuestion().getId())
                 .build();
     }
 
