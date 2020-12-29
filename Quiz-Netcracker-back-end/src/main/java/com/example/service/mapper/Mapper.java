@@ -3,12 +3,21 @@ package com.example.service.mapper;
 import com.example.dto.*;
 import com.example.model.*;
 import com.example.service.interfaces.MapperService;
+import com.example.service.interfaces.QuestionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
 @Component
 public class Mapper implements MapperService {
+
+    private final QuestionService questionService;
+
+    @Autowired
+    public Mapper(QuestionService questionService) {
+        this.questionService = questionService;
+    }
 
     @Override
     public AnswerDto toAnswerDto(Answer answer) {
@@ -22,11 +31,12 @@ public class Mapper implements MapperService {
 
     @Override
     public Answer fromAnswerDto(AnswerDto answerDto) {
+        Question answerQuestion = questionService.getQuestionById(answerDto.getQuestion());
         return Answer.builder()
                 .id(answerDto.getId())
                 .title(answerDto.getTitle())
                 .right(answerDto.getRight())
-//                .question(answerDto.getQuestion())
+                .question(answerQuestion)
                 .build();
     }
 

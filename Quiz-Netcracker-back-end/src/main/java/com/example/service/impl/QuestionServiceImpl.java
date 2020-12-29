@@ -36,6 +36,8 @@ public class QuestionServiceImpl implements QuestionService {
             question.setDescription(questionRequest.getDescription());
             question.setCategory(questionRequest.getCategory());
             question.setLevel(questionRequest.getLevel());
+            question.getAnswersSet().clear();
+            question.getAnswersSet().addAll(questionRequest.getAnswersSet());
             return questionRepository.save(question);
         }).orElseThrow(() -> new ResourceNotFoundException("Question not found with id " + questionId));
     }

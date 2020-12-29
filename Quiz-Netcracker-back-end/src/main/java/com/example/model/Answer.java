@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -29,7 +30,7 @@ public class Answer {
     private Boolean right;
 
     @EqualsAndHashCode.Exclude
-//    @JsonBackReference
+    @ToString.Exclude
     @ManyToOne
     private Question question;
 

@@ -41,7 +41,6 @@ public class Question {
     @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     private Game game;
 
-//    @JsonManagedReference
     @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "question_id", referencedColumnName = "id")
     private Set<Answer> answersSet;
