@@ -233,4 +233,28 @@ public class Mapper implements MapperService {
                 .question(categoryDto.getQuestion())
                 .build();
     }
+
+    @Override
+    public PlayerDto toPlayerDto(Player player) {
+        return PlayerDto.builder()
+                .id(player.getId())
+                .games(player.getGame().stream().map(Game::getId).collect(Collectors.toSet()))
+                .build();
+
+    }
+
+    @Override
+    public Player fromPlayerDto(PlayerDto playerDto) {
+        return null;
+    }
+
+    /*@Override
+    public Player fromPlayerDto(PlayerDto playerDto) {
+        return Player.builder()
+                .id(playerDto.getId())
+                .game(playerDto.getGames())
+                .build();
+    }*/
 }
+
+

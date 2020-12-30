@@ -28,4 +28,7 @@ public interface MapperService {
     CategoryDto toCategoryDto(final Category category);
     CategoryDto toShortCategoryDto(final Category category);
     Category fromCategoryDro(final CategoryDto categoryDto);
+    PlayerDto toPlayerDto(final Player player);
+    Player fromPlayerDto(final PlayerDto playerDto);
+
 }
