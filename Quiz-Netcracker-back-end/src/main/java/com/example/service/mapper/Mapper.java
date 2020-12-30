@@ -3,10 +3,21 @@ package com.example.service.mapper;
 import com.example.dto.*;
 import com.example.model.*;
 import com.example.service.interfaces.MapperService;
+import com.example.service.interfaces.QuestionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 @Component
 public class Mapper implements MapperService {
+
+    private final QuestionService questionService;
+
+    @Autowired
+    public Mapper(QuestionService questionService) {
+        this.questionService = questionService;
+    }
 
     @Override
     public AnswerDto toAnswerDto(Answer answer) {
@@ -14,15 +25,18 @@ public class Mapper implements MapperService {
                 .id(answer.getId())
                 .title(answer.getTitle())
                 .right(answer.getRight())
+                .question(answer.getQuestion().getId())
                 .build();
     }
 
     @Override
     public Answer fromAnswerDto(AnswerDto answerDto) {
+        Question answerQuestion = questionService.getQuestionById(answerDto.getQuestion());
         return Answer.builder()
                 .id(answerDto.getId())
                 .title(answerDto.getTitle())
                 .right(answerDto.getRight())
+                .question(answerQuestion)
                 .build();
     }
 
@@ -30,6 +44,7 @@ public class Mapper implements MapperService {
     public AnswerDto toShortAnswerDto(Answer answer) {
         return AnswerDto.builder()
                 .title(answer.getTitle())
+                .question(answer.getQuestion().getId())
                 .build();
     }
 
@@ -150,10 +165,14 @@ public class Mapper implements MapperService {
     public QuestionDto toQuestionDto(Question question) {
         return QuestionDto.builder()
                 .id(question.getId())
-                .title(question.getDescription())
+                .title(question.getTitle())
                 .description(question.getDescription())
                 .category(question.getCategory())
                 .level(question.getLevel())
+                .answersSet(question.getAnswersSet()
+                    .stream()
+                    .map(this::toAnswerDto)
+                    .collect(Collectors.toSet()))
                 .build();
     }
 
@@ -166,6 +185,10 @@ public class Mapper implements MapperService {
                 .category(questionDto.getCategory())
                 .level(questionDto.getLevel())
                 .game(questionDto.getGame())
+                .answersSet(questionDto.getAnswersSet()
+                    .stream()
+                    .map(this::fromAnswerDto)
+                    .collect(Collectors.toSet()))
                 .build();
     }
 
@@ -177,6 +200,10 @@ public class Mapper implements MapperService {
                 .description(question.getDescription())
                 .category(question.getCategory())
                 .level(question.getLevel())
+                .answersSet(question.getAnswersSet()
+                    .stream()
+                    .map(this::toShortAnswerDto)
+                    .collect(Collectors.toSet()))
                 .build();
     }
 

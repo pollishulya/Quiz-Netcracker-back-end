@@ -30,13 +30,13 @@ public class QuestionController {
     @GetMapping("/findAllQuestions")
     public List<QuestionDto> getQuestions() {
         return questionService.findAllQuestion().stream()
-                .map(mapper::toShortQuestionDto)
+                .map(mapper::toQuestionDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/findQuestion/{questionId}")
     public QuestionDto getQuestions(@PathVariable UUID questionId) {
-        return mapper.toShortQuestionDto(questionService.getQuestionById(questionId));
+        return mapper.toQuestionDto(questionService.getQuestionById(questionId));
     }
 
     @PostMapping("/save")

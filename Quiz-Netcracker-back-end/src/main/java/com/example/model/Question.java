@@ -1,6 +1,8 @@
 package com.example.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Value;
@@ -39,17 +41,21 @@ public class Question {
     @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     private Game game;
 
+    @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "question_id", referencedColumnName = "id")
+    private Set<Answer> answersSet;
 
     public Question() {
     }
 
     @Builder
-    public Question(UUID id, String title, String description, Category category, Level level, Game game) {
+    public Question(UUID id, String title, String description, Category category, Level level, Game game, Set<Answer> answersSet) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.category = category;
         this.level = level;
         this.game = game;
+        this.answersSet = answersSet;
     }
 }
