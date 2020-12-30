@@ -1,16 +1,9 @@
 package com.example.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -26,7 +19,8 @@ public class Answer {
 
     @Column(name = "title")
     private String title;
-    @Column(name="answerIsRight" )
+
+    @Column(name = "answerIsRight")
     private Boolean right;
 
     @EqualsAndHashCode.Exclude

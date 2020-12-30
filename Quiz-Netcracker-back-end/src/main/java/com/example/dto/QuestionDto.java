@@ -1,6 +1,5 @@
 package com.example.dto;
 
-import com.example.model.Answer;
 import com.example.model.Category;
 import com.example.model.Game;
 import com.example.model.Level;

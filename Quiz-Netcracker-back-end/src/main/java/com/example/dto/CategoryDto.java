@@ -3,7 +3,6 @@ package com.example.dto;
 import com.example.model.Question;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Value;
 
 import java.util.Set;

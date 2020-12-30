@@ -33,21 +33,21 @@ public class AnswerController {
     @GetMapping("/all")
     public List<AnswerDto> getAnswer() {
         return answerService.getALL().stream()
-                .map(mapper:: toAnswerDto)//???????
+                .map(mapper::toAnswerDto)//???????
                 .collect(Collectors.toList());
     }
 
     @PostMapping("/answer")
     public AnswerDto createAnswer(@Valid @RequestBody AnswerDto answerDto) {
-        Answer answer= mapper.fromAnswerDto(answerDto);
+        Answer answer = mapper.fromAnswerDto(answerDto);
         return mapper.toAnswerDto(answerService.createAnswer(answer));
     }
 
     @PutMapping("/{id}")
     public AnswerDto updateAnswer(@PathVariable UUID id,
-                             @Valid @RequestBody AnswerDto answerDto) {
-        Answer answer= mapper.fromAnswerDto(answerDto);
-        return mapper.toAnswerDto(answerService.updateAnswer(id,answer));
+                                  @Valid @RequestBody AnswerDto answerDto) {
+        Answer answer = mapper.fromAnswerDto(answerDto);
+        return mapper.toAnswerDto(answerService.updateAnswer(id, answer));
     }
 
     @DeleteMapping("/{id}")
