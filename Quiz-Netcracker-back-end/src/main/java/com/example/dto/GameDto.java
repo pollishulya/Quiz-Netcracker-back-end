@@ -1,18 +1,14 @@
 package com.example.dto;
 
-import com.example.model.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Builder;
-import lombok.Value;
-
+import lombok.*;
 import java.util.UUID;
 
-@Builder
-@Value
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Data
 public class GameDto {
     UUID id;
     String name;
     String description;
-    User user;
+    UUID user;
 }
