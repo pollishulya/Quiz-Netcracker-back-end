@@ -3,7 +3,8 @@ package com.example.controller;
 import com.example.dto.AnswerDto;
 import com.example.model.Answer;
 import com.example.service.interfaces.AnswerService;
-import com.example.service.mapper.Mapper;
+import com.example.service.mapper.AnswerMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,36 +19,37 @@ import java.util.stream.Collectors;
 
 public class AnswerController {
     public final AnswerService answerService;
-    public final Mapper mapper;
+    private final AnswerMapper mapper;
 
-    public AnswerController(AnswerService answerService, Mapper mapper) {
+    @Autowired
+    public AnswerController(AnswerService answerService, AnswerMapper mapper) {
         this.answerService = answerService;
         this.mapper = mapper;
     }
 
     @GetMapping("/{id}")
     public AnswerDto getAnswer(@PathVariable UUID id) {
-        return mapper.toAnswerDto(answerService.getAnswerById(id)); //???тут есть 2 способа, но нужно уточнять
+        return mapper.toDto(answerService.getAnswerById(id));
     }
 
     @GetMapping("/all")
     public List<AnswerDto> getAnswer() {
         return answerService.getALL().stream()
-                .map(mapper::toAnswerDto)//???????
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @PostMapping("/answer")
     public AnswerDto createAnswer(@Valid @RequestBody AnswerDto answerDto) {
-        Answer answer = mapper.fromAnswerDto(answerDto);
-        return mapper.toAnswerDto(answerService.createAnswer(answer));
+        Answer answer = mapper.toEntity(answerDto);
+        return mapper.toDto(answerService.createAnswer(answer));
     }
 
     @PutMapping("/{id}")
     public AnswerDto updateAnswer(@PathVariable UUID id,
                                   @Valid @RequestBody AnswerDto answerDto) {
-        Answer answer = mapper.fromAnswerDto(answerDto);
-        return mapper.toAnswerDto(answerService.updateAnswer(id, answer));
+        Answer answer = mapper.toEntity(answerDto);
+        return mapper.toDto(answerService.updateAnswer(id, answer));
     }
 
     @DeleteMapping("/{id}")

@@ -3,7 +3,7 @@ package com.example.controller;
 import com.example.dto.UserDto;
 import com.example.model.User;
 import com.example.service.interfaces.UserService;
-import com.example.service.mapper.Mapper;
+import com.example.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +19,10 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserService userService;
-    private final Mapper mapper;
+    private final UserMapper mapper;
+
     @Autowired
-    public UserController(UserService userService, Mapper mapper) {
+    public UserController(UserService userService, UserMapper mapper) {
         this.userService = userService;
         this.mapper = mapper;
     }
@@ -38,15 +39,15 @@ public class UserController {
 
     @PostMapping("/save")
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
-        User user= mapper.fromUserDto(userDto);
-        return mapper.toUserDto(userService.saveUser(user));
+        User user= mapper.toEntity(userDto);
+        return mapper.toDto(userService.saveUser(user));
     }
 
     @PutMapping("/update/{userId}")
     public UserDto updateUser(@PathVariable UUID userId,
                                    @Valid @RequestBody UserDto userDto) {
-        User user= mapper.fromUserDto(userDto);
-        return mapper.toUserDto(userService.updateUser(userId, user));
+        User user= mapper.toEntity(userDto);
+        return mapper.toDto(userService.updateUser(userId, user));
     }
 
     @DeleteMapping("/delete/{userId}")
