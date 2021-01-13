@@ -1,6 +1,6 @@
-package com.example.service.validation;
+package com.example.service.validation.annotation;
 
-import com.example.service.validation.impl.AnswerTitleValidator;
+import com.example.service.validation.annotation.impl.AnswersSetValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -11,12 +11,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Documented
-@Constraint(validatedBy = AnswerTitleValidator.class)
-//TODO Повесить над классом Question и Answer
-//@Target({ ElementType })
+@Constraint(validatedBy = AnswersSetValidator.class)
+@Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AnswerTitleConstraint {
-    String message() default "Wrong answer title";
+public @interface AnswersSetConstraint {
+    String message() default "Answer title is null or duplicate";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

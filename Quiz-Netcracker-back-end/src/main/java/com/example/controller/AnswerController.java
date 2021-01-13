@@ -1,14 +1,17 @@
 package com.example.controller;
 
 import com.example.dto.AnswerDto;
+import com.example.exception.ArgumentNotValidException;
 import com.example.model.Answer;
 import com.example.service.interfaces.AnswerService;
 import com.example.service.mapper.AnswerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.example.service.validation.group.CreateValidationGroup;
+import com.example.service.validation.group.UpdateValidationGroup;
+import com.example.service.validation.validator.impl.BaseCustomValidator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -20,11 +23,15 @@ import java.util.stream.Collectors;
 public class AnswerController {
     public final AnswerService answerService;
     private final AnswerMapper mapper;
+    private final BaseCustomValidator baseCustomValidator;
 
     @Autowired
-    public AnswerController(AnswerService answerService, AnswerMapper mapper) {
+    public AnswerController(AnswerService answerService,
+                            AnswerMapper mapper,
+                            BaseCustomValidator baseCustomValidator) {
         this.answerService = answerService;
         this.mapper = mapper;
+        this.baseCustomValidator = baseCustomValidator;
     }
 
     @GetMapping("/{id}")
@@ -40,14 +47,22 @@ public class AnswerController {
     }
 
     @PostMapping("/answer")
-    public AnswerDto createAnswer(@Valid @RequestBody AnswerDto answerDto) {
+    public AnswerDto createAnswer(@RequestBody AnswerDto answerDto) {
+        String errorMessages = baseCustomValidator.validate(answerDto, CreateValidationGroup.class);
+        if (!errorMessages.isEmpty()) {
+            throw new ArgumentNotValidException(errorMessages);
+        }
         Answer answer = mapper.toEntity(answerDto);
         return mapper.toDto(answerService.createAnswer(answer));
     }
 
     @PutMapping("/{id}")
     public AnswerDto updateAnswer(@PathVariable UUID id,
-                                  @Valid @RequestBody AnswerDto answerDto) {
+                                  @RequestBody AnswerDto answerDto) {
+        String errorMessages = baseCustomValidator.validate(answerDto, UpdateValidationGroup.class);
+        if (!errorMessages.isEmpty()) {
+            throw new ArgumentNotValidException(errorMessages);
+        }
         Answer answer = mapper.toEntity(answerDto);
         return mapper.toDto(answerService.updateAnswer(id, answer));
     }
