@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -18,12 +20,12 @@ public class BaseCustomValidator implements CustomValidator {
     }
 
     @Override
-    public <T> String validate(T entity, Class<?> constraintGroup) {
-        StringBuilder message = new StringBuilder();
+    public <T> Map<String, String> validate(T entity, Class<?> constraintGroup) {
+        Map<String, String> propertyViolation = new HashMap<>();
         Set<ConstraintViolation<T>> entityViolations = validator.validate(entity, constraintGroup);
         for (ConstraintViolation<T> violation: entityViolations) {
-            message.append(violation.getPropertyPath().toString()).append(": ").append(violation.getMessage()).append("; ");
+            propertyViolation.put(violation.getPropertyPath().toString(), violation.getMessage());
         }
-        return message.toString();
+        return propertyViolation;
     }
 }

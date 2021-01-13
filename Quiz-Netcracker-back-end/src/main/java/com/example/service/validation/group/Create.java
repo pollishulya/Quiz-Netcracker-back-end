@@ -1,4 +1,4 @@
 package com.example.service.validation.group;
 
-public interface UpdateValidationGroup {
+public interface Create {
 }

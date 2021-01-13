@@ -1,8 +1,8 @@
 package com.example.dto;
 
 import com.example.service.validation.annotation.AnswersSetConstraint;
-import com.example.service.validation.group.CreateValidationGroup;
-import com.example.service.validation.group.UpdateValidationGroup;
+import com.example.service.validation.group.Create;
+import com.example.service.validation.group.Update;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import javax.validation.Valid;
@@ -12,12 +12,12 @@ import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
-@AnswersSetConstraint(groups = {CreateValidationGroup.class, UpdateValidationGroup.class})
+@AnswersSetConstraint(groups = {Create.class, Update.class})
 public class QuestionDto {
     UUID id;
-    @NotNull(message = "Shouldn't be null", groups = {CreateValidationGroup.class, UpdateValidationGroup.class} )
+    @NotNull(message = "Shouldn't be null", groups = {Create.class, Update.class} )
     String title;
-    @NotNull(message = "Shouldn't be null", groups = {CreateValidationGroup.class, UpdateValidationGroup.class} )
+    @NotNull(message = "Shouldn't be null", groups = {Create.class, Update.class} )
     String description;
     UUID category;
     UUID level;

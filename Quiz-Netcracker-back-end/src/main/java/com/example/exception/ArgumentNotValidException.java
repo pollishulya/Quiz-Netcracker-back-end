@@ -1,15 +1,14 @@
 package com.example.exception;
 
+import com.example.exception.detail.ErrorInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.BAD_REQUEST)
-public class ArgumentNotValidException extends RuntimeException {
-    public ArgumentNotValidException(String message) {
-        super(message);
-    }
+import java.util.Map;
 
-    public ArgumentNotValidException(String message, Throwable cause) {
-        super(message, cause);
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public class ArgumentNotValidException extends QuizBaseException {
+    public ArgumentNotValidException(ErrorInfo errorInfo, Map<String, String> propertyViolation) {
+        super(errorInfo, propertyViolation);
     }
 }

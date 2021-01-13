@@ -2,17 +2,19 @@ package com.example.controller;
 
 import com.example.dto.QuestionDto;
 import com.example.exception.ArgumentNotValidException;
+import com.example.exception.detail.ErrorInfo;
 import com.example.model.Question;
 import com.example.service.interfaces.QuestionService;
 import com.example.service.mapper.QuestionMapper;
-import com.example.service.validation.group.CreateValidationGroup;
-import com.example.service.validation.group.UpdateValidationGroup;
-import com.example.service.validation.validator.impl.BaseCustomValidator;
+import com.example.service.validation.group.Create;
+import com.example.service.validation.group.Update;
+import com.example.service.validation.validator.CustomValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -20,18 +22,17 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = {"http://localhost:4200"})
 @RequestMapping("/question")
 public class QuestionController {
-
     private final QuestionService questionService;
     private final QuestionMapper mapper;
-    private final BaseCustomValidator baseCustomValidator;
+    private final CustomValidator customValidator;
 
     @Autowired
     public QuestionController(QuestionService questionService,
                               QuestionMapper mapper,
-                              BaseCustomValidator baseCustomValidator) {
+                              CustomValidator customValidator) {
         this.questionService = questionService;
         this.mapper = mapper;
-        this.baseCustomValidator = baseCustomValidator;
+        this.customValidator = customValidator;
     }
 
     @GetMapping("/findAllQuestions")
@@ -48,9 +49,9 @@ public class QuestionController {
 
     @PostMapping("/save")
     public QuestionDto createQuestion(@RequestBody QuestionDto questionDto) {
-        String errorMessages = baseCustomValidator.validate(questionDto, CreateValidationGroup.class);
-        if (!errorMessages.isEmpty()) {
-            throw new ArgumentNotValidException(errorMessages);
+        Map<String, String> propertyViolation = customValidator.validate(questionDto, Create.class);
+        if (!propertyViolation.isEmpty()) {
+            throw new ArgumentNotValidException(ErrorInfo.VALIDATION_ERROR, propertyViolation);
         }
         Question question = mapper.toEntity(questionDto);
         return mapper.toDto(questionService.saveQuestion(question));
@@ -59,9 +60,9 @@ public class QuestionController {
     @PutMapping("/update/{questionId}")
     public QuestionDto updateQuestion(@PathVariable UUID questionId,
                                       @RequestBody QuestionDto questionRequest) {
-        String errorMessages = baseCustomValidator.validate(questionRequest, UpdateValidationGroup.class);
-        if (!errorMessages.isEmpty()) {
-            throw new ArgumentNotValidException(errorMessages);
+        Map<String, String> propertyViolation = customValidator.validate(questionRequest, Update.class);
+        if (!propertyViolation.isEmpty()) {
+            throw new ArgumentNotValidException(ErrorInfo.VALIDATION_ERROR, propertyViolation);
         }
         Question question = mapper.toEntity(questionRequest);
         return mapper.toDto(questionService.updateQuestion(questionId, question));

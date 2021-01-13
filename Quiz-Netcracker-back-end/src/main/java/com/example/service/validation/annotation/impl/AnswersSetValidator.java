@@ -2,9 +2,7 @@ package com.example.service.validation.annotation.impl;
 
 import com.example.dto.AnswerDto;
 import com.example.dto.QuestionDto;
-import com.example.service.interfaces.QuestionService;
 import com.example.service.validation.annotation.AnswersSetConstraint;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -22,19 +20,31 @@ public class AnswersSetValidator implements ConstraintValidator<AnswersSetConstr
     public boolean isValid(QuestionDto questionDto, ConstraintValidatorContext constraintValidatorContext) {
         Set<AnswerDto> answerDtoSet = questionDto.getAnswersSet();
         List<AnswerDto> answerDtoList = new ArrayList<>(answerDtoSet);
+        boolean isValid = true;
 
         for (int i = 0; i < answerDtoList.size() - 1; i++) {
             for (int j = i + 1; j < answerDtoList.size(); j++) {
                 try {
                     if (answerDtoList.get(i).getTitle().equals(answerDtoList.get(j).getTitle())) {
-                        return false;
+                        i = answerDtoList.size();
+                        isValid = false;
+                        break;
                     }
                 }
                 catch (NullPointerException exception) {
-                    return false;
+                    i = answerDtoList.size();
+                    isValid = false;
+                    break;
                 }
             }
         }
-        return true;
+        if (!isValid) {
+            constraintValidatorContext.disableDefaultConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate(
+                    constraintValidatorContext.getDefaultConstraintMessageTemplate())
+                    .addPropertyNode("title")
+                    .addConstraintViolation();
+        }
+        return isValid;
     }
 }
