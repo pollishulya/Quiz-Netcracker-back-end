@@ -34,6 +34,10 @@ public class Level {
     @OneToMany(cascade = {CascadeType.ALL},mappedBy = "level",fetch = FetchType.LAZY)
     private Set<Question> questions = new HashSet<>();
 
+  public Level() {
+
+    }
+
     @Builder
     public Level(UUID id, String title, String description, Set<Question> questions) {
         this.id = id;

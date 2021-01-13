@@ -1,11 +1,14 @@
 package com.example.controller;
 
 import com.example.dto.UserDto;
+import com.example.model.RoleList;
 import com.example.model.User;
+import com.example.security.LoginModel;
 import com.example.service.interfaces.UserService;
 import com.example.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,11 +23,13 @@ public class UserController {
 
     private final UserService userService;
     private final UserMapper mapper;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     public UserController(UserService userService, UserMapper mapper) {
         this.userService = userService;
         this.mapper = mapper;
+        bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
     @GetMapping("/findAllUsers")
@@ -54,5 +59,13 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable UUID userId) {
         userService.deleteUser(userId);
         return ResponseEntity.ok().build();
+    }
+    @PostMapping("/register")
+    UUID singUpr(@RequestBody LoginModel loginModel){
+        User userFacade = new User(loginModel.getUsername(),
+                bCryptPasswordEncoder.encode(loginModel.getPassword()));
+        userFacade.setRole(RoleList.USER);
+        userService.saveUser(userFacade);
+        return userFacade.getId();
     }
 }

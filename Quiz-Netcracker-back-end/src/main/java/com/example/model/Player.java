@@ -39,5 +39,9 @@ public class Player {
         this.user = user;
         this.game = game;
     }
+
+    public Player() {
+
+    }
 }
 

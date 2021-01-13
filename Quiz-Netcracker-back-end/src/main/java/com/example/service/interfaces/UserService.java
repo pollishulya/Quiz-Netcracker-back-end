@@ -11,4 +11,8 @@ public interface UserService {
     User updateUser(UUID userId, User userRequest);
     void deleteUser(UUID userId);
     User getUserById(UUID userId);
+    //User getUserByLogin(String login);
+   // User findUserByUserName(String userName);
+
+    User findUserByUsername(String userName);
 }

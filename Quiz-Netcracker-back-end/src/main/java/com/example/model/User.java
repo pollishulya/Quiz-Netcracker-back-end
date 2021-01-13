@@ -6,9 +6,7 @@ import lombok.Data;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -32,6 +30,8 @@ public class User {
 
     private String role;
 
+
+
     /*@ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinTable(name = "userRole",
             joinColumns = @JoinColumn(columnDefinition = "userId"),
@@ -52,5 +52,21 @@ public class User {
         this.password = password;
         this.role = role;
         this.game = game;
+    }
+
+    public User() {
+
+    }
+
+    public User(String username, String password) {
+        this.login = username;
+        this.password = password;
+    }
+
+    public List<String> getRoleList(){
+        if(this.role.length() > 0){
+            return Arrays.asList(this.role.split(","));
+        }
+        return new ArrayList<>();
     }
 }
