@@ -22,7 +22,7 @@ public class GameMapper implements Mapper<Game, GameDto> {
         gameDto.setId(entity.getId());
         gameDto.setDescription(entity.getDescription());
         gameDto.setName(entity.getName());
-        gameDto.setUser(entity.getUser().getId());
+ //       gameDto.setUser(entity.getUser().getId());
         return gameDto;
     }
 

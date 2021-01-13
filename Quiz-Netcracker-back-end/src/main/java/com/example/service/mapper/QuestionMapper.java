@@ -33,22 +33,22 @@ public class QuestionMapper implements Mapper<Question, QuestionDto> {
         questionDto.setId(entity.getId());
         questionDto.setTitle(entity.getTitle());
         questionDto.setDescription(entity.getDescription());
-        questionDto.setCategory(entity.getCategory().getId());
-        questionDto.setLevel(entity.getLevel().getId());
-        questionDto.setGame(entity.getGame().getId());
-        questionDto.setAnswersSet(entity.getAnswersSet()
-                .stream()
-                .map(Answer::getId)
-                .collect(Collectors.toSet()));
+//        questionDto.setCategory(entity.getCategory().getId());
+//        questionDto.setLevel(entity.getLevel().getId());
+//        questionDto.setGame(entity.getGame().getId());
+//        questionDto.setAnswersSet(entity.getAnswersSet()
+//                .stream()
+//                .map(Answer::getId)
+//                .collect(Collectors.toSet()));
         return questionDto;
     }
 
     @Override
     public Question toEntity(QuestionDto dto) {
-        Set<Answer> answers = dto.getAnswersSet()
-                .stream()
-                .map(answerService::getAnswerById)
-                .collect(Collectors.toSet());
+//        Set<Answer> answers = dto.getAnswersSet()
+//                .stream()
+//                .map(answerService::getAnswerById)
+//                .collect(Collectors.toSet());
         Category category = categoryService.findCategoryById(dto.getCategory());
         Level level = levelService.findLevelById(dto.getLevel());
         Game game = gameService.findGameById(dto.getGame());
@@ -59,7 +59,7 @@ public class QuestionMapper implements Mapper<Question, QuestionDto> {
         question.setCategory(category);
         question.setLevel(level);
         question.setGame(game);
-        question.setAnswersSet(answers);
+      //  question.setAnswersSet(answers);
         return question;
     }
 

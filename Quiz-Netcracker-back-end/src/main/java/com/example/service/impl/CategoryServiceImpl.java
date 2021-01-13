@@ -18,7 +18,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category findCategoryById(UUID id) {
-        return categoryRepository.findById(id).orElse(null);
+        return categoryRepository.getCategoryById(id);
     }
 
     @Override

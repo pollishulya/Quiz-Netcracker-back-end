@@ -3,6 +3,7 @@ package com.example.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -13,16 +14,13 @@ import java.util.UUID;
 @Entity
 @Table(name = "levels")
 @Data
+@NoArgsConstructor
 public class Level {
     @Id
     @GeneratedValue
     @Type(type = "pg-uuid")
     @Column(name = "id")
     private UUID id;
-
-//    @NotBlank
-//    @Size(min = 3, max = 100)
-//    private String title;
 
     @Column(name = "title")
     private String title;
@@ -33,10 +31,6 @@ public class Level {
     @JsonIgnore
     @OneToMany(cascade = {CascadeType.ALL},mappedBy = "level",fetch = FetchType.LAZY)
     private Set<Question> questions = new HashSet<>();
-
-  public Level() {
-
-    }
 
     @Builder
     public Level(UUID id, String title, String description, Set<Question> questions) {

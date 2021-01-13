@@ -3,6 +3,7 @@ package com.example.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "players")
 @Data
+@NoArgsConstructor
 public class Player {
 
     @Id
@@ -38,10 +40,6 @@ public class Player {
         this.id = id;
         this.user = user;
         this.game = game;
-    }
-
-    public Player() {
-
     }
 }
 

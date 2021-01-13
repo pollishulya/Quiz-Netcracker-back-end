@@ -32,22 +32,24 @@ public class CategoryMapper implements Mapper<Category, CategoryDto> {
 
     @Override
     public Category toEntity(CategoryDto dto) {
-        Set<Question> questions = dto.getQuestion()
-                .stream()
-                .map(questionService::getQuestionById)
-                .collect(Collectors.toSet());
+//        Set<Question> questions = dto.getQuestion()
+//                .stream()
+//                .map(questionService::getQuestionById)
+//                .collect(Collectors.toSet());
         Category category = new Category();
         category.setId(dto.getId());
         category.setName(dto.getName());
         category.setDescription(dto.getDescription());
-        category.setQuestion(questions);
+        //category.setQuestion(questions);
         return category;
     }
 
     @Override
     public CategoryDto toShortDto(Category entity) {
         CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setId(entity.getId());
         categoryDto.setName(entity.getName());
+        categoryDto.setDescription(entity.getDescription());
         return categoryDto;
     }
 }

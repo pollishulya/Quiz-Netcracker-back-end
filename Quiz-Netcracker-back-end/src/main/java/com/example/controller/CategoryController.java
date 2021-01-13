@@ -14,6 +14,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = {"http://localhost:4200"})
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -29,7 +30,7 @@ public class CategoryController {
     public List<CategoryDto> getCategories() {
         return categoryService.findAllCategory()
                 .stream()
-                .map(mapper::toShortDto)
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 

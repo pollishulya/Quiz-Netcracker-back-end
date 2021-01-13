@@ -34,7 +34,7 @@ public class UserController {
 
     @GetMapping("/findAllUsers")
     public List<UserDto> getUsers() {
-        return userService.findAllUser().stream().map(mapper:: toShortDto).collect(Collectors.toList());
+        return userService.findAllUser().stream().map(mapper:: toDto).collect(Collectors.toList());
     }
 
     @GetMapping("/findUser/{userId}")
@@ -43,9 +43,10 @@ public class UserController {
     }
 
     @PostMapping("/save")
-    public UserDto createUser(@Valid @RequestBody UserDto userDto) {
-        User user= mapper.toEntity(userDto);
-        return mapper.toDto(userService.saveUser(user));
+    public User createUser(@Valid @RequestBody User usero) {
+        //User user= mapper.toEntity(userDto);
+        //return mapper.toDto(userService.saveUser(user));
+        return userService.saveUser(usero);
     }
 
     @PutMapping("/update/{userId}")

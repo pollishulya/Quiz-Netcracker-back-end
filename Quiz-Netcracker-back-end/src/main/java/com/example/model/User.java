@@ -3,6 +3,7 @@ package com.example.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.*;
 @Entity
 @Table(name = "users")
 @Data
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue
@@ -30,14 +32,6 @@ public class User {
 
     private String role;
 
-
-
-    /*@ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinTable(name = "userRole",
-            joinColumns = @JoinColumn(columnDefinition = "userId"),
-            inverseJoinColumns = @JoinColumn(columnDefinition = "roleId"))
-    private Set<Role> roleSet = new HashSet<>();*/
-
     @JsonIgnore
     @OneToMany(cascade = {CascadeType.ALL},
             //orphanRemoval=true,
@@ -52,10 +46,6 @@ public class User {
         this.password = password;
         this.role = role;
         this.game = game;
-    }
-
-    public User() {
-
     }
 
     public User(String username, String password) {
