@@ -24,7 +24,7 @@ public class Answer {
     private Boolean right;
 
     @EqualsAndHashCode.Exclude
-//    @ToString.Exclude
+    @ToString.Exclude
     @ManyToOne
     private Question question;
 
