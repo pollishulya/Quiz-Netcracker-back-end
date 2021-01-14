@@ -32,20 +32,13 @@ public class User {
 
     private String role;
 
-    @JsonIgnore
-    @OneToMany(cascade = {CascadeType.ALL},
-            //orphanRemoval=true,
-            mappedBy = "user", fetch = FetchType.LAZY)
-    private Set<Game> game = new HashSet<>();
-
     @Builder
-    public User(UUID id, String mail, String login, String password, String role, Set<Game> game) {
+    public User(UUID id, String mail, String login, String password, String role) {
         this.id = id;
         this.mail = mail;
         this.login = login;
         this.password = password;
         this.role = role;
-        this.game = game;
     }
 
     public User(String username, String password) {

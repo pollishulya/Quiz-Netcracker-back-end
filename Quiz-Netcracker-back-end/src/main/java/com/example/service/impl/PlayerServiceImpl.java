@@ -34,7 +34,6 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public Player updatePlayer(UUID playerId, User playerRequest) {
         return playerRepository.findById(playerId).map(player -> {
-            player.setGame(playerRequest.getGame());
             return playerRepository.save(player);
         }).orElseThrow(() -> new ResourceNotFoundException("Player not found with id " + playerId));
     }

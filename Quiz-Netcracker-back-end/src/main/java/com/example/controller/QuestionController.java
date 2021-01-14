@@ -35,16 +35,16 @@ public class QuestionController {
         this.customValidator = customValidator;
     }
 
-    @GetMapping("/findAllQuestions")
+    @GetMapping()
     public List<QuestionDto> getQuestions() {
         return questionService.findAllQuestion().stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/findQuestion/{questionId}")
+    @GetMapping("/{questionId}")
     public QuestionDto getQuestions(@PathVariable UUID questionId) {
-        return mapper.toDto(questionService.getQuestionById(questionId));
+        return mapper.toShortDto(questionService.getQuestionById(questionId));
     }
 
     @PostMapping("/save")

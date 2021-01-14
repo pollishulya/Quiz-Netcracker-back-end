@@ -8,7 +8,7 @@ import java.util.UUID;
 @Data
 public class GameDto {
     UUID id;
-    String name;
+    String title;
     String description;
     UUID user;
 }

@@ -20,8 +20,8 @@ public class GameMapper implements Mapper<Game, GameDto> {
     public GameDto toDto(Game entity) {
         GameDto gameDto = new GameDto();
         gameDto.setId(entity.getId());
+        gameDto.setTitle(entity.getTitle());
         gameDto.setDescription(entity.getDescription());
-        gameDto.setName(entity.getName());
  //       gameDto.setUser(entity.getUser().getId());
         return gameDto;
     }
@@ -32,7 +32,7 @@ public class GameMapper implements Mapper<Game, GameDto> {
         Game game = new Game();
         game.setId(dto.getId());
         game.setDescription(dto.getDescription());
-        game.setName(dto.getName());
+        game.setTitle(dto.getTitle());
         game.setUser(user);
         return game;
     }
@@ -40,7 +40,7 @@ public class GameMapper implements Mapper<Game, GameDto> {
     @Override
     public GameDto toShortDto(Game entity) {
         GameDto gameDto = new GameDto();
-        gameDto.setName(entity.getName());
+        gameDto.setTitle(entity.getTitle());
         gameDto.setDescription(entity.getDescription());
         return gameDto;
     }

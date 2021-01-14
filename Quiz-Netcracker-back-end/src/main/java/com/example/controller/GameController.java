@@ -26,35 +26,35 @@ public class GameController {
 
     @GetMapping("/{id}")
     public GameDto getGame(@PathVariable UUID id) {
-        return mapper.toShortDto(gameService.findGameById(id));
+        return mapper.toDto(gameService.findGameById(id));
     }
 
-    @GetMapping("/{name}")
-    public GameDto getGameByName(@PathVariable String name) {
-        return mapper.toDto(gameService.findGameByName(name));
-    }
+//    @GetMapping("/{title}")
+//    public GameDto getGameByName(@PathVariable String title) {
+//        return mapper.toDto(gameService.findGameByName(title));
+//    }
 
-    @GetMapping("/all")
+    @GetMapping()
     public List<GameDto> getGames() {
         return gameService.findAllGames().stream()
-                .map(mapper:: toShortDto)
+                .map(mapper:: toDto)
                 .collect(Collectors.toList());
     }
 
-    @PostMapping("/game")
+    @PostMapping("/save")
     public GameDto createGame(@Valid @RequestBody GameDto gameDto) {
         Game game= mapper.toEntity(gameDto);
         return mapper.toDto(gameService.createGame(game));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public GameDto updateGame(@PathVariable UUID id,
                                @Valid @RequestBody GameDto gameDto) {
         Game game= mapper.toEntity(gameDto);
         return mapper.toDto(gameService.updateGame(id,game));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteGame(@PathVariable UUID id) {
         gameService.deleteGame(id);
         return ResponseEntity.ok().build();
