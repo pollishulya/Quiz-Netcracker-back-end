@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:4200"})
+@RequestMapping("/level")
 public class LevelController {
     private final LevelService levelService;
     private final LevelMapper mapper;
@@ -25,32 +26,32 @@ public class LevelController {
         this.mapper = mapper;
     }
 
-    @GetMapping("/levels")
+    @GetMapping()
     public List<LevelDto> getLevels() {
         return levelService.findAll().stream()
-                .map(mapper:: toShortDto)
+                .map(mapper:: toDto)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/levels/{levelId}")
+    @GetMapping("/{levelId}")
     public LevelDto getLevel(@PathVariable UUID levelId) {
         return mapper.toDto(levelService.findLevelById(levelId));
     }
 
-    @PostMapping("/levels")
+    @PostMapping("save")
     public LevelDto createLevel(@Valid @RequestBody LevelDto levelDto) {
         Level level= mapper.toEntity(levelDto);
         return mapper.toDto(levelService.save(level));
     }
 
-    @PutMapping("/levels/{levelId}")
+    @PutMapping("/update/{levelId}")
     public LevelDto updateLevel(@PathVariable UUID levelId,
                              @Valid @RequestBody LevelDto levelDto) {
         Level level= mapper.toEntity(levelDto);
         return mapper.toDto(levelService.update(levelId,level));
     }
 
-    @DeleteMapping("/levels/{levelId}")
+    @DeleteMapping("/delete/{levelId}")
     public ResponseEntity<?> deleteLevel(@PathVariable UUID levelId) {
         levelService.delete(levelId);
         return ResponseEntity.ok().build();

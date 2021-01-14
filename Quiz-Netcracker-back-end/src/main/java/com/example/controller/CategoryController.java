@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:4200"})
+@RequestMapping("/category")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -26,7 +27,7 @@ public class CategoryController {
         this.mapper = mapper;
     }
 
-    @GetMapping("/categories")
+    @GetMapping()
     public List<CategoryDto> getCategories() {
         return categoryService.findAllCategory()
                 .stream()
@@ -34,25 +35,25 @@ public class CategoryController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/categories/{categoryId}")
+    @GetMapping("/{categoryId}")
     public CategoryDto getQuestions(@PathVariable UUID categoryId) {
         return mapper.toDto(categoryService.findCategoryById(categoryId));
     }
 
-    @PostMapping("/category")
+    @PostMapping("/save")
     public CategoryDto createCategory(@Valid @RequestBody CategoryDto categoryDto) {
         Category category = mapper.toEntity(categoryDto);
         return mapper.toDto(categoryService.saveCategory(category));
     }
 
-    @PutMapping("/category/{categoryId}")
+    @PutMapping("/update/{categoryId}")
     public CategoryDto updateCategory(@PathVariable UUID categoryId,
                                    @Valid @RequestBody CategoryDto categoryDto) {
         Category category = mapper.toEntity(categoryDto);
         return mapper.toDto(categoryService.updateCategory(categoryId, category));
     }
 
-    @DeleteMapping("/category/{categoryId}")
+    @DeleteMapping("/delete/{categoryId}")
     public ResponseEntity<?> deleteCategory(@PathVariable UUID categoryId) {
         categoryService.deleteCategory(categoryId);
         return ResponseEntity.ok().build();

@@ -9,7 +9,7 @@ import java.util.UUID;
 @Data
 public class CategoryDto {
     UUID id;
-    String name;
+    String title;
     String description;
     Set<UUID> question;
 }
