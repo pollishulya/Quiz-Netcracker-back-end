@@ -1,6 +1,7 @@
 package com.example.service.impl;
 
 import com.example.exception.ResourceNotFoundException;
+import com.example.model.Answer;
 import com.example.model.Question;
 import com.example.repository.QuestionRepository;
 import com.example.service.interfaces.QuestionService;
@@ -8,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
@@ -26,7 +29,14 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Question saveQuestion(Question question) {
-        return questionRepository.save(question);
+        Question question1 = questionRepository.save(question);
+        Set<Answer> answersSet = question1.getAnswersSet()
+                .stream()
+                .peek(answer -> answer.setQuestion(question1))
+                .collect(Collectors.toSet());
+        question1.getAnswersSet().clear();
+        question1.getAnswersSet().addAll(answersSet);
+        return question1;
     }
 
     @Override
