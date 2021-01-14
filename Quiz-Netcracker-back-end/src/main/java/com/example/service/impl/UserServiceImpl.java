@@ -42,7 +42,10 @@ public class UserServiceImpl implements UserService {
             user.setPassword(userRequest.getPassword());
             user.setMail(userRequest.getMail());
             user.setRole(userRequest.getRole());
-            user.setGame(userRequest.getGame());
+//            if (userRequest.getGame() != null) {
+//                user.getGame().clear();
+//                user.getGame().addAll(userRequest.getGame());
+//            }
             return userRepository.save(user);
         }).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + userId));
     }

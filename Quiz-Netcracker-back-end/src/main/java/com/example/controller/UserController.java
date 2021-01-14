@@ -39,6 +39,7 @@ public class UserController {
 
     @GetMapping("/findUser/{userId}")
     public UserDto getUsers(@PathVariable UUID userId) {
+
         return mapper.toShortDto(userService.getUserById(userId));
     }
 
