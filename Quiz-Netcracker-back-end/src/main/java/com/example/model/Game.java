@@ -21,7 +21,7 @@ public class Game {
     private UUID id;
 
     @Column(name = "name")
-    private String name;
+    private String title;
 
     @Column(name = "description")
     private String description;
@@ -31,9 +31,9 @@ public class Game {
     private User user;
 
     @Builder
-    public Game(UUID id, String name, String description, User user, Set<Question> questionsSet) {
+    public Game(UUID id, String name, String description, User user) {
         this.id = id;
-        this.name = name;
+        this.title = name;
         this.description = description;
         this.user = user;
     }

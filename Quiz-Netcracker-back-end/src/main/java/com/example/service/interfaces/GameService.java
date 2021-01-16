@@ -9,7 +9,7 @@ public interface GameService {
     Game createGame(Game game);
     void deleteGame(UUID id);
     Game updateGame(UUID id, Game game);
-    Game findGameByName(String name);
+//    Game findGameByTitle(String name);
     Game findGameById(UUID id);
     List<Game> findAllGames();
 }

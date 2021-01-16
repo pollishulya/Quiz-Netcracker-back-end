@@ -23,20 +23,15 @@ public class Category {
     private UUID id;
 
     @Column(name = "name")
-    private String name;
+    private String title;
 
     @Column(name = "description")
     private String description;
 
-    @JsonIgnore
-    @OneToMany(cascade = {CascadeType.ALL},mappedBy = "category",fetch = FetchType.LAZY)
-    private Set<Question> question = new HashSet<>();
-
     @Builder
-    public Category(UUID id, String name, String description, Set<Question> question) {
+    public Category(UUID id, String name, String description) {
         this.id = id;
-        this.name = name;
+        this.title = name;
         this.description = description;
-        this.question = question;
     }
 }

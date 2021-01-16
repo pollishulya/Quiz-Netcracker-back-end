@@ -35,7 +35,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Category updateCategory(UUID categoryId, Category categoryRequest) {
         return categoryRepository.findById(categoryId).map(category -> {
             category.setDescription(categoryRequest.getDescription());
-            category.setName(categoryRequest.getName());
+            category.setTitle(categoryRequest.getTitle());
             return categoryRepository.save(category);
         }).orElseThrow(() -> new ResourceNotFoundException("Question not found with id " + categoryId));
     }

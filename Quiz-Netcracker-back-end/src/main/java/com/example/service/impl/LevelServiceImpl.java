@@ -39,7 +39,6 @@ public class LevelServiceImpl implements LevelService {
         return levelRepository.findById(id).map(level -> {
             level.setTitle(levelRequest.getTitle());
             level.setDescription(levelRequest.getDescription());
-            level.setQuestions(levelRequest.getQuestions());
             return levelRepository.save(level);
         }).orElseThrow(() -> new ResourceNotFoundException("Level not found with id " + id));
     }

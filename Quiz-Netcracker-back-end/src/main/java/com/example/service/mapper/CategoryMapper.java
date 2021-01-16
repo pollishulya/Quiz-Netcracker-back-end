@@ -1,12 +1,10 @@
 package com.example.service.mapper;
 
-import com.example.dto.*;
-import com.example.model.*;
-import com.example.service.interfaces.*;
+import com.example.dto.CategoryDto;
+import com.example.model.Category;
+import com.example.service.interfaces.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class CategoryMapper implements Mapper<Category, CategoryDto> {
@@ -21,26 +19,17 @@ public class CategoryMapper implements Mapper<Category, CategoryDto> {
     public CategoryDto toDto(Category entity) {
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setId(entity.getId());
-        categoryDto.setName(entity.getName());
+        categoryDto.setTitle(entity.getTitle());
         categoryDto.setDescription(entity.getDescription());
-        categoryDto.setQuestion(entity.getQuestion()
-                .stream()
-                .map(Question::getId)
-                .collect(Collectors.toSet()));
         return categoryDto;
     }
 
     @Override
     public Category toEntity(CategoryDto dto) {
-//        Set<Question> questions = dto.getQuestion()
-//                .stream()
-//                .map(questionService::getQuestionById)
-//                .collect(Collectors.toSet());
         Category category = new Category();
         category.setId(dto.getId());
-        category.setName(dto.getName());
+        category.setTitle(dto.getTitle());
         category.setDescription(dto.getDescription());
-        //category.setQuestion(questions);
         return category;
     }
 
@@ -48,7 +37,7 @@ public class CategoryMapper implements Mapper<Category, CategoryDto> {
     public CategoryDto toShortDto(Category entity) {
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setId(entity.getId());
-        categoryDto.setName(entity.getName());
+        categoryDto.setTitle(entity.getTitle());
         categoryDto.setDescription(entity.getDescription());
         return categoryDto;
     }

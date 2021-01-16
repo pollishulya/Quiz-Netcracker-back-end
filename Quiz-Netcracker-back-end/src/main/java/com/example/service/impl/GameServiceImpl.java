@@ -32,6 +32,7 @@ public class GameServiceImpl implements GameService {
     public Game updateGame(UUID id, Game gameReq)
     {
         return gameRepository.findById(id).map(game->{
+            game.setTitle(gameReq.getTitle());
             game.setDescription(gameReq.getDescription());
             return  gameRepository.save(game);
         }).orElseThrow(()-> new ResourceNotFoundException("Object not found"));
@@ -42,10 +43,10 @@ public class GameServiceImpl implements GameService {
         return gameRepository.findGameById(id);
     }
 
-    @Override
-    public Game findGameByName(String name) {
-        return gameRepository.findGameByName(name);
-    }
+//    @Override
+//    public Game findGameByName(String title) {
+//        return gameRepository.findGameByTitle(title);
+//    }
 
     @Override
     public List<Game> findAllGames() {
