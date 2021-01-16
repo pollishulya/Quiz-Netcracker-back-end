@@ -1,8 +1,10 @@
 package com.example.controller;
 
+import antlr.ASTFactory;
 import com.example.dto.UserDto;
 import com.example.model.RoleList;
 import com.example.model.User;
+import com.example.security.JwtProperties;
 import com.example.security.LoginModel;
 import com.example.service.interfaces.UserService;
 import com.example.service.mapper.UserMapper;
@@ -10,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import com.auth0.jwt.JWT;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -39,9 +43,9 @@ public class UserController {
 
     @GetMapping("/findUser/{userId}")
     public UserDto getUsers(@PathVariable UUID userId) {
-
         return mapper.toShortDto(userService.getUserById(userId));
     }
+
 
     @PostMapping("/save")
     public User createUser(@Valid @RequestBody User usero) {
@@ -62,12 +66,26 @@ public class UserController {
         userService.deleteUser(userId);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/users/{username}")
+    public UserDto getOneAccount(@PathVariable String username) {
+        return mapper.toDto(userService.findUserByUsername(username));
+    }
+
     @PostMapping("/register")
-    UUID singUpr(@RequestBody LoginModel loginModel){
+    UUID singUp(@RequestBody LoginModel loginModel){
         User userFacade = new User(loginModel.getUsername(),
-                bCryptPasswordEncoder.encode(loginModel.getPassword()));
+                loginModel.getMail(),
+                bCryptPasswordEncoder.encode(loginModel.getPassword())
+        );
         userFacade.setRole(RoleList.USER);
         userService.saveUser(userFacade);
+
         return userFacade.getId();
+    }
+
+    @RequestMapping(value = "/login", method = { RequestMethod.POST, RequestMethod.GET})
+    public User loginAccount(@RequestBody User account) {
+        return userService.login(account);
     }
 }

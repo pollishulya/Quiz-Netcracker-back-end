@@ -64,4 +64,19 @@ public class UserServiceImpl implements UserService {
     public User findUserByUsername(String username) {
         return userRepository.findUserByLogin(username);
     }
+
+//    @Override
+//    public User confirmAccount(String token) {
+//        VerificationToken passedToken = verificationTokenRepository.findByToken(token);
+//        User account = userRepository.findUserByLogin(passedToken.getUser().getLogin());
+//       // account.setActive(1);
+//        userRepository.save(account);
+//        return account;
+//    }
+
+    @Override
+    public User login(User account) {
+        return userRepository.findByLoginAndPassword(account.getLogin(),
+                account.getPassword());
+    }
 }

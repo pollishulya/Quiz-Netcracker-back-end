@@ -13,6 +13,7 @@ public interface UserService {
     User getUserById(UUID userId);
     //User getUserByLogin(String login);
    // User findUserByUserName(String userName);
-
+   // User confirmAccount(String token);
+    User login(User account);
     User findUserByUsername(String userName);
 }
