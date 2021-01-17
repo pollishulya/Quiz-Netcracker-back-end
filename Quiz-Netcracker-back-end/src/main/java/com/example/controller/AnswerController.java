@@ -44,7 +44,7 @@ public class AnswerController {
     @GetMapping("/all")
     public List<AnswerDto> getAnswer() {
         return answerService.getALL().stream()
-                .map(mapper::toDto)
+                .map(mapper::toShortDto)
                 .collect(Collectors.toList());
     }
 
