@@ -33,13 +33,8 @@ public class QuestionMapper implements Mapper<Question, QuestionDto> {
         questionDto.setId(entity.getId());
         questionDto.setTitle(entity.getTitle());
         questionDto.setDescription(entity.getDescription());
-//<<<<<<< HEAD
-//        questionDto.setCategory(entity.getCategory().getId());
-//        questionDto.setLevel(entity.getLevel().getId());
-//=======
-//        questionDto.setCategory(entity.getCategory().getId());
-//        questionDto.setLevel(entity.getLevel().getId());
-//>>>>>>> 56a8ac9... Added game creation
+        questionDto.setCategory(entity.getCategory().getId());
+        questionDto.setLevel(entity.getLevel().getId());
         questionDto.setGame(entity.getGame().getId());
         questionDto.setAnswersSet(entity.getAnswersSet()
                 .stream()
