@@ -48,10 +48,9 @@ public class UserController {
 
 
     @PostMapping("/save")
-    public User createUser(@Valid @RequestBody User usero) {
-        //User user= mapper.toEntity(userDto);
-        //return mapper.toDto(userService.saveUser(user));
-        return userService.saveUser(usero);
+    public UserDto createUser(@Valid @RequestBody UserDto userDto) {
+        User user= mapper.toEntity(userDto);
+        return mapper.toDto(userService.saveUser(user));
     }
 
     @PutMapping("/update/{userId}")

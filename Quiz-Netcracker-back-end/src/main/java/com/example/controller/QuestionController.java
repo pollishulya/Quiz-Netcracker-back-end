@@ -38,13 +38,20 @@ public class QuestionController {
     @GetMapping()
     public List<QuestionDto> getQuestions() {
         return questionService.findAllQuestion().stream()
-                .map(mapper::toDto)
+                .map(mapper::toShortDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{questionId}")
     public QuestionDto getQuestions(@PathVariable UUID questionId) {
-        return mapper.toShortDto(questionService.getQuestionById(questionId));
+        return mapper.toDto(questionService.getQuestionById(questionId));
+    }
+
+    @GetMapping("/game/{gameId}")
+    public List<QuestionDto> getQuestionsByGameId(@PathVariable UUID gameId){
+        return questionService.getQuestionsByGameId(gameId).stream()
+                .map(mapper::toShortDto)
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/save")
