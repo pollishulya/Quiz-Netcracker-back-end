@@ -16,4 +16,5 @@ public interface UserService {
    // User confirmAccount(String token);
     User login(User account);
     User findUserByUsername(String userName);
+    //User findUserByUsernameAn(String userName);
 }
