@@ -4,6 +4,8 @@ import com.example.exception.ResourceNotFoundException;
 import com.example.model.Game;
 import com.example.repository.GameRepository;
 import com.example.service.interfaces.GameService;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +23,11 @@ public class GameServiceImpl implements GameService {
     @Override
     public Game createGame(Game game) {
         return gameRepository.save(game);
+    }
+
+
+    public List<Game> searchGamesByTitle(String title) {
+        return gameRepository.findAllByTitleContaining(title);
     }
 
     @Override
@@ -43,13 +50,15 @@ public class GameServiceImpl implements GameService {
         return gameRepository.findGameById(id);
     }
 
-//    @Override
-//    public Game findGameByName(String title) {
-//        return gameRepository.findGameByTitle(title);
-//    }
+    @Override
+    public Game findGameByTitle(String title) {
+        return gameRepository.findGameByTitle(title);
+    }
 
     @Override
     public List<Game> findAllGames() {
         return gameRepository.findAll();
     }
+
+
 }

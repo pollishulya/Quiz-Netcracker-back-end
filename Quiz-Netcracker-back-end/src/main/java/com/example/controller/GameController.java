@@ -24,15 +24,22 @@ public class GameController {
         this.mapper = mapper;
     }
 
+    @GetMapping("/searchByTitle/{title}")
+    public List<GameDto> searchGamesByTitle(@PathVariable String title) {
+        return gameService.searchGamesByTitle(title).stream()
+                .map(mapper:: toDto)
+                .collect(Collectors.toList());
+    }
+
     @GetMapping("/{id}")
     public GameDto getGame(@PathVariable UUID id) {
         return mapper.toDto(gameService.findGameById(id));
     }
 
-//    @GetMapping("/{title}")
-//    public GameDto getGameByName(@PathVariable String title) {
-//        return mapper.toDto(gameService.findGameByName(title));
-//    }
+    @GetMapping("/getByTitle/{title}")
+    public GameDto getGameByTitle(@PathVariable String title) {
+       return mapper.toDto(gameService.findGameByTitle(title));
+    }
 
     @GetMapping()
     public List<GameDto> getGames() {
