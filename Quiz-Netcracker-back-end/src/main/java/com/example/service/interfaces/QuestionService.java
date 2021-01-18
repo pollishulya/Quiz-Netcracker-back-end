@@ -6,8 +6,9 @@ import java.util.*;
 public interface QuestionService {
     List<Question> findAllQuestion();
     Question saveQuestion(Question question);
-    Question updateQuestion(UUID questionId, Question questionRequest);
-    void deleteQuestion(UUID questionId);
-    Question getQuestionById(UUID questionId);
-    List<Question> getQuestionsByCategoryId(UUID category);
+    Question updateQuestion(UUID id, Question questionRequest);
+    void deleteQuestion(UUID id);
+    Question getQuestionById(UUID id);
+    List<Question> getQuestionsByCategoryId(UUID id);
+    List<Question> getQuestionsByGameId(UUID id);
 }

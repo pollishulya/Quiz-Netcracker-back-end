@@ -33,9 +33,9 @@ public class QuestionMapper implements Mapper<Question, QuestionDto> {
         questionDto.setId(entity.getId());
         questionDto.setTitle(entity.getTitle());
         questionDto.setDescription(entity.getDescription());
-//        questionDto.setCategory(entity.getCategory().getId());
-//        questionDto.setLevel(entity.getLevel().getId());
-//        questionDto.setGame(entity.getGame().getId());
+        questionDto.setCategory(entity.getCategory().getId());
+        questionDto.setLevel(entity.getLevel().getId());
+        questionDto.setGame(entity.getGame().getId());
         questionDto.setAnswersSet(entity.getAnswersSet()
                 .stream()
                 .map(answerMapper::toDto)
@@ -73,7 +73,7 @@ public class QuestionMapper implements Mapper<Question, QuestionDto> {
         questionDto.setLevel(entity.getLevel().getId());
         questionDto.setAnswersSet(entity.getAnswersSet()
                 .stream()
-                .map(answerMapper::toDto)
+                .map(answerMapper::toShortDto)
                 .collect(Collectors.toSet()));
         return questionDto;
     }

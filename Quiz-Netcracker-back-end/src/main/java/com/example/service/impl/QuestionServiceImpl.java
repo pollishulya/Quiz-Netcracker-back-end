@@ -68,4 +68,10 @@ public class QuestionServiceImpl implements QuestionService {
     public List<Question> getQuestionsByCategoryId(UUID categoryId) {
         return questionRepository.getQuestionByCategoryId(categoryId);
     }
+
+    @Override
+    public List<Question> getQuestionsByGameId(UUID id) {
+        return questionRepository.getQuestionByGameId(id);
+    }
+
 }

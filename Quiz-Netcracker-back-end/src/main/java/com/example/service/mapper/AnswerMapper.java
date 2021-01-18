@@ -40,6 +40,7 @@ public class AnswerMapper implements Mapper<Answer, AnswerDto> {
     @Override
     public AnswerDto toShortDto(Answer entity) {
         AnswerDto answerDto = new AnswerDto();
+        answerDto.setId(entity.getId());
         answerDto.setTitle(entity.getTitle());
         answerDto.setQuestion(entity.getQuestion().getId());
         return answerDto;
