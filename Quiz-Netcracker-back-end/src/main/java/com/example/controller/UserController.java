@@ -6,6 +6,7 @@ import com.example.model.RoleList;
 import com.example.model.User;
 import com.example.security.JwtProperties;
 import com.example.security.LoginModel;
+import com.example.security.UserRoleList;
 import com.example.service.interfaces.UserService;
 import com.example.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class UserController {
 
     @GetMapping("/findUser/{userId}")
     public UserDto getUsers(@PathVariable UUID userId) {
-        return mapper.toShortDto(userService.getUserById(userId));
+        return mapper.toDto(userService.getUserById(userId));
     }
 
 
@@ -77,14 +78,10 @@ public class UserController {
                 loginModel.getMail(),
                 bCryptPasswordEncoder.encode(loginModel.getPassword())
         );
-        userFacade.setRole(RoleList.USER);
+        userFacade.setRole(UserRoleList.USER);
         userService.saveUser(userFacade);
 
         return userFacade.getId();
     }
 
-    @RequestMapping(value = "/login", method = { RequestMethod.POST, RequestMethod.GET})
-    public User loginAccount(@RequestBody User account) {
-        return userService.login(account);
-    }
 }

@@ -1,5 +1,6 @@
 package com.example.security;
 
+import com.example.model.RoleList;
 import com.example.service.interfaces.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,9 +38,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(),this.userService))
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST,"/login").permitAll()
+                .antMatchers(HttpMethod.GET,"/question").hasRole(RoleList.USER)
                 .antMatchers(HttpMethod.POST,"/users/register").permitAll()
-                .antMatchers(HttpMethod.POST,"/question/*").permitAll()
-                .antMatchers(HttpMethod.GET,"/question/*").permitAll()
+//                .antMatchers(HttpMethod.POST,"/question/*").permitAll()
+//                .antMatchers(HttpMethod.GET,"/question/*").permitAll()
+                .antMatchers("/logout").authenticated()
+                .antMatchers("/games/*").hasRole(RoleList.USER)
+                .antMatchers("/users/*").hasRole(RoleList.ADMIN)
                 .anyRequest().permitAll();
     }
 

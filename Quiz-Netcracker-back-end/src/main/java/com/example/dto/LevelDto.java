@@ -10,5 +10,4 @@ public class LevelDto {
     UUID id;
     String title;
     String description;
-    Set<UUID> questions;
 }

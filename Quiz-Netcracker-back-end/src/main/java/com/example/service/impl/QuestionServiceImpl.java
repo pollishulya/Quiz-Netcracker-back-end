@@ -30,12 +30,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Question saveQuestion(Question question) {
         Question question1 = questionRepository.save(question);
-        Set<Answer> answersSet = question1.getAnswersSet()
-                .stream()
-                .peek(answer -> answer.setQuestion(question1))
-                .collect(Collectors.toSet());
-        question1.getAnswersSet().clear();
-        question1.getAnswersSet().addAll(answersSet);
+        setQuestionToAnswers(question1);
         return question1;
     }
 
@@ -74,4 +69,12 @@ public class QuestionServiceImpl implements QuestionService {
         return questionRepository.getQuestionByGameId(id);
     }
 
+    public void setQuestionToAnswers(Question question1) {
+        Set<Answer> answersSet = question1.getAnswersSet()
+                .stream()
+                .peek(answer -> answer.setQuestion(question1))
+                .collect(Collectors.toSet());
+        question1.getAnswersSet().clear();
+        question1.getAnswersSet().addAll(answersSet);
+    }
 }
