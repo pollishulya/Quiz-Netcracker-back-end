@@ -11,5 +11,4 @@ public class CategoryDto {
     UUID id;
     String title;
     String description;
-    Set<UUID> question;
 }

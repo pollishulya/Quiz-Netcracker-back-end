@@ -3,6 +3,8 @@ package com.example.model;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -13,6 +15,7 @@ import java.util.UUID;
 @Table(name = "questions")
 @Data
 @Builder
+@NoArgsConstructor
 public class Question {
     @Id
     @GeneratedValue
@@ -35,15 +38,14 @@ public class Question {
     @JoinColumn(name = "levelId")
     private Level level;
 
-    @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToOne
     private Game game;
 
     @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "question_id", referencedColumnName = "id")
     private Set<Answer> answersSet;
-
-    public Question() {
-    }
 
     @Builder
     public Question(UUID id, String title, String description, Category category, Level level, Game game, Set<Answer> answersSet) {
