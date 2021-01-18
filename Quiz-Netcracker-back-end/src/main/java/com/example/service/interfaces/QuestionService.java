@@ -11,4 +11,5 @@ public interface QuestionService {
     Question getQuestionById(UUID id);
     List<Question> getQuestionsByCategoryId(UUID id);
     List<Question> getQuestionsByGameId(UUID id);
+    void setQuestionToAnswers(Question question);
 }

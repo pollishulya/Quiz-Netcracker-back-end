@@ -30,6 +30,10 @@ public class Game {
     @JoinColumn(name = "userId")
     private User user;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "game_id", referencedColumnName = "id")
+    private Set<Question> questions;
+
     @Builder
     public Game(UUID id, String name, String description, User user) {
         this.id = id;
