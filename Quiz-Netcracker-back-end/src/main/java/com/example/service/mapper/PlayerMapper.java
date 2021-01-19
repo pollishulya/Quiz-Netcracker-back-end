@@ -1,50 +1,54 @@
 package com.example.service.mapper;
 
 import com.example.dto.PlayerDto;
-import com.example.model.Game;
 import com.example.model.Player;
-import com.example.service.interfaces.GameService;
+import com.example.model.User;
+import com.example.repository.UserRepository;
+import com.example.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @Component
 public class PlayerMapper implements Mapper<Player, PlayerDto> {
-    private final GameService gameService;
+   // private final UserService userService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public PlayerMapper(GameService gameService) {
-        this.gameService = gameService;
+    public PlayerMapper( UserRepository userRepository) {
+        //this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @Override
     public PlayerDto toDto(Player entity) {
         PlayerDto playerDto = new PlayerDto();
         playerDto.setId(entity.getId());
-        playerDto.setGames(entity.getGame()
-                .stream()
-                .map(Game::getId)
-                .collect(Collectors.toSet()));
+        playerDto.setName(entity.getName());
+        playerDto.setEmail(entity.getEmail());
+        playerDto.setPhoto(entity.getPhoto());
+        playerDto.setUser(entity.getUser().getId());
         return playerDto;
     }
 
     @Override
     public Player toEntity(PlayerDto dto) {
-        Set<Game> games = dto.getGames()
-                .stream()
-                .map(gameService::findGameById)
-                .collect(Collectors.toSet());
         Player player = new Player();
+        User user = userRepository.findUserById(dto.getUser());
         player.setId(dto.getId());
-        player.setGame(games);
+        player.setName(dto.getName());
+        player.setEmail(dto.getEmail());
+        player.setPhoto(dto.getPhoto());
+        player.setUser(user);
         return player;
     }
 
-    // Всего 2 параметра в сущности, пока что не знаю что здесь резонно вернуть
     @Override
     public PlayerDto toShortDto(Player entity) {
-        return null;
+        PlayerDto playerDto = new PlayerDto();
+        playerDto.setId(entity.getId());
+//        playerDto.setEmail(entity.getEmail());
+//        playerDto.setPhoto(entity.getPhoto());
+        playerDto.setUser(entity.getUser().getId());
+        return playerDto;
     }
 }

@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-
 
 @Entity
 @Table(name = "players")
@@ -24,22 +24,37 @@ public class Player {
     @Column(name = "id")
     private UUID id;
 
+    @Column
+    private String name;
+
+    @Column
+    private String email;
+
+    private String photo;
+
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
     private User user;
 
-    @JsonIgnore
-    @OneToMany(cascade = {CascadeType.ALL},
-            //orphanRemoval=true,
-            mappedBy = "user", fetch = FetchType.LAZY)
-    private Set<Game> game = new HashSet<>();
-
-
-    @Builder
-    public Player(UUID id, User user, Set<Game> game) {
+    public Player(UUID id, String name, String email, String photo, User user) {
         this.id = id;
+        this.name=name;
+        this.email = email;
+        this.photo = photo;
         this.user = user;
-        this.game = game;
+    }
+
+    public Player(String login, User user) {
+        this.user = user;
+        this.name=login;
+    }
+
+    public Player(String login) {
+        this.name=login;
+    }
+
+    public Player(String mail, String login, User user) {
+        this.name=login;
+        this.email = mail;
+        this.user = user;
     }
 }
-

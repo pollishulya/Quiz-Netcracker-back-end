@@ -12,5 +12,6 @@ public class UserDto {
     String password;
     String login;
     String roles;
-    Set<UUID> games;
+    UUID player;
+   // Set<UUID> games;
 }

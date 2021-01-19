@@ -8,5 +8,8 @@ import java.util.*;
 @Data
 public class PlayerDto {
     UUID id;
-    Set<UUID> games;
+    String name;
+    String email;
+    String photo;
+    UUID user;
 }

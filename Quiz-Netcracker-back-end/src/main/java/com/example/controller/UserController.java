@@ -1,10 +1,10 @@
 package com.example.controller;
 
-import antlr.ASTFactory;
 import com.example.dto.UserDto;
+import com.example.model.Player;
 import com.example.model.RoleList;
 import com.example.model.User;
-import com.example.security.JwtProperties;
+import com.example.repository.PlayerRepository;
 import com.example.security.LoginModel;
 import com.example.security.UserRoleList;
 import com.example.service.interfaces.UserService;
@@ -13,10 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import com.auth0.jwt.JWT;
 
 import javax.validation.Valid;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,11 +27,14 @@ public class UserController {
     private final UserService userService;
     private final UserMapper mapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PlayerRepository playerRepository;
+
 
     @Autowired
-    public UserController(UserService userService, UserMapper mapper) {
+    public UserController(UserService userService, UserMapper mapper, PlayerRepository playerRepository) {
         this.userService = userService;
         this.mapper = mapper;
+        this.playerRepository = playerRepository;
         bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -75,13 +76,37 @@ public class UserController {
     @PostMapping("/register")
     UUID singUp(@RequestBody LoginModel loginModel){
         User userFacade = new User(loginModel.getUsername(),
-                loginModel.getMail(),
+                loginModel.getEmail(),
                 bCryptPasswordEncoder.encode(loginModel.getPassword())
         );
-        userFacade.setRole(UserRoleList.USER);
+        userFacade.setRole(RoleList.USER);
+
+      //  userFacade.setPlayer(player);
         userService.saveUser(userFacade);
 
         return userFacade.getId();
     }
 
+
+    @PostMapping("/registerPlayer")
+    UUID singUp(@RequestBody Player player){
+//        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+//        // user.setStatus(true);
+//        //  user.setActive(1);   //TODO Make front validation depending on active
+//        user.setRole(role);
+        User user = setUser(player.getUser(), RoleList.USER);  //TODO check on presence in DB
+        user.setPlayer(player);
+        userService.saveUser(user);
+        playerRepository.save(player);
+       // sendRegistrationEmail(account, client.getEmail());
+        return user.getId();
+    }
+    private User setUser(User user, String role) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        // user.setStatus(true);
+        //  user.setActive(1);   //TODO Make front validation depending on active
+        user.setRole(role);
+
+        return user;
+    }
 }

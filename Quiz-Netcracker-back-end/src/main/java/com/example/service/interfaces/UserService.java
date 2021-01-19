@@ -1,6 +1,8 @@
 package com.example.service.interfaces;
 
+import com.example.model.Player;
 import com.example.model.User;
+import com.example.security.LoginModel;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,5 +18,6 @@ public interface UserService {
    // User confirmAccount(String token);
     User login(User account);
     User findUserByUsername(String userName);
+    //Player registerPlayer(LoginModel player);
     //User findUserByUsernameAn(String userName);
 }
