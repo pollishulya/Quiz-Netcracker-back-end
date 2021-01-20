@@ -73,10 +73,20 @@ public class UserController {
         return mapper.toDto(userService.findUserByUsername(username));
     }
 
+    @RequestMapping(value = "/loginA", method = { RequestMethod.POST, RequestMethod.GET})
+    public User loginAccount(@RequestBody LoginModel loginModel) {
+        User userFacade = new User(loginModel.getUsername(),
+                loginModel.getLogin(),
+                bCryptPasswordEncoder.encode(loginModel.getPassword())
+        );
+        return userService.login(userFacade);
+    }
+
+
     @PostMapping("/register")
     UUID singUp(@RequestBody LoginModel loginModel){
         User userFacade = new User(loginModel.getUsername(),
-                loginModel.getEmail(),
+                loginModel.getLogin(),
                 bCryptPasswordEncoder.encode(loginModel.getPassword())
         );
         userFacade.setRole(RoleList.USER);

@@ -55,7 +55,7 @@ public class UserMapper implements Mapper<User, UserDto> {
     public UserDto toShortDto(User entity) {
         UserDto userDto = new UserDto();
         userDto.setLogin(entity.getLogin());
-        userDto.setRoles(entity.getRole());
+        userDto.setPassword(entity.getPassword());
         return userDto;
     }
 }

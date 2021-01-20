@@ -4,19 +4,19 @@ public class LoginModel {
     private String username;
     private String password;
     private String email;
-  //  private String login;
+    private String login;
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-//    public String getLogin() {
-//        return login;
-//    }
-//
-//    public void setLogin(String login) {
-//        this.login = login;
-//    }
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
 
     public String getUsername() {
         return username;

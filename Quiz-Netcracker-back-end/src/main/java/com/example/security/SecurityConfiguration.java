@@ -44,7 +44,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                .antMatchers(HttpMethod.GET,"/question/*").permitAll()
                 .antMatchers("/logout").authenticated()
                 .antMatchers("/games/*").hasRole(RoleList.USER)
-                .antMatchers("/users/*").hasRole(RoleList.ADMIN)
+                .antMatchers("/users/*").permitAll()
                 .anyRequest().permitAll();
     }
 
