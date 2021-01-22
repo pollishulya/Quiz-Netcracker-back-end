@@ -47,7 +47,7 @@ public class GameController {
     @GetMapping()
     public List<GameDto> getGames() {
         return gameService.findAllGames().stream()
-                .map(mapper:: toDto)
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -57,19 +57,19 @@ public class GameController {
         if (!propertyViolation.isEmpty()) {
             throw new ArgumentNotValidException(ErrorInfo.VALIDATION_ERROR, propertyViolation);
         }
-        Game game= mapper.toEntity(gameDto);
+        Game game = mapper.toEntity(gameDto);
         return mapper.toDto(gameService.createGame(game));
     }
 
     @PutMapping("/update/{id}")
     public GameDto updateGame(@PathVariable UUID id,
-                               @Valid @RequestBody GameDto gameDto) {
+                              @Valid @RequestBody GameDto gameDto) {
         Map<String, String> propertyViolation = customValidator.validate(gameDto, Update.class);
         if (!propertyViolation.isEmpty()) {
             throw new ArgumentNotValidException(ErrorInfo.VALIDATION_ERROR, propertyViolation);
         }
-        Game game= mapper.toEntity(gameDto);
-        return mapper.toDto(gameService.updateGame(id,game));
+        Game game = mapper.toEntity(gameDto);
+        return mapper.toDto(gameService.updateGame(id, game));
     }
 
     @DeleteMapping("/delete/{id}")

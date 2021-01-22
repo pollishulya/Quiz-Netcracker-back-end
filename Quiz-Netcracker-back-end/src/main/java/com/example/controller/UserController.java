@@ -6,7 +6,6 @@ import com.example.model.RoleList;
 import com.example.model.User;
 import com.example.repository.PlayerRepository;
 import com.example.security.LoginModel;
-import com.example.security.UserRoleList;
 import com.example.service.interfaces.UserService;
 import com.example.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +104,6 @@ public class UserController {
 //        //  user.setActive(1);   //TODO Make front validation depending on active
 //        user.setRole(role);
         User user = setUser(player.getUser(), RoleList.USER);  //TODO check on presence in DB
-        user.setPlayer(player);
         userService.saveUser(user);
         playerRepository.save(player);
        // sendRegistrationEmail(account, client.getEmail());

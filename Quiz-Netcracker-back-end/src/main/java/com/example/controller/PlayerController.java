@@ -40,7 +40,7 @@ public class PlayerController {
 
     @GetMapping("/id/{id}")
     public PlayerDto getPlayerById(@PathVariable UUID id) {
-        return mapper.toDto(playerService.findPlayerById(id));
+        return mapper.toDto(playerService.findPlayerByUserId(id));
     }
 
     @GetMapping()

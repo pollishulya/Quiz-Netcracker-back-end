@@ -28,17 +28,17 @@ public class Game {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    private User user;
+    private Player player;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "game_id", referencedColumnName = "id")
     private Set<Question> questions;
 
     @Builder
-    public Game(UUID id, String name, String description, User user) {
+    public Game(UUID id, String name, String description, Player player) {
         this.id = id;
         this.title = name;
         this.description = description;
-        this.user = user;
+        this.player = player;
     }
 }

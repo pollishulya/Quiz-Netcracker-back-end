@@ -32,26 +32,22 @@ public class User {
 
     private String role;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "player_id")
-    private Player player;
+//    @Builder
+//    public User(UUID id, String mail, String login, String password, String role) {
+//        this.id = id;
+//        this.mail = mail;
+//        this.login = login;
+//        this.password = password;
+//        this.role = role;
+//    }
 
-    @Builder
     public User(UUID id, String mail, String login, String password, String role) {
         this.id = id;
         this.mail = mail;
         this.login = login;
         this.password = password;
         this.role = role;
-    }
-
-    public User(UUID id, String mail, String login, String password, String role, Player player) {
-        this.id = id;
-        this.mail = mail;
-        this.login = login;
-        this.password = password;
-        this.role = role;
-        this.player = player;
+//        this.player = player;
     }
 
     public User(String username, String password) {

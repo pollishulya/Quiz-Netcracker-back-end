@@ -2,9 +2,10 @@ package com.example.service.mapper;
 
 import com.example.dto.GameDto;
 import com.example.model.Game;
+import com.example.model.Player;
 import com.example.model.User;
+import com.example.service.interfaces.PlayerService;
 import com.example.service.interfaces.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -13,11 +14,12 @@ import java.util.stream.Collectors;
 public class GameMapper implements Mapper<Game, GameDto> {
     private final UserService userService;
     private final QuestionMapper questionMapper;
+    private final PlayerService playerService;
 
-    @Autowired
-    public GameMapper(UserService userService, QuestionMapper questionMapper) {
+    public GameMapper(UserService userService, QuestionMapper questionMapper, PlayerService playerService) {
         this.userService = userService;
         this.questionMapper = questionMapper;
+        this.playerService = playerService;
     }
 
     @Override
@@ -30,13 +32,13 @@ public class GameMapper implements Mapper<Game, GameDto> {
                 .stream()
                 .map(questionMapper::toDto)
                 .collect(Collectors.toSet()));
- //       gameDto.setUser(entity.getUser().getId());
+        gameDto.setPlayer(entity.getPlayer().getId());
         return gameDto;
     }
 
     @Override
     public Game toEntity(GameDto dto) {
-//        User user = userService.getUserById(dto.getUser());
+        Player player = playerService.findPlayerByUserId(dto.getPlayer());
         Game game = new Game();
         game.setId(dto.getId());
         game.setDescription(dto.getDescription());
@@ -45,7 +47,7 @@ public class GameMapper implements Mapper<Game, GameDto> {
                 .stream()
                 .map(questionMapper::toEntity)
                 .collect(Collectors.toSet()));
-//        game.setUser(user);
+        game.setPlayer(player);
         return game;
     }
 

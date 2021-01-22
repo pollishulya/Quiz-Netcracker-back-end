@@ -42,8 +42,7 @@ public class UserServiceImpl implements UserService {
 //        }
 //        user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
 //        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        Player player= new Player(user.getMail(),user.getLogin(),user);
-        user.setPlayer(player);
+        Player player= new Player(user.getMail(),user.getLogin(),user);        user.setPlayer(player);
         userRepository.save(user);
         playerRepository.save(player);
         return  user;

@@ -15,4 +15,5 @@ public interface PlayerService {
     Player findPlayer(String property);
     Player findPlayerById(UUID id);
 
+    Player findPlayerByUserId(UUID player);
 }
