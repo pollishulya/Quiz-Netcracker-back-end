@@ -13,11 +13,6 @@ public interface UserService {
     User updateUser(UUID userId, User userRequest);
     void deleteUser(UUID userId);
     User getUserById(UUID userId);
-    //User getUserByLogin(String login);
-   // User findUserByUserName(String userName);
-   // User confirmAccount(String token);
     User login(User account);
     User findUserByUsername(String userName);
-    //Player registerPlayer(LoginModel player);
-    //User findUserByUsernameAn(String userName);
 }

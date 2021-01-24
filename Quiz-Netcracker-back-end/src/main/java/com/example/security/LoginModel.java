@@ -3,11 +3,11 @@ package com.example.security;
 public class LoginModel {
     private String username;
     private String password;
-    private String email;
+    private String mail;
     private String login;
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 
     public String getLogin() {
@@ -34,7 +34,7 @@ public class LoginModel {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public String getMail() {
+        return mail;
     }
 }
