@@ -3,7 +3,6 @@ package com.example.service.mapper;
 import com.example.dto.GameDto;
 import com.example.model.Game;
 import com.example.model.Player;
-import com.example.model.User;
 import com.example.service.interfaces.PlayerService;
 import com.example.service.interfaces.UserService;
 import org.springframework.stereotype.Component;

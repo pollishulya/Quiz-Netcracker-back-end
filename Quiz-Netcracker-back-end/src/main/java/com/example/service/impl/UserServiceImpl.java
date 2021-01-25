@@ -2,11 +2,9 @@ package com.example.service.impl;
 
 import com.example.exception.ResourceNotFoundException;
 import com.example.model.Player;
-import com.example.model.RoleList;
 import com.example.model.User;
 import com.example.repository.PlayerRepository;
 import com.example.repository.UserRepository;
-import com.example.security.LoginModel;
 import com.example.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -42,10 +40,10 @@ public class UserServiceImpl implements UserService {
 //        }
 //        user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
 //        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        Player player= new Player(user.getMail(),user.getLogin(),user);        user.setPlayer(player);
+        Player player = new Player(user.getMail(), user.getLogin(), user);
         userRepository.save(user);
         playerRepository.save(player);
-        return  user;
+        return user;
     }
 
     @Override
@@ -69,7 +67,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(UUID userId){
+    public User getUserById(UUID userId) {
         return userRepository.findUserById(userId);
     }
 
@@ -105,8 +103,8 @@ public class UserServiceImpl implements UserService {
 
     private User setUser(User user, String role) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-       // user.setStatus(true);
-      //  user.setActive(1);   //TODO Make front validation depending on active
+        // user.setStatus(true);
+        //  user.setActive(1);   //TODO Make front validation depending on active
         user.setRole(role);
 
         return user;

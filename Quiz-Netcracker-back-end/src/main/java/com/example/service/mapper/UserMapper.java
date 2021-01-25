@@ -22,7 +22,7 @@ public class UserMapper implements Mapper<User, UserDto> {
         userDto.setMail(entity.getMail());
         userDto.setLogin(entity.getLogin());
         userDto.setPassword(entity.getPassword());
-        userDto.setRoles(entity.getRole());
+        userDto.setRole(entity.getRole());
        // userDto.setPlayer(entity.getPlayer().getId());
 //        userDto.setGames(entity.getGame()
 //                .stream()

@@ -27,7 +27,7 @@ public class Game {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "playerId")
     private Player player;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
@@ -35,7 +35,7 @@ public class Game {
     private Set<Question> questions;
 
     @Builder
-    public Game(UUID id, String name, String description, Player player) {
+    public Game(UUID id, String name, String description, Player player, GameRoom gameRoom) {
         this.id = id;
         this.title = name;
         this.description = description;

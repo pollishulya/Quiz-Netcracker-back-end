@@ -19,8 +19,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:4200"})
 @RequestMapping("/users")
+@CrossOrigin(origins = {"http://localhost:4200"})
 public class UserController {
 
     private final UserService userService;
@@ -67,7 +67,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/users/{username}")
+    @GetMapping("/{username}")
     public UserDto getOneAccount(@PathVariable String username) {
         return mapper.toDto(userService.findUserByUsername(username));
     }

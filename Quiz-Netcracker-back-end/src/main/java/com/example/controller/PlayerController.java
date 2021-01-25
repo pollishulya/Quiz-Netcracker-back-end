@@ -18,13 +18,13 @@ import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:4200"})
-@RequestMapping("/users")
+@RequestMapping("/player")
 public class PlayerController {
 
     private final PlayerService playerService;
     private final UserService userService;
     private final PlayerMapper mapper;
-   private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public PlayerController(PlayerService playerService, UserService userService, PlayerMapper mapper) {
         this.playerService = playerService;
@@ -44,8 +44,8 @@ public class PlayerController {
     }
 
     @GetMapping()
-    public List<PlayerDto> getAllClients(){
-        return playerService.findAllPlayers().stream().map(mapper:: toDto).collect(Collectors.toList());
+    public List<PlayerDto> getAllClients() {
+        return playerService.findAllPlayers().stream().map(mapper::toDto).collect(Collectors.toList());
     }
 
 //    @PostMapping("/registration/player")
