@@ -34,6 +34,7 @@ public class Question {
     @JoinColumn(name = "categoryId")
     private Category category;
 
+    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "levelId")
     private Level level;
