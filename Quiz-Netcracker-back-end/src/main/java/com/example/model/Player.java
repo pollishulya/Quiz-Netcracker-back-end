@@ -54,4 +54,6 @@ public class Player {
         this.email = mail;
         this.user = user;
     }
+
+   // public Player() { }
 }

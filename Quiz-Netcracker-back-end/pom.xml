@@ -50,6 +50,7 @@
 		<artifactId>spring-boot-starter-security</artifactId>
 	</dependency>
 
+
 	<dependency>
 		<groupId>org.projectlombok</groupId>
 		<artifactId>lombok</artifactId>
@@ -105,6 +106,11 @@
 		<groupId>org.springframework.security</groupId>
 		<artifactId>spring-security-web</artifactId>
 		<version>5.4.2</version>
+	</dependency>
+	<dependency>
+		<groupId> com.amazonaws </groupId>
+		<artifactId> aws-java-sdk </artifactId>
+		<version> 1.11.133 </version>
 	</dependency>
 </dependencies>
 

@@ -1,8 +1,6 @@
 package com.example.model;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -34,7 +32,9 @@ public class Game {
     @JoinColumn(name = "game_id", referencedColumnName = "id")
     private Set<Question> questions;
 
-    @Builder
+    @Column(name = "photo")
+    private String photo;
+
     public Game(UUID id, String name, String description, Player player, GameRoom gameRoom) {
         this.id = id;
         this.title = name;
