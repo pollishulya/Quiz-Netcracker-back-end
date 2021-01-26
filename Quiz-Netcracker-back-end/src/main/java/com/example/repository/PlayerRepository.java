@@ -12,4 +12,6 @@ public interface PlayerRepository extends JpaRepository<Player, UUID> {
 
     Optional<Player> findPlayerByName(String name);
     Optional<Player> findById(UUID playerId);
+    Player getPlayerById(UUID id);
+    Player getPlayerByUserId(UUID id);
 }

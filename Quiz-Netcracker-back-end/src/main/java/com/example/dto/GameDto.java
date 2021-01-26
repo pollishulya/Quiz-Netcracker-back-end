@@ -21,5 +21,5 @@ public class GameDto {
     @NotEmpty(message = "Shouldn't be empty", groups = {Create.class, Update.class})
     String description;
     Set<@Valid QuestionDto> questions;
-    UUID user;
+    UUID player;
 }

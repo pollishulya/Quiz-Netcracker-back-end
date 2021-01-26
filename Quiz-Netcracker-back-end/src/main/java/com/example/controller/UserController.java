@@ -6,7 +6,6 @@ import com.example.model.RoleList;
 import com.example.model.User;
 import com.example.repository.PlayerRepository;
 import com.example.security.LoginModel;
-import com.example.security.UserRoleList;
 import com.example.service.interfaces.UserService;
 import com.example.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +19,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:4200"})
 @RequestMapping("/users")
+@CrossOrigin(origins = {"http://localhost:4200"})
 public class UserController {
 
     private final UserService userService;
@@ -73,16 +72,49 @@ public class UserController {
         return mapper.toDto(userService.findUserByUsername(username));
     }
 
+    @RequestMapping(value = "/loginA", method = { RequestMethod.POST, RequestMethod.GET})
+    public User loginAccount(@RequestBody LoginModel loginModel) {
+        User userFacade = new User(loginModel.getUsername(),
+                loginModel.getLogin(),
+                bCryptPasswordEncoder.encode(loginModel.getPassword())
+        );
+        return userService.login(userFacade);
+    }
+
+
     @PostMapping("/register")
     UUID singUp(@RequestBody LoginModel loginModel){
         User userFacade = new User(loginModel.getUsername(),
-                loginModel.getMail(),
+                loginModel.getLogin(),
                 bCryptPasswordEncoder.encode(loginModel.getPassword())
         );
         userFacade.setRole(RoleList.USER);
+
+      //  userFacade.setPlayer(player);
         userService.saveUser(userFacade);
 
         return userFacade.getId();
     }
 
+
+    @PostMapping("/registerPlayer")
+    UUID singUp(@RequestBody Player player){
+//        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+//        // user.setStatus(true);
+//        //  user.setActive(1);   //TODO Make front validation depending on active
+//        user.setRole(role);
+        User user = setUser(player.getUser(), RoleList.USER);  //TODO check on presence in DB
+        userService.saveUser(user);
+        playerRepository.save(player);
+       // sendRegistrationEmail(account, client.getEmail());
+        return user.getId();
+    }
+    private User setUser(User user, String role) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        // user.setStatus(true);
+        //  user.setActive(1);   //TODO Make front validation depending on active
+        user.setRole(role);
+
+        return user;
+    }
 }

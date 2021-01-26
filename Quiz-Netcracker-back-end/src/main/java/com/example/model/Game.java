@@ -1,8 +1,6 @@
 package com.example.model;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -10,7 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "game")
+@Table(name = "games")
 @Data
 @NoArgsConstructor
 public class Game {
@@ -27,18 +25,20 @@ public class Game {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
-    private User user;
+    @JoinColumn(name = "playerId")
+    private Player player;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "game_id", referencedColumnName = "id")
     private Set<Question> questions;
 
-    @Builder
-    public Game(UUID id, String name, String description, User user) {
+    @Column(name = "photo")
+    private String photo;
+
+    public Game(UUID id, String name, String description, Player player, GameRoom gameRoom) {
         this.id = id;
         this.title = name;
         this.description = description;
-        this.user = user;
+        this.player = player;
     }
 }

@@ -24,7 +24,7 @@ public class PlayerController {
     private final PlayerService playerService;
     private final UserService userService;
     private final PlayerMapper mapper;
-   private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public PlayerController(PlayerService playerService, UserService userService, PlayerMapper mapper) {
         this.playerService = playerService;
@@ -40,12 +40,12 @@ public class PlayerController {
 
     @GetMapping("/id/{id}")
     public PlayerDto getPlayerById(@PathVariable UUID id) {
-        return mapper.toDto(playerService.findPlayerById(id));
+        return mapper.toDto(playerService.findPlayerByUserId(id));
     }
 
     @GetMapping()
-    public List<PlayerDto> getAllClients(){
-        return playerService.findAllPlayers().stream().map(mapper:: toDto).collect(Collectors.toList());
+    public List<PlayerDto> getAllClients() {
+        return playerService.findAllPlayers().stream().map(mapper::toDto).collect(Collectors.toList());
     }
 
 }

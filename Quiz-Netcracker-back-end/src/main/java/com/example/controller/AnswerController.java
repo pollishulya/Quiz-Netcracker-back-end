@@ -4,12 +4,16 @@ import com.example.dto.AnswerDto;
 import com.example.exception.ArgumentNotValidException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.model.Answer;
+import com.example.model.Player;
+import com.example.model.Statistics;
 import com.example.service.interfaces.AnswerService;
+import com.example.service.interfaces.PlayerService;
+import com.example.service.interfaces.StatisticsService;
 import com.example.service.mapper.AnswerMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.example.service.validation.group.Create;
 import com.example.service.validation.group.Update;
 import com.example.service.validation.validator.CustomValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,19 +25,28 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/answer")
 @CrossOrigin(origins = {"http://localhost:4200"})
-
 public class AnswerController {
     private final AnswerService answerService;
     private final AnswerMapper mapper;
     private final CustomValidator customValidator;
+    private final PlayerService playerService;
+    private final StatisticsService statisticsService;
 
     @Autowired
-    public AnswerController(AnswerService answerService,
-                            AnswerMapper mapper,
-                            CustomValidator customValidator) {
+    public AnswerController(AnswerService answerService, AnswerMapper mapper,
+                            CustomValidator customValidator, PlayerService playerService,
+                            StatisticsService statisticsService) {
         this.answerService = answerService;
         this.mapper = mapper;
         this.customValidator = customValidator;
+        this.playerService = playerService;
+        this.statisticsService = statisticsService;
+    }
+
+    @GetMapping("/{answerId}/{playerId}")
+    public AnswerDto getAnswer(@PathVariable UUID answerId, @PathVariable UUID playerId) {
+        Answer answer = answerService.getAnswerById(answerId);
+        return saveStatistics(answer, answerId, playerId);
     }
 
     @GetMapping("/{id}")
@@ -73,5 +86,20 @@ public class AnswerController {
     public ResponseEntity<?> deleteLevel(@PathVariable UUID id) {
         answerService.deleteAnswer(id);
         return ResponseEntity.ok().build();
+    }
+
+    private AnswerDto saveStatistics(Answer answer, UUID answerId, UUID userId) {
+        Player player = playerService.findPlayerByUserId(userId);
+        List<Statistics> statisticsList = statisticsService.findStatisticsByPlayerId(player.getId());
+        for (Statistics s : statisticsList) {
+            if (s.getAnswer().getId().equals(answerId)) {
+                return mapper.toDto(answer);
+            }
+        }
+        Statistics statistics = new Statistics();
+        statistics.setAnswer(answer);
+        statistics.setPlayer(playerService.findPlayerByUserId(userId));
+        statisticsService.save(statistics);
+        return mapper.toDto(answer);
     }
 }
