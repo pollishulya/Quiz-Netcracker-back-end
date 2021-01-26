@@ -6,6 +6,9 @@ import com.example.repository.GameRoomRepository;
 import com.example.service.interfaces.GameRoomService;
 import com.example.service.interfaces.GameService;
 import com.example.service.interfaces.PlayerService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -17,11 +20,13 @@ public class GameRoomServiceImpl implements GameRoomService {
     private final GameRoomRepository gameRoomRepository;
     private final PlayerService playerService;
     private final GameService gameService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public GameRoomServiceImpl(GameRoomRepository gameRoomRepository, PlayerService playerService, GameService gameService) {
+    public GameRoomServiceImpl(GameRoomRepository gameRoomRepository, PlayerService playerService, GameService gameService, SimpMessagingTemplate simpMessagingTemplate) {
         this.gameRoomRepository = gameRoomRepository;
         this.playerService = playerService;
         this.gameService = gameService;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     @Override
@@ -34,6 +39,7 @@ public class GameRoomServiceImpl implements GameRoomService {
         return gameRoomRepository.save(gameRoom);
     }
 
+    @SneakyThrows
     @Override
     public GameRoom findGameRoom(UUID gameId, UUID playerId) {
         Player player = playerService.findPlayerById(playerId);
@@ -41,6 +47,12 @@ public class GameRoomServiceImpl implements GameRoomService {
         for (GameRoom gameRoom : gameRooms) {
             if (gameRoom.getPlayers().size() < 2) {
                 gameRoom.getPlayers().add(player);
+                ObjectMapper mapper = new ObjectMapper();
+                for (Player playerInGameRoom : gameRoom.getPlayers()) {
+                    if (!playerInGameRoom.getId().equals(playerId)) {
+                        simpMessagingTemplate.convertAndSend("/topic/game/" + playerInGameRoom.getId(), mapper.writeValueAsString(gameRoom.getPlayers()));
+                    }
+                }
                 return save(gameRoom);
             }
         }
