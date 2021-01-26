@@ -1,9 +1,8 @@
 package com.example.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -13,6 +12,7 @@ import java.util.UUID;
 @Table(name = "players")
 @Data
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Player {
 
     @Id
@@ -29,7 +29,7 @@ public class Player {
 
     private String photo;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     private User user;
 
     public Player(UUID id, String name, String email, String photo, User user) {
@@ -54,6 +54,4 @@ public class Player {
         this.email = mail;
         this.user = user;
     }
-
-   // public Player() { }
 }

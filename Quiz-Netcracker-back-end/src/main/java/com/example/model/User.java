@@ -1,13 +1,15 @@
 package com.example.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -32,22 +34,12 @@ public class User {
 
     private String role;
 
-//    @Builder
-//    public User(UUID id, String mail, String login, String password, String role) {
-//        this.id = id;
-//        this.mail = mail;
-//        this.login = login;
-//        this.password = password;
-//        this.role = role;
-//    }
-
     public User(UUID id, String mail, String login, String password, String role) {
         this.id = id;
         this.mail = mail;
         this.login = login;
         this.password = password;
         this.role = role;
-//        this.player = player;
     }
 
     public User(String username, String password) {
@@ -57,12 +49,12 @@ public class User {
 
     public User(String username, String mail, String password) {
         this.login = username;
-        this.mail=mail;
+        this.mail = mail;
         this.password = password;
     }
 
-    public List<String> getRoleList(){
-        if(this.role.length() > 0){
+    public List<String> getRoleList() {
+        if (this.role.length() > 0) {
             return Arrays.asList(this.role.split(","));
         }
         return new ArrayList<>();
