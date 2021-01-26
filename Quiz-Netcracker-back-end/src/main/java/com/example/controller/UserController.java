@@ -11,8 +11,10 @@ import com.example.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -48,11 +50,11 @@ public class UserController {
     }
 
 
-    @PostMapping("/save")
-    public UserDto createUser(@Valid @RequestBody UserDto userDto) {
-        User user= mapper.toEntity(userDto);
-        return mapper.toDto(userService.saveUser(user));
-    }
+//    @PostMapping("/save")
+//    public UserDto createUser(@Valid @RequestBody UserDto userDto) {
+//        User user= mapper.toEntity(userDto);
+//        return mapper.toDto(userService.saveUser(user));
+//    }
 
     @PutMapping("/update/{userId}")
     public UserDto updateUser(@PathVariable UUID userId,
@@ -72,49 +74,35 @@ public class UserController {
         return mapper.toDto(userService.findUserByUsername(username));
     }
 
-    @RequestMapping(value = "/loginA", method = { RequestMethod.POST, RequestMethod.GET})
-    public User loginAccount(@RequestBody LoginModel loginModel) {
-        User userFacade = new User(loginModel.getUsername(),
-                loginModel.getLogin(),
-                bCryptPasswordEncoder.encode(loginModel.getPassword())
-        );
-        return userService.login(userFacade);
-    }
-
 
     @PostMapping("/register")
-    UUID singUp(@RequestBody LoginModel loginModel){
+    UUID singUp(@RequestBody LoginModel loginModel/*, HttpServletRequest request*/){
         User userFacade = new User(loginModel.getUsername(),
-                loginModel.getLogin(),
+                loginModel.getMail(),
                 bCryptPasswordEncoder.encode(loginModel.getPassword())
         );
-        userFacade.setRole(RoleList.USER);
-
-      //  userFacade.setPlayer(player);
-        userService.saveUser(userFacade);
+        userFacade.setRole(RoleList.ADMIN);
+        userService.saveUser(userFacade/*,request.getLocalAddr())*/);
 
         return userFacade.getId();
     }
 
 
-    @PostMapping("/registerPlayer")
-    UUID singUp(@RequestBody Player player){
-//        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-//        // user.setStatus(true);
-//        //  user.setActive(1);   //TODO Make front validation depending on active
-//        user.setRole(role);
-        User user = setUser(player.getUser(), RoleList.USER);  //TODO check on presence in DB
-        userService.saveUser(user);
-        playerRepository.save(player);
-       // sendRegistrationEmail(account, client.getEmail());
-        return user.getId();
+    @GetMapping("/activate/{code}")
+    public String activate(Model model, @PathVariable String code) {
+        boolean isActivated = userService.activateUser(code);
+        if (isActivated) {
+            model.addAttribute("message", "Ваша активация прошла успешно");
+        } else {
+            model.addAttribute("message", "Код активации не найден!");
+        }
+        model.addAttribute("isActivated", isActivated);
+        return "Ваша активация прошла успешно";
     }
-    private User setUser(User user, String role) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        // user.setStatus(true);
-        //  user.setActive(1);   //TODO Make front validation depending on active
-        user.setRole(role);
 
-        return user;
+    @PostMapping(value = "/block/{userId}")
+    public UserDto blockUser(@PathVariable UUID userId) {
+        return mapper.toDto(userService.blockUser(userId));
     }
+
 }

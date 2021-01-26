@@ -32,6 +32,11 @@ public class User {
 
     private String role;
 
+    @Column(name = "activation_code")
+    private String activationCode;
+
+    @Column(name = "active")
+    private boolean active;
 //    @Builder
 //    public User(UUID id, String mail, String login, String password, String role) {
 //        this.id = id;
@@ -40,6 +45,11 @@ public class User {
 //        this.password = password;
 //        this.role = role;
 //    }
+
+
+    public boolean isActive() {
+        return active;
+    }
 
     public User(UUID id, String mail, String login, String password, String role) {
         this.id = id;

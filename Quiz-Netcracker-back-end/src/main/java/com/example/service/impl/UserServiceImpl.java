@@ -19,6 +19,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PlayerRepository playerRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    MailSender mailSender;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, PlayerRepository playerRepository) {
@@ -33,14 +35,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(User user) {
-//        User userFromDB = userRepository.findUserByLogin(user.getLogin());
-//        if (userFromDB != null) {
-//            return false;
-//        }
-//        user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
-//        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+    public User saveUser(User user/*, String urlAddress*/) {
         Player player = new Player(user.getMail(), user.getLogin(), user);
+       // user.setActive(false); //оставить, когда будет активация через почту
+        user.setActive(true);//убрать, когда будет активация через почту
+        user.setActivationCode(UUID.randomUUID().toString());
+
+        String message = String.format(
+                "Hello, %s! \n" +
+                        "Welcome to localhost. Please, visit next link: http://localhost:8085/activate/%s",
+                user.getLogin(),
+               // urlAddress,
+                user.getActivationCode()
+        );
+     //   mailSender.send(user.getMail(), "Activation code", message);
         userRepository.save(user);
         playerRepository.save(player);
         return user;
@@ -53,10 +61,6 @@ public class UserServiceImpl implements UserService {
             user.setPassword(userRequest.getPassword());
             user.setMail(userRequest.getMail());
             user.setRole(userRequest.getRole());
-//            if (userRequest.getGame() != null) {
-//                user.getGame().clear();
-//                user.getGame().addAll(userRequest.getGame());
-//            }
             return userRepository.save(user);
         }).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + userId));
     }
@@ -73,40 +77,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserByUsername(String username) {
-        return userRepository.findUserByLogin(username);
+        return userRepository.findByLoginOrMail(username, username);
     }
-
-//    @Override
-//    public User confirmAccount(String token) {
-//        VerificationToken passedToken = verificationTokenRepository.findByToken(token);
-//        User account = userRepository.findUserByLogin(passedToken.getUser().getLogin());
-//       // account.setActive(1);
-//        userRepository.save(account);
-//        return account;
-//    }
 
     @Override
-    public User login(User account) {
-        return userRepository.findByLoginAndPassword(account.getLogin(),
-                account.getPassword());
+    public boolean activateUser(String code) {
+        User user = userRepository.findUserByActivationCode(code);
+        if (user == null) {
+            return false;
+        }
+        user.setActive(true);
+        userRepository.save(user);
+        return true;
     }
 
-//    @Override
-//    public Player registerPlayer(LoginModel player) {
-//      //  User user = setUser(player.getUser(), RoleList.USER);  //TODO check on presence in DB
-//        //user.setPlayer(player);
-//       // userRepository.save(user);
-//        //playerRepository.save(player);
-//       // sendRegistrationEmail(account, client.getEmail());
-//        return player;
-//    }
-
-    private User setUser(User user, String role) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        // user.setStatus(true);
-        //  user.setActive(1);   //TODO Make front validation depending on active
-        user.setRole(role);
-
-        return user;
+    @Override
+    public User blockUser(UUID userId) {
+        User userToBlock = userRepository.findUserById(userId);
+        if(userToBlock.isActive()) {
+            userToBlock.setActive(false);
+        }
+        else{
+            userToBlock.setActive(true);
+        }
+        return userRepository.save(userToBlock);
     }
+
 }

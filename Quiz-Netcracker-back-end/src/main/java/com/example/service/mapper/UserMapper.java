@@ -23,27 +23,18 @@ public class UserMapper implements Mapper<User, UserDto> {
         userDto.setLogin(entity.getLogin());
         userDto.setPassword(entity.getPassword());
         userDto.setRole(entity.getRole());
-       // userDto.setPlayer(entity.getPlayer().getId());
-//        userDto.setGames(entity.getGame()
-//                .stream()
-//                .map(Game::getId)
-//                .collect(Collectors.toSet()));
+        userDto.setActive(entity.isActive());
         return userDto;
     }
 
     @Override
     public User toEntity(UserDto dto) {
-//        Set<Game> games = dto.getGames()
-//                .stream()
-//                .map(gameService::findGameById)
-//                .collect(Collectors.toSet());
         User user = new User();
         user.setId(dto.getId());
         user.setMail(dto.getMail());
         user.setLogin(dto.getLogin());
         user.setPassword(dto.getPassword());
-        user.setRole(dto.getPassword());
-    //    user.setGame(games);
+        user.setRole(dto.getRole());
         return user;
     }
 

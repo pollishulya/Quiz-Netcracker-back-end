@@ -38,13 +38,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(),this.userService))
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST,"/login").permitAll()
-                .antMatchers(HttpMethod.GET,"/question").hasRole(RoleList.USER)
                 .antMatchers(HttpMethod.POST,"/users/register").permitAll()
 //                .antMatchers(HttpMethod.POST,"/question/*").permitAll()
 //                .antMatchers(HttpMethod.GET,"/question/*").permitAll()
                 .antMatchers("/logout").authenticated()
                 .antMatchers("/games/*").permitAll()
-                .antMatchers("/users/*").permitAll()
+                .antMatchers(HttpMethod.GET,"/users/findAllUsers").hasRole(RoleList.ADMIN)
                 .anyRequest().permitAll();
     }
 

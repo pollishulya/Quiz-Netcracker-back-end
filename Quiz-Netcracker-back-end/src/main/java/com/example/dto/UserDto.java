@@ -13,5 +13,6 @@ public class UserDto {
     String login;
     String role;
     UUID player;
+    boolean active;
    // Set<UUID> games;
 }

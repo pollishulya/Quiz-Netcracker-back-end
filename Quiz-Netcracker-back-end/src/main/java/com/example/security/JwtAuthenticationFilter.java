@@ -51,37 +51,37 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setHeader("Access-Control-Expose-Headers", "Origin, X-Requested-With, " +
                 "Content-Type, Accept, Accept-Encoding, Accept-Language, Host," +
                 "Referer, Connection, User-Agent, Authorization, sw-useragent, sw-version");
-        Authentication auth = authenticationManager.authenticate(authenticationToken);
-        return auth;
+//        Authentication auth = authenticationManager.authenticate(authenticationToken);
+
         //Authenticate user
-//        try {
-//            return authenticationManager.authenticate(authenticationToken);
-//        } catch (BadCredentialsException e) {
-//            try {
-//                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Wrong password");
-//            } catch (IOException e1) {
-//                e1.printStackTrace();
-//            }
-//        } catch (NullPointerException e) {
-//            try {
-//                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Wrong userName");
-//            } catch (IOException e1) {
-//                e1.printStackTrace();
-//            }
-//        } catch (InternalAuthenticationServiceException e) {
-//            try {
-//                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "NonUnique userName");
-//            } catch (IOException e1) {
-//                e1.printStackTrace();
-//            }
-//        } catch (AccountStatusException e) {
-//            try {
-//                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Locked");
-//            } catch (IOException e1) {
-//                e1.printStackTrace();
-//            }
-//        }
-//        return null;
+        try {
+            return authenticationManager.authenticate(authenticationToken);
+        } catch (BadCredentialsException e) {
+            try {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Wrong password");
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        } catch (NullPointerException e) {
+            try {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Wrong userName");
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        } catch (InternalAuthenticationServiceException e) {
+            try {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "NonUnique userName");
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        } catch (AccountStatusException e) {
+            try {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Locked");
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+        return null;
     }
 
     @Override
