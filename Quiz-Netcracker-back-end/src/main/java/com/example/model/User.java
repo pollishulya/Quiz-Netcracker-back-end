@@ -34,6 +34,21 @@ public class User {
 
     private String role;
 
+    @Column(name = "activation_code")
+    private String  activationCode;
+    
+    @Column(name = "active")
+    private Boolean  active;
+
+    public User(UUID id, String mail, String login, String password, String role, Boolean active) {
+        this.id = id;
+        this.mail = mail;
+        this.login = login;
+        this.password = password;
+        this.role = role;
+        this.active = active;
+    }
+
     public User(UUID id, String mail, String login, String password, String role) {
         this.id = id;
         this.mail = mail;
@@ -58,5 +73,9 @@ public class User {
             return Arrays.asList(this.role.split(","));
         }
         return new ArrayList<>();
+    }
+
+    public boolean isActive() {
+        return active;
     }
 }
