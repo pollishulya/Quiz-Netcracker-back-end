@@ -9,9 +9,13 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class GameMessage {
-    private String name;
-    private UUID senderId;
+    private int numberAnswer;
     private boolean right;
-    private UUID gameRoomId;
-    private UUID answer;
+    private UUID playerId;
+
+    public GameMessage(boolean right, UUID playerId, int numberAnswer) {
+        this.numberAnswer = numberAnswer;
+        this.right = right;
+        this.playerId = playerId;
+    }
 }

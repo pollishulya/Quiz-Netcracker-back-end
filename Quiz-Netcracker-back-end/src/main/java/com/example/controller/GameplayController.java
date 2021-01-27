@@ -1,11 +1,12 @@
 package com.example.controller;
 
 import com.example.dto.GameRoomDto;
-import com.example.model.GameMessage;
 import com.example.model.GameRoom;
+import com.example.model.LikePlayer;
 import com.example.model.Player;
 import com.example.service.interfaces.GameRoomService;
 import com.example.service.mapper.GameRoomMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -29,17 +30,17 @@ public class GameplayController {
     }
 
     @MessageMapping("/gameplay")
-    public void send(@Payload GameMessage gameMessage) {
-        GameRoom gameRoom = gameRoomService.findById(gameMessage.getGameRoomId());
-        for (Player player : gameRoom.getPlayers()) {
-            if (!gameMessage.getSenderId().equals(player.getId())) {
-                simpMessagingTemplate.convertAndSend("/topic/game/" + player.getId(), gameMessage);
+    public void send(@Payload LikePlayer likePlayer) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        for (Player player : gameRoomService.findById(likePlayer.getGameRoomId()).getPlayers()) {
+            if (likePlayer.getRecipientId().equals(player.getId())) {
+                simpMessagingTemplate.convertAndSend("/topic/game/" + likePlayer.getRecipientId(), objectMapper.writeValueAsString(likePlayer.getName()));
             }
         }
     }
 
     @MessageMapping("/game-room/close")
-    public void deletePlayer(@Payload GameRoomDto gameRoomDto) throws Exception {
+    public void sendPlayerExited(@Payload GameRoomDto gameRoomDto) throws Exception {
         GameRoom gameRoom = mapper.toEntity(gameRoomDto);
         ObjectMapper mapper = new ObjectMapper();
         for (Player player : gameRoom.getPlayers()) {

@@ -55,7 +55,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public List<GameStatisticsDto> findStatisticsByPlayerIdAndGameId(UUID gameId, UUID userId) {
-        List<GameStatisticsDto> gameStatisticsDtos = new ArrayList<>();
+        List<GameStatisticsDto> gameStatisticsDto = new ArrayList<>();
 
         Set<Question> questions = gameService.findGameById(gameId).getQuestions();
 
@@ -65,13 +65,13 @@ public class StatisticsServiceImpl implements StatisticsService {
             if (s.getAnswer().getQuestion().getGame().getId().equals(gameId)) {
                 for (Question question : questions) {
                     if (s.getAnswer().getQuestion().getId().equals(question.getId())) {
-                        gameStatisticsDtos.add(new GameStatisticsDto(questionMapper.toDto(question),
+                        gameStatisticsDto.add(new GameStatisticsDto(questionMapper.toDto(question),
                                 answerMapper.toDto(s.getAnswer()), getPercent(question.getId())));
                     }
                 }
             }
         }
-        return gameStatisticsDtos;
+        return gameStatisticsDto;
     }
 
     @Override
