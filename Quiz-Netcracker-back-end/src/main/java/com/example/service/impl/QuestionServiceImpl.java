@@ -1,11 +1,14 @@
 package com.example.service.impl;
 
 import com.example.exception.ResourceNotFoundException;
+import com.example.exception.detail.ErrorInfo;
 import com.example.model.Answer;
 import com.example.model.Question;
 import com.example.repository.QuestionRepository;
 import com.example.service.interfaces.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,10 +19,12 @@ import java.util.stream.Collectors;
 @Service
 public class QuestionServiceImpl implements QuestionService {
     private final QuestionRepository questionRepository;
+    private final MessageSource messageSource;
 
     @Autowired
-    public QuestionServiceImpl(QuestionRepository questionRepository) {
+    public QuestionServiceImpl(QuestionRepository questionRepository, MessageSource messageSource) {
         this.questionRepository = questionRepository;
+        this.messageSource = messageSource;
     }
 
     @Override
@@ -36,6 +41,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Question updateQuestion(UUID questionId, Question questionRequest) {
+        UUID[] args = new UUID[]{ questionId };
         return questionRepository.findById(questionId).map(question -> {
             question.setTitle(questionRequest.getTitle());
             question.setDescription(questionRequest.getDescription());
@@ -46,7 +52,8 @@ public class QuestionServiceImpl implements QuestionService {
                 question.getAnswersSet().addAll(questionRequest.getAnswersSet());
             }
             return questionRepository.save(question);
-        }).orElseThrow(() -> new ResourceNotFoundException("Question not found with id " + questionId));
+        }).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
 
     @Override
@@ -56,7 +63,9 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Question getQuestionById(UUID questionId) {
-        return questionRepository.getQuestionById(questionId);
+        UUID[] args = new UUID[]{ questionId };
+        return questionRepository.findById(questionId).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale()))) ;
     }
 
     @Override

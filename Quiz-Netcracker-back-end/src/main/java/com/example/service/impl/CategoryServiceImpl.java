@@ -1,10 +1,14 @@
 package com.example.service.impl;
 
+import com.example.exception.DeleteEntityException;
 import com.example.exception.ResourceNotFoundException;
+import com.example.exception.detail.ErrorInfo;
 import com.example.model.Category;
 import com.example.repository.CategoryRepository;
 import com.example.service.interfaces.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,12 +17,20 @@ import java.util.UUID;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
+    private final CategoryRepository categoryRepository;
+    private final MessageSource messageSource;
+
     @Autowired
-    private CategoryRepository categoryRepository;
+    public CategoryServiceImpl(CategoryRepository categoryRepository, MessageSource messageSource) {
+        this.categoryRepository = categoryRepository;
+        this.messageSource = messageSource;
+    }
 
     @Override
     public Category findCategoryById(UUID id) {
-        return categoryRepository.getCategoryById(id);
+        UUID[] args = new UUID[]{ id };
+        return categoryRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
 
     @Override
@@ -33,16 +45,25 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category updateCategory(UUID categoryId, Category categoryRequest) {
+        UUID[] args = new UUID[]{ categoryId };
         return categoryRepository.findById(categoryId).map(category -> {
             category.setDescription(categoryRequest.getDescription());
             category.setTitle(categoryRequest.getTitle());
             return categoryRepository.save(category);
-        }).orElseThrow(() -> new ResourceNotFoundException("Question not found with id " + categoryId));
+        }).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
 
     @Override
     public void deleteCategory(UUID categoryId) {
-        categoryRepository.deleteById(categoryId);
+        try {
+            categoryRepository.deleteById(categoryId);
+        }
+        catch (RuntimeException exception) {
+            UUID[] args = new UUID[]{ categoryId };
+            throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
+                    messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
+        }
     }
 
 

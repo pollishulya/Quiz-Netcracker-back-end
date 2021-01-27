@@ -10,6 +10,7 @@ import com.example.service.validation.group.Create;
 import com.example.service.validation.group.Update;
 import com.example.service.validation.validator.CustomValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,14 +26,17 @@ public class QuestionController {
     private final QuestionService questionService;
     private final QuestionMapper mapper;
     private final CustomValidator customValidator;
+    private final MessageSource messageSource;
 
     @Autowired
     public QuestionController(QuestionService questionService,
                               QuestionMapper mapper,
-                              CustomValidator customValidator) {
+                              CustomValidator customValidator,
+                              MessageSource messageSource) {
         this.questionService = questionService;
         this.mapper = mapper;
         this.customValidator = customValidator;
+        this.messageSource = messageSource;
     }
 
     @GetMapping()
@@ -58,7 +62,7 @@ public class QuestionController {
     public QuestionDto createQuestion(@RequestBody QuestionDto questionDto) {
         Map<String, String> propertyViolation = customValidator.validate(questionDto, Create.class);
         if (!propertyViolation.isEmpty()) {
-            throw new ArgumentNotValidException(ErrorInfo.VALIDATION_ERROR, propertyViolation);
+            throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
         }
         Question question = mapper.toEntity(questionDto);
         return mapper.toDto(questionService.saveQuestion(question));
@@ -69,7 +73,7 @@ public class QuestionController {
                                       @RequestBody QuestionDto questionRequest) {
         Map<String, String> propertyViolation = customValidator.validate(questionRequest, Update.class);
         if (!propertyViolation.isEmpty()) {
-            throw new ArgumentNotValidException(ErrorInfo.VALIDATION_ERROR, propertyViolation);
+            throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
         }
         Question question = mapper.toEntity(questionRequest);
         return mapper.toDto(questionService.updateQuestion(questionId, question));

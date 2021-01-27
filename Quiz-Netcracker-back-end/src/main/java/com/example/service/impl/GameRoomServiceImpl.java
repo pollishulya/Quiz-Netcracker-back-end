@@ -1,5 +1,8 @@
 package com.example.service.impl;
 
+import com.example.exception.DeleteEntityException;
+import com.example.exception.ResourceNotFoundException;
+import com.example.exception.detail.ErrorInfo;
 import com.example.model.GameRoom;
 import com.example.model.Player;
 import com.example.repository.GameRoomRepository;
@@ -9,6 +12,8 @@ import com.example.service.interfaces.PlayerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -21,17 +26,22 @@ public class GameRoomServiceImpl implements GameRoomService {
     private final PlayerService playerService;
     private final GameService gameService;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final MessageSource messageSource;
 
-    public GameRoomServiceImpl(GameRoomRepository gameRoomRepository, PlayerService playerService, GameService gameService, SimpMessagingTemplate simpMessagingTemplate) {
+    public GameRoomServiceImpl(GameRoomRepository gameRoomRepository, PlayerService playerService, GameService gameService,
+                               SimpMessagingTemplate simpMessagingTemplate, MessageSource messageSource) {
         this.gameRoomRepository = gameRoomRepository;
         this.playerService = playerService;
         this.gameService = gameService;
         this.simpMessagingTemplate = simpMessagingTemplate;
+        this.messageSource = messageSource;
     }
 
     @Override
     public GameRoom findById(UUID id) {
-        return gameRoomRepository.findGameRoomById(id);
+        UUID[] args = new UUID[]{ id };
+        return gameRoomRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
 
     @Override
@@ -61,8 +71,13 @@ public class GameRoomServiceImpl implements GameRoomService {
 
     @Override
     public void delete(UUID id) {
-        gameRoomRepository.deleteById(id);
+        try {
+            gameRoomRepository.deleteById(id);
+        }
+        catch (RuntimeException exception) {
+            UUID[] args = new UUID[]{ id };
+            throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
+                    messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
+        }
     }
-
-
 }

@@ -1,12 +1,16 @@
 package com.example.service.impl;
 
+import com.example.exception.DeleteEntityException;
 import com.example.exception.ResourceNotFoundException;
+import com.example.exception.detail.ErrorInfo;
 import com.example.model.Player;
 import com.example.model.User;
 import com.example.repository.PlayerRepository;
 import com.example.repository.UserRepository;
 import com.example.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +23,16 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PlayerRepository playerRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    @Autowired
-    MailSender mailSender;
+    private final MailSender mailSender;
+    private final MessageSource messageSource;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PlayerRepository playerRepository) {
+    public UserServiceImpl(UserRepository userRepository, PlayerRepository playerRepository, MessageSource messageSource, MailSender mailSender) {
         this.userRepository = userRepository;
         this.playerRepository = playerRepository;
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        this.messageSource = messageSource;
+        this.mailSender = mailSender;
     }
 
     @Override
@@ -56,23 +62,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(UUID userId, User userRequest) {
+        UUID[] args = new UUID[]{ userId };
         return userRepository.findById(userId).map(user -> {
             user.setLogin(userRequest.getLogin());
             user.setPassword(userRequest.getPassword());
             user.setMail(userRequest.getMail());
             user.setRole(userRequest.getRole());
             return userRepository.save(user);
-        }).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + userId));
+        }).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
 
     @Override
     public void deleteUser(UUID userId) {
-        userRepository.deleteById(userId);
+        try {
+            userRepository.deleteById(userId);
+        }
+        catch (RuntimeException exception) {
+            UUID[] args = new UUID[]{ userId };
+            throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
+                    messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
+        }
     }
 
     @Override
     public User getUserById(UUID userId) {
-        return userRepository.findUserById(userId);
+        UUID[] args = new UUID[]{ userId };
+        return userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
 
     @Override

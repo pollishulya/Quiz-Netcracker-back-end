@@ -14,6 +14,7 @@ import com.example.service.validation.group.Create;
 import com.example.service.validation.group.Update;
 import com.example.service.validation.validator.CustomValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -35,15 +36,17 @@ public class GameController {
     public final GameMapper mapper;
     private final CustomValidator customValidator;
     private final AmazonClient amazonClient;
+    private final MessageSource messageSource;
 
     @Autowired
     public GameController(GameService gameService, GamePageService gamePageService, GameMapper mapper,
-                          CustomValidator customValidator, AmazonClient amazonClient) {
+                          CustomValidator customValidator, AmazonClient amazonClient, MessageSource messageSource) {
         this.gameService = gameService;
         this.gamePageService = gamePageService;
         this.mapper = mapper;
         this.customValidator = customValidator;
         this.amazonClient = amazonClient;
+        this.messageSource = messageSource;
     }
 
     @GetMapping("/searchByTitle/{title}")
@@ -82,7 +85,7 @@ public class GameController {
     public GameDto createGame(@Valid @RequestBody GameDto gameDto) {
         Map<String, String> propertyViolation = customValidator.validate(gameDto, Create.class);
         if (!propertyViolation.isEmpty()) {
-            throw new ArgumentNotValidException(ErrorInfo.VALIDATION_ERROR, propertyViolation);
+            throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
         }
         Game game = mapper.toEntity(gameDto);
         return mapper.toDto(gameService.createGame(game));
@@ -93,7 +96,7 @@ public class GameController {
                               @Valid @RequestBody GameDto gameDto) {
         Map<String, String> propertyViolation = customValidator.validate(gameDto, Update.class);
         if (!propertyViolation.isEmpty()) {
-            throw new ArgumentNotValidException(ErrorInfo.VALIDATION_ERROR, propertyViolation);
+            throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
         }
         Game game = mapper.toEntity(gameDto);
         return mapper.toDto(gameService.updateGame(id, game));

@@ -1,12 +1,14 @@
 package com.example.service.impl;
 
+import com.example.exception.DeleteEntityException;
 import com.example.exception.ResourceNotFoundException;
+import com.example.exception.detail.ErrorInfo;
 import com.example.model.Game;
 import com.example.model.Question;
 import com.example.repository.GameRepository;
 import com.example.service.interfaces.GameService;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import com.example.service.interfaces.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,11 +27,13 @@ public class GameServiceImpl implements GameService {
 
     private final GameRepository gameRepository;
     private final QuestionService questionService;
+    private final MessageSource messageSource;
 
     @Autowired
-    public GameServiceImpl(GameRepository gameRepository, QuestionService questionService) {
+    public GameServiceImpl(GameRepository gameRepository, QuestionService questionService, MessageSource messageSource) {
         this.gameRepository = gameRepository;
         this.questionService = questionService;
+        this.messageSource = messageSource;
     }
 
     @Override
@@ -54,12 +58,20 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public void deleteGame(UUID id) {
-        gameRepository.deleteById(id);
+        try {
+            gameRepository.deleteById(id);
+        }
+        catch (RuntimeException exception) {
+            UUID[] args = new UUID[]{ id };
+            throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
+                    messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
+        }
     }
 
     @Override
     public Game updateGame(UUID id, Game gameReq)
     {
+        UUID[] args = new UUID[]{ id };
         return gameRepository.findById(id).map(game->{
             game.setTitle(gameReq.getTitle());
             game.setDescription(gameReq.getDescription());
@@ -75,12 +87,15 @@ public class GameServiceImpl implements GameService {
                 game.getQuestions().addAll(gameReq.getQuestions());
             }
             return gameRepository.save(game);
-        }).orElseThrow(()-> new ResourceNotFoundException("Object not found"));
+        }).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
 
     @Override
     public Game findGameById(UUID id) {
-        return gameRepository.findGameById(id);
+        UUID[] args = new UUID[]{ id };
+        return gameRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
 
     @Override

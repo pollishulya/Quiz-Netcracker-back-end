@@ -1,5 +1,7 @@
 package com.example.service.impl;
 
+import com.example.exception.DeleteEntityException;
+import com.example.exception.detail.ErrorInfo;
 import com.example.model.Answer;
 import com.example.model.Question;
 import com.example.dto.GameStatisticsDto;
@@ -12,6 +14,8 @@ import com.example.service.interfaces.StatisticsService;
 import com.example.service.mapper.AnswerMapper;
 import com.example.service.mapper.QuestionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,15 +31,20 @@ public class StatisticsServiceImpl implements StatisticsService {
     private final QuestionService questionService;
     private final QuestionMapper questionMapper;
     private final AnswerMapper answerMapper;
+    private final MessageSource messageSource;
 
     @Autowired
-    public StatisticsServiceImpl(StatisticsRepository statisticsRepository, GameService gameService, PlayerService playerService, QuestionService questionService, QuestionMapper questionMapper, AnswerMapper answerMapper) {
+    public StatisticsServiceImpl(StatisticsRepository statisticsRepository, GameService gameService,
+                                 PlayerService playerService, QuestionService questionService,
+                                 QuestionMapper questionMapper, AnswerMapper answerMapper,
+                                 MessageSource messageSource) {
         this.statisticsRepository = statisticsRepository;
         this.gameService = gameService;
         this.playerService = playerService;
         this.questionService = questionService;
         this.questionMapper = questionMapper;
         this.answerMapper = answerMapper;
+        this.messageSource = messageSource;
     }
 
 
@@ -73,7 +82,14 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public void delete(UUID id) {
-        statisticsRepository.deleteById(id);
+        try {
+            statisticsRepository.deleteById(id);
+        }
+        catch (RuntimeException exception) {
+            UUID[] args = new UUID[]{ id };
+            throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
+                    messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
+        }
     }
 
 
