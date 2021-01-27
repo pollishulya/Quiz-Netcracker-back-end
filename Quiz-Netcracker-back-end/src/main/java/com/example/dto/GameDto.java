@@ -22,4 +22,5 @@ public class GameDto {
     String description;
     Set<@Valid QuestionDto> questions;
     UUID player;
+    String photo;
 }
