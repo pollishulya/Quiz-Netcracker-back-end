@@ -26,6 +26,7 @@ public class GameMapper implements Mapper<Game, GameDto> {
         GameDto gameDto = new GameDto();
         gameDto.setId(entity.getId());
         gameDto.setTitle(entity.getTitle());
+        gameDto.setPhoto(entity.getPhoto());
         gameDto.setDescription(entity.getDescription());
         gameDto.setQuestions(entity.getQuestions()
                 .stream()
@@ -42,6 +43,7 @@ public class GameMapper implements Mapper<Game, GameDto> {
         game.setId(dto.getId());
         game.setDescription(dto.getDescription());
         game.setTitle(dto.getTitle());
+        game.setPhoto(dto.getPhoto());
         game.setQuestions(dto.getQuestions()
                 .stream()
                 .map(questionMapper::toEntity)

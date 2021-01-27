@@ -63,6 +63,7 @@ public class GameServiceImpl implements GameService {
         return gameRepository.findById(id).map(game->{
             game.setTitle(gameReq.getTitle());
             game.setDescription(gameReq.getDescription());
+            game.setPhoto(gameReq.getPhoto());
             if (gameReq.getQuestions() != null) {
 //                gameReq.getQuestions()
 //                        .stream()
@@ -99,8 +100,4 @@ public class GameServiceImpl implements GameService {
         Path path = Paths.get(folder + imageFile.getOriginalFilename());
         Files.write(path, bytes);
     }
-
-
-
-
 }

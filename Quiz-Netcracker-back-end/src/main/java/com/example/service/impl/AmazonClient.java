@@ -7,18 +7,26 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.example.dto.GameDto;
+import com.example.repository.GameRepository;
+import com.example.service.mapper.GameMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import com.example.model.Game;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class AmazonClient {
+
+    private final GameRepository gameRepository;
+    private final GameMapper gameMapper;
 
     private AmazonS3 s3client;
 
@@ -30,6 +38,11 @@ public class AmazonClient {
     private String accessKey;
     @Value("${amazonProperties.secretKey}")
     private String secretKey;
+
+    public AmazonClient(GameRepository gameRepository, GameMapper gameMapper) {
+        this.gameRepository = gameRepository;
+        this.gameMapper = gameMapper;
+    }
 
     @PostConstruct
     private void initializeAmazon() {
@@ -74,5 +87,12 @@ public class AmazonClient {
         return "Successfully deleted";
     }
 
+    public GameDto putObject(String fileUrl, UUID gameId){
+        //String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+        //сохраняет в Game назвнаие
+        Game game = gameRepository.findGameById(gameId);
+        game.setPhoto(fileUrl);
+        return gameMapper.toDto(gameRepository.save(game));
+    }
 
 }

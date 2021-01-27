@@ -114,5 +114,11 @@ public class GameController {
     public String deleteFile(@RequestPart(value = "url") String fileUrl) {
         return this.amazonClient.deleteFileFromS3Bucket(fileUrl);
     }
+
+    @PostMapping("/updateFile/{gameId}")
+    public GameDto updateFile(@RequestPart(value = "url") String fileUrl,
+                             @PathVariable UUID gameId) {
+        return this.amazonClient.putObject(fileUrl, gameId);
+    }
 }
 
