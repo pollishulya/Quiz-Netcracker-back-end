@@ -15,9 +15,9 @@ import java.util.UUID;
 @AnswersSetConstraint(groups = {Create.class, Update.class})
 public class QuestionDto {
     UUID id;
-    @NotNull(message = "Shouldn't be null", groups = {Create.class, Update.class} )
+    @NotNull(message = "message.QuestionTitleNotValid", groups = {Create.class, Update.class} )
     String title;
-    @NotNull(message = "Shouldn't be null", groups = {Create.class, Update.class} )
+    @NotNull(message = "message.QuestionDescriptionNotValid", groups = {Create.class, Update.class} )
     String description;
     UUID category;
     UUID level;

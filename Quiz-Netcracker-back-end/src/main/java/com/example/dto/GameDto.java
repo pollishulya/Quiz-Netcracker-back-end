@@ -16,9 +16,9 @@ import java.util.UUID;
 @Data
 public class GameDto {
     UUID id;
-    @NotEmpty(message = "Shouldn't be empty", groups = {Create.class, Update.class})
+    @NotEmpty(message = "message.GameTitleNotValid", groups = {Create.class, Update.class})
     String title;
-    @NotEmpty(message = "Shouldn't be empty", groups = {Create.class, Update.class})
+    @NotEmpty(message = "message.GameDescriptionNotValid", groups = {Create.class, Update.class})
     String description;
     Set<@Valid QuestionDto> questions;
     UUID player;

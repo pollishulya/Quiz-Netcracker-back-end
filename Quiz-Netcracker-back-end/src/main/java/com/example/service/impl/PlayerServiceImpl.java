@@ -1,9 +1,13 @@
 package com.example.service.impl;
 
+import com.example.exception.ResourceNotFoundException;
+import com.example.exception.detail.ErrorInfo;
 import com.example.model.Player;
 import com.example.repository.PlayerRepository;
 import com.example.service.interfaces.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,10 +16,12 @@ import java.util.UUID;
 @Service
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
+    private final MessageSource messageSource;
 
     @Autowired
-    public PlayerServiceImpl(PlayerRepository playerRepository) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, MessageSource messageSource) {
         this.playerRepository = playerRepository;
+        this.messageSource = messageSource;
     }
 
 
@@ -31,7 +37,9 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player findPlayerById(UUID id) {
-        return playerRepository.getPlayerById(id);
+        UUID[] args = new UUID[]{ id };
+        return playerRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
 
     @Override
