@@ -39,6 +39,24 @@ public class GameplayController {
         }
     }
 
+    @MessageMapping("/go-game")
+    public void sendGoGame(@Payload GameRoomDto gameRoomDto) throws JsonProcessingException {
+        GameRoom gameRoom = mapper.toEntity(gameRoomDto);
+        ObjectMapper objectMapper = new ObjectMapper();
+        for (Player player : gameRoom.getPlayers()) {
+            simpMessagingTemplate.convertAndSend("/topic/game/" + player.getId(), objectMapper.writeValueAsString("go"));
+        }
+    }
+
+    @MessageMapping("/next-question")
+    public void sendNextQuestion(@Payload GameRoomDto gameRoomDto) throws JsonProcessingException {
+        GameRoom gameRoom = mapper.toEntity(gameRoomDto);
+        ObjectMapper objectMapper = new ObjectMapper();
+        for (Player player : gameRoom.getPlayers()) {
+            simpMessagingTemplate.convertAndSend("/topic/game/" + player.getId(), objectMapper.writeValueAsString("next"));
+        }
+    }
+
     @MessageMapping("/game-room/close")
     public void sendPlayerExited(@Payload GameRoomDto gameRoomDto) throws Exception {
         GameRoom gameRoom = mapper.toEntity(gameRoomDto);
