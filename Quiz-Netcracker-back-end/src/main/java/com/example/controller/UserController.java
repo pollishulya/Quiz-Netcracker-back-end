@@ -10,6 +10,8 @@ import com.example.service.interfaces.UserService;
 import com.example.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -71,9 +73,18 @@ public class UserController {
 
     @GetMapping("/{username}")
     public UserDto getOneAccount(@PathVariable String username) {
-        return mapper.toDto(userService.findUserByUsername(username));
+            return mapper.toDto(userService.findUserByUsername(username));
     }
 
+    @GetMapping("/check/{username}")
+    public UserDto checkAccount(@PathVariable String username) {
+        User userFromDb = userService.findUserByUsername(username);
+        if (userFromDb == null) {
+            return null;}
+        else{
+            return mapper.toDto(userService.findUserByUsername(username));
+        }
+    }
 
     @PostMapping("/register")
     UUID singUp(@RequestBody LoginModel loginModel/*, HttpServletRequest request*/){

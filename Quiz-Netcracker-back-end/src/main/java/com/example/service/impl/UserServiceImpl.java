@@ -42,22 +42,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(User user/*, String urlAddress*/) {
-        Player player = new Player(user.getMail(), user.getLogin(), user);
-       // user.setActive(false); //оставить, когда будет активация через почту
-        user.setActive(true);//убрать, когда будет активация через почту
-        user.setActivationCode(UUID.randomUUID().toString());
-
-        String message = String.format(
-                "Hello, %s! \n" +
-                        "Welcome to localhost. Please, visit next link: http://localhost:8085/activate/%s",
-                user.getLogin(),
-               // urlAddress,
-                user.getActivationCode()
-        );
-     //   mailSender.send(user.getMail(), "Activation code", message);
-        userRepository.save(user);
-        playerRepository.save(player);
-        return user;
+        User userFromDb = userRepository.findByLoginOrMail(user.getLogin(), user.getMail());
+        if (userFromDb != null) {
+            return null;
+        } else {
+            Player player = new Player(user.getMail(), user.getLogin(), user);
+             user.setActive(false); //оставить, когда будет активация через почту
+         //   user.setActive(true);//убрать, когда будет активация через почту
+            user.setActivationCode(UUID.randomUUID().toString());
+            String message = String.format(
+                    "Hello, %s! \n" +
+                            "Welcome to localhost. Please, visit next link: http://localhost:8085/users/activate/%s",
+                    user.getLogin(),
+                    // urlAddress,
+                    user.getActivationCode()
+            );
+            mailSender.send(user.getMail(), "Activation code", message);
+            userRepository.save(user);
+            playerRepository.save(player);
+            return user;
+        }
     }
 
     @Override

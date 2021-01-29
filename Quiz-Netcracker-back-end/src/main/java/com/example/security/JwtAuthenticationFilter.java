@@ -54,6 +54,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 //        Authentication auth = authenticationManager.authenticate(authenticationToken);
 
         //Authenticate user
+
         try {
             return authenticationManager.authenticate(authenticationToken);
         } catch (BadCredentialsException e) {
