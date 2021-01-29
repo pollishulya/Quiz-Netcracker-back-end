@@ -2,7 +2,7 @@ package com.example.controller;
 
 import com.example.dto.GameRoomDto;
 import com.example.model.GameRoom;
-import com.example.model.LikePlayer;
+import com.example.dto.LikePlayer;
 import com.example.model.Player;
 import com.example.service.interfaces.GameRoomService;
 import com.example.service.mapper.GameRoomMapper;
