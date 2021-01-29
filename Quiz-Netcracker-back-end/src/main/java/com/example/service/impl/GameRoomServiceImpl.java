@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import com.example.dto.PlayerDto;
 import com.example.exception.DeleteEntityException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
@@ -9,6 +10,7 @@ import com.example.repository.GameRoomRepository;
 import com.example.service.interfaces.GameRoomService;
 import com.example.service.interfaces.GameService;
 import com.example.service.interfaces.PlayerService;
+import com.example.service.mapper.PlayerMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -16,9 +18,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class GameRoomServiceImpl implements GameRoomService {
@@ -27,14 +27,16 @@ public class GameRoomServiceImpl implements GameRoomService {
     private final GameService gameService;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final MessageSource messageSource;
+    private final PlayerMapper playerMapper;
 
     public GameRoomServiceImpl(GameRoomRepository gameRoomRepository, PlayerService playerService, GameService gameService,
-                               SimpMessagingTemplate simpMessagingTemplate, MessageSource messageSource) {
+                               SimpMessagingTemplate simpMessagingTemplate, MessageSource messageSource, PlayerMapper playerMapper) {
         this.gameRoomRepository = gameRoomRepository;
         this.playerService = playerService;
         this.gameService = gameService;
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.messageSource = messageSource;
+        this.playerMapper = playerMapper;
     }
 
     @Override
@@ -55,12 +57,16 @@ public class GameRoomServiceImpl implements GameRoomService {
         Player player = playerService.findPlayerById(playerId);
         List<GameRoom> gameRooms = gameRoomRepository.findGameRoomByGameId(gameId);
         for (GameRoom gameRoom : gameRooms) {
-            if (gameRoom.getPlayers().size() < 2) {
+            if (gameRoom.getPlayers().size() < 3) {
                 gameRoom.getPlayers().add(player);
                 ObjectMapper mapper = new ObjectMapper();
+                Set<PlayerDto> dtoSet = new HashSet<>();
+                for (Player entity: gameRoom.getPlayers()) {
+                    dtoSet.add(playerMapper.toDto(entity));
+                }
                 for (Player playerInGameRoom : gameRoom.getPlayers()) {
                     if (!playerInGameRoom.getId().equals(playerId)) {
-                        simpMessagingTemplate.convertAndSend("/topic/game/" + playerInGameRoom.getId(), mapper.writeValueAsString(gameRoom.getPlayers()));
+                        simpMessagingTemplate.convertAndSend("/topic/game/" + playerInGameRoom.getId(), mapper.writeValueAsString(dtoSet));
                     }
                 }
                 return save(gameRoom);

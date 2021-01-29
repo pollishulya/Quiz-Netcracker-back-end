@@ -88,11 +88,8 @@ public class AmazonClient {
     }
 
     public GameDto putObject(String fileUrl, UUID gameId){
-        //String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
-        //сохраняет в Game назвнаие
         Game game = gameRepository.findGameById(gameId);
         game.setPhoto(fileUrl);
         return gameMapper.toDto(gameRepository.save(game));
     }
-
 }

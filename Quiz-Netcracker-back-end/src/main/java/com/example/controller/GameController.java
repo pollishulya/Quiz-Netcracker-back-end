@@ -4,6 +4,7 @@ import com.example.dto.GameDto;
 import com.example.exception.ArgumentNotValidException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.model.Game;
+import com.example.model.Photo;
 import com.example.model.Response;
 import com.example.repository.GamePageRepository;
 import com.example.service.impl.AmazonClient;
@@ -109,8 +110,10 @@ public class GameController {
     }
 
     @PostMapping("/uploadFile")
-    public String uploadFile(@RequestPart(value = "file") MultipartFile file) {
-        return this.amazonClient.uploadFile(file);
+    public Photo uploadFile(@RequestPart(value = "file") MultipartFile file) {
+        Photo photo = new Photo();
+         photo.setPhoto(this.amazonClient.uploadFile(file));
+         return photo;
     }
 
     @DeleteMapping("/deleteFile")

@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.dto.AnswerDto;
+import com.example.dto.GameMessage;
 import com.example.exception.ArgumentNotValidException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.model.*;

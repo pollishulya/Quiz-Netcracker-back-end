@@ -2,7 +2,7 @@ package com.example.controller;
 
 import com.example.dto.GameRoomDto;
 import com.example.model.GameRoom;
-import com.example.model.LikePlayer;
+import com.example.dto.LikePlayer;
 import com.example.model.Player;
 import com.example.service.interfaces.GameRoomService;
 import com.example.service.mapper.GameRoomMapper;
@@ -36,6 +36,24 @@ public class GameplayController {
             if (likePlayer.getRecipientId().equals(player.getId())) {
                 simpMessagingTemplate.convertAndSend("/topic/game/" + likePlayer.getRecipientId(), objectMapper.writeValueAsString(likePlayer.getName()));
             }
+        }
+    }
+
+    @MessageMapping("/go-game")
+    public void sendGoGame(@Payload GameRoomDto gameRoomDto) throws JsonProcessingException {
+        GameRoom gameRoom = mapper.toEntity(gameRoomDto);
+        ObjectMapper objectMapper = new ObjectMapper();
+        for (Player player : gameRoom.getPlayers()) {
+            simpMessagingTemplate.convertAndSend("/topic/game/" + player.getId(), objectMapper.writeValueAsString("go"));
+        }
+    }
+
+    @MessageMapping("/next-question")
+    public void sendNextQuestion(@Payload GameRoomDto gameRoomDto) throws JsonProcessingException {
+        GameRoom gameRoom = mapper.toEntity(gameRoomDto);
+        ObjectMapper objectMapper = new ObjectMapper();
+        for (Player player : gameRoom.getPlayers()) {
+            simpMessagingTemplate.convertAndSend("/topic/game/" + player.getId(), objectMapper.writeValueAsString("next"));
         }
     }
 
