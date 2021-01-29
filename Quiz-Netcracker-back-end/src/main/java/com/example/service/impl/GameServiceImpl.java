@@ -12,14 +12,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import com.example.service.interfaces.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,7 +43,6 @@ public class GameServiceImpl implements GameService {
         game1.getQuestions().addAll(questions);
         return game1;
     }
-
 
     public List<Game> searchGamesByTitle(String title) {
         return gameRepository.findAllByTitleContaining(title);
@@ -106,13 +98,5 @@ public class GameServiceImpl implements GameService {
     @Override
     public List<Game> findAllGames() {
         return gameRepository.findAll();
-    }
-
-    @Override
-    public void saveImage(MultipartFile imageFile) throws Exception {
-        String folder = "/photos";
-        byte[] bytes = imageFile.getBytes();
-        Path path = Paths.get(folder + imageFile.getOriginalFilename());
-        Files.write(path, bytes);
     }
 }
