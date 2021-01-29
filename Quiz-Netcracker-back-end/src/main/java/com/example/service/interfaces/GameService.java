@@ -14,5 +14,4 @@ public interface GameService {
     Game findGameById(UUID id);
     List<Game> findAllGames();
     List<Game> searchGamesByTitle(String title);
-    void saveImage(MultipartFile imageFile) throws Exception;
 }
