@@ -48,17 +48,23 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
 
+
 //    @Override
 //    public Player savePlayer(Player player) {
 //        return playerRepository.save(player);
 //    }
 //
-//    @Override
-//    public Player updatePlayer(UUID playerId, User playerRequest) {
-//        return playerRepository.findById(playerId).map(player -> {
-//            return playerRepository.save(player);
-//        }).orElseThrow(() -> new ResourceNotFoundException("Player not found with id " + playerId));
-//    }
+    @Override
+    public Player updatePlayer(UUID playerId, Player playerRequest) {
+        UUID[] args = new UUID[]{ playerId };
+        return playerRepository.findById(playerId).map(player -> {
+            player.setName(playerRequest.getName());
+            player.setEmail(playerRequest.getEmail());
+            player.setPhoto(playerRequest.getPhoto());
+            return playerRepository.save(player);
+        }).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
+    }
 //
 //    @Override
 //    public void deletePlayer(UUID playerId) {

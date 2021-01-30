@@ -1,22 +1,20 @@
 package com.example.controller;
 
+import com.example.dto.GameDto;
 import com.example.dto.UserDto;
-import com.example.model.Player;
-import com.example.model.RoleList;
-import com.example.model.User;
+import com.example.model.*;
 import com.example.repository.PlayerRepository;
 import com.example.security.LoginModel;
+import com.example.service.impl.AmazonClient;
 import com.example.service.interfaces.UserService;
 import com.example.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -31,19 +29,21 @@ public class UserController {
     private final UserMapper mapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final PlayerRepository playerRepository;
+    private final AmazonClient amazonClient;
 
 
     @Autowired
-    public UserController(UserService userService, UserMapper mapper, PlayerRepository playerRepository) {
+    public UserController(UserService userService, UserMapper mapper, PlayerRepository playerRepository, AmazonClient amazonClient) {
         this.userService = userService;
         this.mapper = mapper;
         this.playerRepository = playerRepository;
+        this.amazonClient = amazonClient;
         bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
     @GetMapping("/findAllUsers")
     public List<UserDto> getUsers() {
-        return userService.findAllUser().stream().map(mapper:: toDto).collect(Collectors.toList());
+        return userService.findAllUser().stream().map(mapper:: toShortDto).collect(Collectors.toList());
     }
 
     @GetMapping("/findUser/{userId}")
@@ -115,5 +115,4 @@ public class UserController {
     public UserDto blockUser(@PathVariable UUID userId) {
         return mapper.toDto(userService.blockUser(userId));
     }
-
 }

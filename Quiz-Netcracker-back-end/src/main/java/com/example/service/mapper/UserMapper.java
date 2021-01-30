@@ -41,8 +41,11 @@ public class UserMapper implements Mapper<User, UserDto> {
     @Override
     public UserDto toShortDto(User entity) {
         UserDto userDto = new UserDto();
+        userDto.setId(entity.getId());
+        userDto.setMail(entity.getMail());
         userDto.setLogin(entity.getLogin());
         userDto.setPassword(entity.getPassword());
+        userDto.setRole(entity.getRole());
         return userDto;
     }
 }

@@ -1,17 +1,20 @@
 package com.example.controller;
 
+import com.example.dto.GameDto;
 import com.example.dto.PlayerDto;
+import com.example.dto.UserDto;
+import com.example.model.Photo;
 import com.example.model.Player;
-import com.example.model.RoleList;
 import com.example.model.User;
-import com.example.security.LoginModel;
-import com.example.security.UserRoleList;
+import com.example.service.impl.AmazonClient;
 import com.example.service.interfaces.PlayerService;
 import com.example.service.interfaces.UserService;
 import com.example.service.mapper.PlayerMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -22,15 +25,13 @@ import java.util.stream.Collectors;
 public class PlayerController {
 
     private final PlayerService playerService;
-    private final UserService userService;
     private final PlayerMapper mapper;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AmazonClient amazonClient;
 
-    public PlayerController(PlayerService playerService, UserService userService, PlayerMapper mapper) {
+    public PlayerController(PlayerService playerService, PlayerMapper mapper, AmazonClient amazonClient) {
         this.playerService = playerService;
-        this.userService = userService;
         this.mapper = mapper;
-        bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        this.amazonClient = amazonClient;
     }
 
     @GetMapping("/{userProperty}")
@@ -48,4 +49,28 @@ public class PlayerController {
         return playerService.findAllPlayers().stream().map(mapper::toDto).collect(Collectors.toList());
     }
 
+    @PutMapping("/update/{playerId}")
+    public PlayerDto updatePlayer(@PathVariable UUID playerId,
+                              @Valid @RequestBody PlayerDto playerDto) {
+        Player player= mapper.toEntity(playerDto);
+        return mapper.toDto(playerService.updatePlayer(playerId, player));
+    }
+
+    @PostMapping("/uploadFile")
+    public Photo uploadFile(@RequestPart(value = "file") MultipartFile file) {
+        Photo photo = new Photo();
+        photo.setPhoto(this.amazonClient.uploadFile(file));
+        return photo;
+    }
+
+    @DeleteMapping("/deleteFile")
+    public String deleteFile(@RequestPart(value = "url") String fileUrl) {
+        return this.amazonClient.deleteFileFromS3Bucket(fileUrl);
+    }
+
+    @PostMapping("/updateFile/{gameId}")
+    public PlayerDto updateFile(@RequestPart(value = "url") String fileUrl,
+                              @PathVariable UUID gameId) {
+        return this.amazonClient.putObjectForPlayer(fileUrl, gameId);
+    }
 }

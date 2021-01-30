@@ -8,8 +8,12 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.dto.GameDto;
+import com.example.dto.PlayerDto;
+import com.example.model.Player;
 import com.example.repository.GameRepository;
+import com.example.repository.PlayerRepository;
 import com.example.service.mapper.GameMapper;
+import com.example.service.mapper.PlayerMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +31,9 @@ public class AmazonClient {
 
     private final GameRepository gameRepository;
     private final GameMapper gameMapper;
+    private final PlayerRepository playerRepository;
+    private final PlayerMapper playerMapper;
+
 
     private AmazonS3 s3client;
 
@@ -39,9 +46,11 @@ public class AmazonClient {
     @Value("${amazonProperties.secretKey}")
     private String secretKey;
 
-    public AmazonClient(GameRepository gameRepository, GameMapper gameMapper) {
+    public AmazonClient(GameRepository gameRepository, GameMapper gameMapper, PlayerRepository playerRepository, PlayerMapper playerMapper) {
         this.gameRepository = gameRepository;
         this.gameMapper = gameMapper;
+        this.playerRepository = playerRepository;
+        this.playerMapper = playerMapper;
     }
 
     @PostConstruct
@@ -91,5 +100,10 @@ public class AmazonClient {
         Game game = gameRepository.findGameById(gameId);
         game.setPhoto(fileUrl);
         return gameMapper.toDto(gameRepository.save(game));
+    }
+    public PlayerDto putObjectForPlayer(String fileUrl, UUID playerId){
+        Player player = playerRepository.findPlayerById(playerId);
+        player.setPhoto(fileUrl);
+        return playerMapper.toDto(playerRepository.save(player));
     }
 }

@@ -27,6 +27,7 @@ public class Player {
     @Column
     private String email;
 
+    @Column
     private String photo;
 
     @OneToOne(fetch = FetchType.EAGER)
