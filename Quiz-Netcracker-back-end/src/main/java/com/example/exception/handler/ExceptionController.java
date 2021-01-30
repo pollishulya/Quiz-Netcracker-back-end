@@ -33,15 +33,15 @@ public class ExceptionController {
         return new ResponseEntity<>(exceptionDetails, httpStatus);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> runtimeExceptionHandler(RuntimeException exception) {
-        String errorTitle = ErrorInfo.INTERNAL_SERVER_ERROR.getErrorTitle();
-        ExceptionDetails exceptionDetails = new ExceptionDetails();
-        exceptionDetails.setErrorTitle(messageSource.getMessage(errorTitle, null, LocaleContextHolder.getLocale()));
-        exceptionDetails.setTimestamp(new Date());
-        exceptionDetails.setErrorCode(ErrorInfo.INTERNAL_SERVER_ERROR.getErrorCode());
-        exceptionDetails.setMessage(messageSource.getMessage("message.InternalServerError", null, LocaleContextHolder.getLocale()));
-        HttpStatus httpStatus = ErrorInfo.INTERNAL_SERVER_ERROR.getHttpStatus();
-        return new ResponseEntity<>(exceptionDetails, httpStatus);
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity<?> runtimeExceptionHandler(RuntimeException exception) {
+//        String errorTitle = ErrorInfo.INTERNAL_SERVER_ERROR.getErrorTitle();
+//        ExceptionDetails exceptionDetails = new ExceptionDetails();
+//        exceptionDetails.setErrorTitle(messageSource.getMessage(errorTitle, null, LocaleContextHolder.getLocale()));
+//        exceptionDetails.setTimestamp(new Date());
+//        exceptionDetails.setErrorCode(ErrorInfo.INTERNAL_SERVER_ERROR.getErrorCode());
+//        exceptionDetails.setMessage(messageSource.getMessage("message.InternalServerError", null, LocaleContextHolder.getLocale()));
+//        HttpStatus httpStatus = ErrorInfo.INTERNAL_SERVER_ERROR.getHttpStatus();
+//        return new ResponseEntity<>(exceptionDetails, httpStatus);
+//    }
 }

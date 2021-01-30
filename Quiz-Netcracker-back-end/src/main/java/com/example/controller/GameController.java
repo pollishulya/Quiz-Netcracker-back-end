@@ -67,7 +67,8 @@ public class GameController {
                          @RequestParam(name = "size", defaultValue = "3") int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Game> pageResult = gamePageService.findAll(pageRequest);
-        return new Response(pageResult.getContent(), pageResult.getTotalPages(),
+        List<GameDto> gameDtoList = pageResult.getContent().stream().map(mapper::toDto).collect(Collectors.toList());
+        return new Response(gameDtoList, pageResult.getTotalPages(),
                 pageResult.getNumber(), pageResult.getSize());
     }
     @GetMapping("/getByTitle/{title}")

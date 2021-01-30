@@ -1,5 +1,6 @@
 package com.example.model;
 
+import com.example.dto.GameDto;
 import lombok.AllArgsConstructor;
 import lombok.*;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class Response {
-    private List<Game> games;
+    private List<GameDto> games;
     private int totalPages;
     private int pageNumber;
     private int pageSize;
