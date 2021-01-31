@@ -28,7 +28,10 @@ public class AnswerMapper implements Mapper<Answer, AnswerDto> {
 
     @Override
     public Answer toEntity(AnswerDto dto) {
-        Question answerQuestion = questionService.getQuestionById(dto.getQuestion());
+        Question answerQuestion = null;
+        if (dto.getQuestion() != null) {
+            answerQuestion = questionService.getQuestionById(dto.getQuestion());
+        }
         Answer answer = new Answer();
         answer.setId(dto.getId());
         answer.setTitle(dto.getTitle());
