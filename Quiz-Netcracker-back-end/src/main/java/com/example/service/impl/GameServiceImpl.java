@@ -49,6 +49,11 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    public List<Game> findGameByPlayerId(UUID playerId) {
+        return gameRepository.findGamesByPlayerId(playerId);
+    }
+
+    @Override
     public void deleteGame(UUID id) {
         try {
             gameRepository.deleteById(id);
