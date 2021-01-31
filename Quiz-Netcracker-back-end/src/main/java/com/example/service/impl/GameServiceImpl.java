@@ -69,14 +69,14 @@ public class GameServiceImpl implements GameService {
             game.setDescription(gameReq.getDescription());
             game.setPhoto(gameReq.getPhoto());
             if (gameReq.getQuestions() != null) {
-//                gameReq.getQuestions()
-//                        .stream()
-//                        .peek(question -> {
-//                            question.setGame(game);
-//                            questionService.setQuestionToAnswers(question);
-//                        });
+                Set<Question> questions = gameReq.getQuestions()
+                        .stream()
+                        .peek(question -> {
+                            question.setGame(game);
+                            questionService.setQuestionToAnswers(question);
+                        }).collect(Collectors.toSet());
                 game.getQuestions().clear();
-                game.getQuestions().addAll(gameReq.getQuestions());
+                game.getQuestions().addAll(questions);
             }
             return gameRepository.save(game);
         }).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
