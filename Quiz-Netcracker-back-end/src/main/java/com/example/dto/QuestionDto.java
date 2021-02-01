@@ -22,5 +22,6 @@ public class QuestionDto {
     UUID category;
     UUID level;
     UUID game;
+    String photo;
     Set<@Valid AnswerDto> answersSet;
 }

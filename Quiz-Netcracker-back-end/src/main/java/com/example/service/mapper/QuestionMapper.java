@@ -36,6 +36,7 @@ public class QuestionMapper implements Mapper<Question, QuestionDto> {
         questionDto.setCategory(entity.getCategory().getId());
         questionDto.setLevel(entity.getLevel().getId());
         questionDto.setGame(entity.getGame().getId());
+        questionDto.setPhoto(entity.getPhoto());
         questionDto.setAnswersSet(entity.getAnswersSet()
                 .stream()
                 .map(answerMapper::toDto)
@@ -62,6 +63,7 @@ public class QuestionMapper implements Mapper<Question, QuestionDto> {
         question.setCategory(category);
         question.setLevel(level);
         question.setGame(game);
+        question.setPhoto(dto.getPhoto());
         question.setAnswersSet(answers);
         return question;
     }

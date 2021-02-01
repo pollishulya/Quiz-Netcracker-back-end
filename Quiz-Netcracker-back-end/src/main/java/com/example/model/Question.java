@@ -48,8 +48,11 @@ public class Question {
     @JoinColumn(name = "question_id", referencedColumnName = "id")
     private Set<Answer> answersSet;
 
+    @Column(name = "photo")
+    private String photo;
+
     @Builder
-    public Question(UUID id, String title, String description, Category category, Level level, Game game, Set<Answer> answersSet) {
+    public Question(UUID id, String title, String description, Category category, Level level, Game game, Set<Answer> answersSet, String photo) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -57,5 +60,6 @@ public class Question {
         this.level = level;
         this.game = game;
         this.answersSet = answersSet;
+        this.photo = photo;
     }
 }
