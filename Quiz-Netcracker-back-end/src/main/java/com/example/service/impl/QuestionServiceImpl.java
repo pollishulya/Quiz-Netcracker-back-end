@@ -47,6 +47,7 @@ public class QuestionServiceImpl implements QuestionService {
             question.setDescription(questionRequest.getDescription());
             question.setCategory(questionRequest.getCategory());
             question.setLevel(questionRequest.getLevel());
+            question.setPhoto(questionRequest.getPhoto());
             if (questionRequest.getAnswersSet() != null) {
                 question.getAnswersSet().clear();
                 question.getAnswersSet().addAll(questionRequest.getAnswersSet());

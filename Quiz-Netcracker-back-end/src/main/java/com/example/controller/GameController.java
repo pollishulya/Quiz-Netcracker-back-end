@@ -76,6 +76,13 @@ public class GameController {
        return mapper.toDto(gameService.findGameByTitle(title));
     }
 
+    @GetMapping("/player/{playerId}")
+    public List<GameDto> getGamesByPlayerId(@PathVariable UUID playerId){
+        return gameService.findGameByPlayerId(playerId).stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
+
     @GetMapping()
     public List<GameDto> getGames() {
         return gameService.findAllGames().stream()

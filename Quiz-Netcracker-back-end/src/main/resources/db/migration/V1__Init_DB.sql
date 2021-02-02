@@ -47,6 +47,7 @@ create table questions (
     category_id uuid,
     game_id uuid,
     level_id uuid,
+    photo varchar(255),
     primary key (id)
 );
 create table statictics (

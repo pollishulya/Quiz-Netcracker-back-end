@@ -11,4 +11,5 @@ public interface GameRepository extends JpaRepository<Game,UUID> {
     Game findGameById(UUID id);
     Game findGameByTitle(String title);
     List<Game> findAllByTitleContaining(String title);
+    List<Game> findGamesByPlayerId(UUID playerId);
 }
