@@ -70,14 +70,14 @@ public class GameAccessServiceImpl implements GameAccessService {
     }
 
     @Override
-    public boolean activateGame(String code) {
-        GameAccess gameAccess = gameAccessRepository.findGameAccessByActivationCode(code);
+    public GameAccess activate(UUID gameId, UUID playerId) {
+        GameAccess gameAccess = gameAccessRepository.findGameAccessesByGameIdAndPlayerId(gameId,playerId);
         if (gameAccess == null) {
-            return false;
+            return null;
         }
         gameAccess.setAccess(true);
         gameAccessRepository.save(gameAccess);
-        return true;
+        return gameAccess;
     }
 
     @Override

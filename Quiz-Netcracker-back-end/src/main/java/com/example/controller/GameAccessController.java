@@ -25,36 +25,26 @@ public class GameAccessController {
     private final GameAccessService gameAccessService;
 
     @Autowired
-    public GameAccessController(/*GameAccessMapper gameAccessMapper,*/ PlayerMapper playerMapper, GameMapper gameMapper, GameAccessMapper gameAccessMapper, GameAccessService gameAccessService) {
+    public GameAccessController( PlayerMapper playerMapper, GameMapper gameMapper, GameAccessMapper gameAccessMapper, GameAccessService gameAccessService) {
         this.gameMapper = gameMapper;
         this.playerMapper = playerMapper;
         this.gameAccessMapper = gameAccessMapper;
-//        this.gameAccessMapper = gameAccessMapper;
         this.gameAccessService = gameAccessService;
     }
 
     @GetMapping("/players/{userId}")
     public PlayerDto findPlayers(@PathVariable UUID userId) {
         return playerMapper.toDto(gameAccessService.createGameAccessByPlayer(userId));
-       // return (PlayerDto) gameAccessService.createGameAccessByGame(id);
     }
 
     @GetMapping("/games/{userId}")
     public GameDto findGames(@PathVariable UUID userId) {
         return gameMapper.toDto(gameAccessService.createGameAccessByGame(userId));
-        // return (PlayerDto) gameAccessService.createGameAccessByGame(id);
     }
 
-    @GetMapping("/activate/{code}")
-    public String activate(Model model, @PathVariable String code) {
-        boolean isActivated = gameAccessService.activateGame(code);
-        if (isActivated) {
-            model.addAttribute("message", "Ваша активация прошла успешно");
-        } else {
-            model.addAttribute("message", "Код активации не найден!");
-        }
-        model.addAttribute("isActivated", isActivated);
-        return "Ваша активация прошла успешно";
+    @GetMapping("/activate/{gameId}/{playerId}")
+    public GameAccessDto activate(@PathVariable UUID playerId, @PathVariable UUID gameId) {
+        return gameAccessMapper.toDto(gameAccessService.activate(gameId,playerId));
     }
 
     @GetMapping("/check/{gameId}/{playerId}")
