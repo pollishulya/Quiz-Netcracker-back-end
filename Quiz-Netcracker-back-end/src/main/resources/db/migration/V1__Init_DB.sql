@@ -21,6 +21,7 @@ create table games (
     description varchar(255),
     photo varchar(255),
     name varchar(255),
+    access varchar(255),
     player_id uuid,
     primary key (id)
 );
@@ -54,6 +55,13 @@ create table statictics (
     player_id uuid,
     primary key (id)
 );
+create table game_access (
+     id uuid not null,
+     game_id uuid,
+     player_id uuid,
+     access boolean,
+     primary key (id)
+);
 create table users (
     id uuid not null,
     activation_code varchar(255),
@@ -84,3 +92,7 @@ alter table statictics
     add constraint statictics_answer_fk foreign key (answer_id) references answers;
 alter table statictics
     add constraint statictics_player_fk foreign key (player_id) references players;
+alter table game_access
+    add constraint game_access_game_fk foreign key (game_id) references games;
+alter table game_access
+    add constraint game_access_player_fk foreign key (player_id) references players;

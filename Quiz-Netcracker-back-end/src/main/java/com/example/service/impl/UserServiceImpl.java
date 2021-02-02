@@ -7,6 +7,7 @@ import com.example.model.Player;
 import com.example.model.User;
 import com.example.repository.PlayerRepository;
 import com.example.repository.UserRepository;
+import com.example.service.interfaces.GameAccessService;
 import com.example.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -22,14 +23,16 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PlayerRepository playerRepository;
+    private final GameAccessService gameAccessService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MailSender mailSender;
     private final MessageSource messageSource;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PlayerRepository playerRepository, MessageSource messageSource, MailSender mailSender) {
+    public UserServiceImpl(UserRepository userRepository, PlayerRepository playerRepository, GameAccessService gameAccessService, MessageSource messageSource, MailSender mailSender) {
         this.userRepository = userRepository;
         this.playerRepository = playerRepository;
+        this.gameAccessService = gameAccessService;
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
         this.messageSource = messageSource;
         this.mailSender = mailSender;
@@ -60,6 +63,7 @@ public class UserServiceImpl implements UserService {
             mailSender.send(user.getMail(), "Activation code", message);
             userRepository.save(user);
             playerRepository.save(player);
+
             return user;
         }
     }

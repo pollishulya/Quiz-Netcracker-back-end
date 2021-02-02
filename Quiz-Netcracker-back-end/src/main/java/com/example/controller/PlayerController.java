@@ -1,16 +1,14 @@
 package com.example.controller;
 
-import com.example.dto.GameDto;
 import com.example.dto.PlayerDto;
-import com.example.dto.UserDto;
 import com.example.model.Photo;
 import com.example.model.Player;
 import com.example.model.User;
+import com.example.repository.PlayerRepository;
+import com.example.security.LoginModel;
 import com.example.service.impl.AmazonClient;
 import com.example.service.interfaces.PlayerService;
-import com.example.service.interfaces.UserService;
 import com.example.service.mapper.PlayerMapper;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,11 +23,13 @@ import java.util.stream.Collectors;
 public class PlayerController {
 
     private final PlayerService playerService;
+    private final PlayerRepository playerRepository;
     private final PlayerMapper mapper;
     private final AmazonClient amazonClient;
 
-    public PlayerController(PlayerService playerService, PlayerMapper mapper, AmazonClient amazonClient) {
+    public PlayerController(PlayerService playerService, PlayerRepository playerRepository, PlayerMapper mapper, AmazonClient amazonClient) {
         this.playerService = playerService;
+        this.playerRepository = playerRepository;
         this.mapper = mapper;
         this.amazonClient = amazonClient;
     }
@@ -72,5 +72,12 @@ public class PlayerController {
     public PlayerDto updateFile(@RequestPart(value = "url") String fileUrl,
                               @PathVariable UUID gameId) {
         return this.amazonClient.putObjectForPlayer(fileUrl, gameId);
+    }
+
+    @PostMapping("/register")
+    UUID singUp(@RequestBody LoginModel loginModel/*, HttpServletRequest request*/){
+        Player player = new Player(loginModel.getUsername());
+        playerService.savePlayer(player);
+        return player.getId();
     }
 }

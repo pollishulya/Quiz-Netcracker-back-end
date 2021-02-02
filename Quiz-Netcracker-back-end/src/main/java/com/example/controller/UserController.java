@@ -1,11 +1,11 @@
 package com.example.controller;
 
-import com.example.dto.GameDto;
 import com.example.dto.UserDto;
 import com.example.model.*;
 import com.example.repository.PlayerRepository;
 import com.example.security.LoginModel;
 import com.example.service.impl.AmazonClient;
+import com.example.service.interfaces.GameAccessService;
 import com.example.service.interfaces.UserService;
 import com.example.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -30,14 +29,16 @@ public class UserController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final PlayerRepository playerRepository;
     private final AmazonClient amazonClient;
+    private final GameAccessService gameAccessService;
 
 
     @Autowired
-    public UserController(UserService userService, UserMapper mapper, PlayerRepository playerRepository, AmazonClient amazonClient) {
+    public UserController(UserService userService, UserMapper mapper, PlayerRepository playerRepository, AmazonClient amazonClient, GameAccessService gameAccessService) {
         this.userService = userService;
         this.mapper = mapper;
         this.playerRepository = playerRepository;
         this.amazonClient = amazonClient;
+        this.gameAccessService = gameAccessService;
         bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -94,7 +95,8 @@ public class UserController {
         );
         userFacade.setRole(RoleList.ADMIN);
         userService.saveUser(userFacade/*,request.getLocalAddr())*/);
-
+        User user= userService.findUserByUsername(userFacade.getLogin());
+        gameAccessService.createGameAccessByPlayer(user.getId());
         return userFacade.getId();
     }
 

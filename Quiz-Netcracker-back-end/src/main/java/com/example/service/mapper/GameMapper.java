@@ -33,6 +33,7 @@ public class GameMapper implements Mapper<Game, GameDto> {
                 .map(questionMapper::toDto)
                 .collect(Collectors.toSet()));
         gameDto.setPlayer(entity.getPlayer().getId());
+        gameDto.setAccess(entity.getAccess());
         return gameDto;
     }
 
@@ -49,6 +50,7 @@ public class GameMapper implements Mapper<Game, GameDto> {
                 .map(questionMapper::toEntity)
                 .collect(Collectors.toSet()));
         game.setPlayer(player);
+        game.setAccess(dto.getAccess());
         return game;
     }
 

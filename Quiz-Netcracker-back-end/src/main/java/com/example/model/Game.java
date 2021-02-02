@@ -35,10 +35,14 @@ public class Game {
     @Column(name = "photo")
     private String photo;
 
-    public Game(UUID id, String name, String description, Player player, GameRoom gameRoom) {
+    @Column(name = "access")
+    private String access;
+
+    public Game(UUID id, String name, String description, Player player, GameRoom gameRoom, String access) {
         this.id = id;
         this.title = name;
         this.description = description;
         this.player = player;
+        this.access=access;
     }
 }

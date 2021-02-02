@@ -68,6 +68,10 @@ public class User {
         this.password = password;
     }
 
+    public User(String username) {
+        this.login = username;
+    }
+
     public List<String> getRoleList() {
         if (this.role.length() > 0) {
             return Arrays.asList(this.role.split(","));

@@ -6,6 +6,7 @@ import com.example.exception.detail.ErrorInfo;
 import com.example.model.Game;
 import com.example.model.Question;
 import com.example.repository.GameRepository;
+import com.example.service.interfaces.GameAccessService;
 import com.example.service.interfaces.GameService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -21,12 +22,14 @@ public class GameServiceImpl implements GameService {
     private final GameRepository gameRepository;
     private final QuestionService questionService;
     private final MessageSource messageSource;
+    private final GameAccessService gameAccessService;
 
     @Autowired
-    public GameServiceImpl(GameRepository gameRepository, QuestionService questionService, MessageSource messageSource) {
+    public GameServiceImpl(GameRepository gameRepository, QuestionService questionService, MessageSource messageSource, GameAccessService gameAccessService) {
         this.gameRepository = gameRepository;
         this.questionService = questionService;
         this.messageSource = messageSource;
+        this.gameAccessService = gameAccessService;
     }
 
     @Override
@@ -41,6 +44,7 @@ public class GameServiceImpl implements GameService {
                 .collect(Collectors.toSet());
         game1.getQuestions().clear();
         game1.getQuestions().addAll(questions);
+        gameAccessService.createGameAccessByGame(game.getId());
         return game1;
     }
 

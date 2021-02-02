@@ -47,13 +47,11 @@ public class PlayerServiceImpl implements PlayerService {
         return playerRepository.getPlayerByUserId(user);
     }
 
+    @Override
+    public Player savePlayer(Player player) {
+        return playerRepository.save(player);
+    }
 
-
-//    @Override
-//    public Player savePlayer(Player player) {
-//        return playerRepository.save(player);
-//    }
-//
     @Override
     public Player updatePlayer(UUID playerId, Player playerRequest) {
         UUID[] args = new UUID[]{ playerId };

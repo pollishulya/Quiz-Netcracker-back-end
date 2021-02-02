@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public interface PlayerService {
     Player updatePlayer(UUID playerId, Player playerRequest);
+    Player savePlayer(Player player);
     List<Player> findAllPlayers();
     Player findPlayer(String property);
     Player findPlayerById(UUID id);
