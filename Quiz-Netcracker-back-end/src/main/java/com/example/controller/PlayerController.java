@@ -45,7 +45,7 @@ public class PlayerController {
     }
 
     @GetMapping()
-    public List<PlayerDto> getAllClients() {
+    public List<PlayerDto> getAllPlayers() {
         return playerService.findAllPlayers().stream().map(mapper::toDto).collect(Collectors.toList());
     }
 

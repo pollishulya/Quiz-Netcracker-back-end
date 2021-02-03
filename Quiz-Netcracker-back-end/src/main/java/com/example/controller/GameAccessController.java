@@ -43,8 +43,9 @@ public class GameAccessController {
     }
 
     @GetMapping("/activate/{gameId}/{playerId}")
-    public GameAccessDto activate(@PathVariable UUID playerId, @PathVariable UUID gameId) {
-        return gameAccessMapper.toDto(gameAccessService.activate(gameId,playerId));
+    public boolean activate(@PathVariable UUID playerId, @PathVariable UUID gameId) {
+        GameAccess gameAccess=gameAccessService.checkAccess(gameId, playerId);
+        return gameAccess.isAccess();
     }
 
     @GetMapping("/check/{gameId}/{playerId}")

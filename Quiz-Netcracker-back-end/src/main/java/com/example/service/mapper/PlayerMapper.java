@@ -46,9 +46,10 @@ public class PlayerMapper implements Mapper<Player, PlayerDto> {
     public PlayerDto toShortDto(Player entity) {
         PlayerDto playerDto = new PlayerDto();
         playerDto.setId(entity.getId());
-//        playerDto.setEmail(entity.getEmail());
+        playerDto.setName(entity.getName());
+        playerDto.setEmail(entity.getEmail());
 //        playerDto.setPhoto(entity.getPhoto());
-        playerDto.setUser(entity.getUser().getId());
+  //      playerDto.setUser(entity.getUser().getId());
         return playerDto;
     }
 }
