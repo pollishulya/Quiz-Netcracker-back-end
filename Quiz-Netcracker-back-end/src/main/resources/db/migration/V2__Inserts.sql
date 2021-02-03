@@ -9,11 +9,14 @@ VALUES ('365924ba-fe34-412d-99b6-dec9554815d9', NULL, TRUE, 'Administrator', 'ad
 
 -- Заполняем категории
 INSERT INTO categories(id, description, name) VALUES ('f7b926e4-3a0c-43d5-913d-28e27a612a76', 'Наука', 'Наука');
-INSERT INTO categories(id, description, name) VALUES ('5fb660e7-5425-46da-9b33-6a8fc4c716a0', 'Культура', 'Культура');
+INSERT INTO categories(id, description, name) VALUES ('5fb660e7-5425-46da-9b33-6a8fc4c716a0', 'Литература', 'Литература');
 INSERT INTO categories(id, description, name) VALUES ('ebf7b015-6061-43d1-92e7-3fac5c5802b3', 'Общее', 'Общее');
 INSERT INTO categories(id, description, name) VALUES ('634572e8-6926-463d-8712-c699b4821cdc', 'Разное', 'Разное');
 INSERT INTO categories(id, description, name) VALUES ('ed2b4a73-a6ec-476a-b82e-16eac9249f5e', 'Мультфильмы', 'Мультфильмы');
 INSERT INTO categories(id, description, name) VALUES ('ed677e4d-ce26-4e75-8a9b-1be83b5b39d7', 'Спорт', 'Спорт');
+INSERT INTO categories(id, description, name) VALUES ('90ed209c-7714-4c2b-b539-2c87799264e7', 'История', 'История');
+INSERT INTO categories(id, description, name) VALUES ('c2a658e6-ea92-4df8-bc06-620089ffb187', 'География', 'География');
+INSERT INTO categories(id, description, name) VALUES ('dad69283-f7c4-47aa-a754-69a2525b43cd', 'Биология', 'Биология');
 
 -- Разрабатываем игру про футбол (запустить может только админ)
 INSERT INTO games(id, description, photo, name, player_id)
@@ -27,6 +30,9 @@ UPDATE games SET player_id = 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd' WHERE id = '
 INSERT INTO game_room(id, game_id) VALUES ('c3856e57-89f9-47c8-b178-92649a38b671', '716fb029-148d-4515-8aca-7cb8a604ee24');
 
 UPDATE players SET game_room_id = 'c3856e57-89f9-47c8-b178-92649a38b671' WHERE id = 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd';
+
+INSERT INTO game_access(id, game_id, player_id, access, activation_code)
+VALUES ('cba12d14-41ef-4a1c-9478-1bdf93fd1c0f', '716fb029-148d-4515-8aca-7cb8a604ee24', 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd', TRUE, NULL);
 
 -- 1 вопрос
 INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
@@ -452,3 +458,267 @@ VALUES('2d88a38c-0cff-40b4-aa1b-f1d2555a55dd', FALSE, '«Ручной мяч»',
 
 INSERT INTO answers(id, answer_is_right, title, question_id)
 VALUES('e919b6a7-4c8f-415c-9042-ac6a7ffb1a51', TRUE, '«Мячом и ступней»', '2f78d7e2-88e0-4dd8-8356-48ff525a6db5');
+
+-- Разрабатываем игру "Кто хочет стать миллионером?" (запускать может только админ)
+insert into games(id, description, photo, name, player_id)
+VALUES ('7e9fffd6-b1e6-4343-bc4d-2930620436b4', '15 интересных вопросов', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1612267962433-dadd84efdf6e0ec53664fe89a32e7283.jpeg', 'Кто хочет стать миллионером?', 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd');
+
+INSERT INTO game_room(ID, GAME_ID) VALUES ('223dc383-5989-4f12-8197-4826566aa609', '7e9fffd6-b1e6-4343-bc4d-2930620436b4');
+
+INSERT INTO game_access(id, game_id, player_id, access, activation_code)
+VALUES ('8919f74d-5dbc-4624-a965-72b7c8ff9e9d', '7e9fffd6-b1e6-4343-bc4d-2930620436b4', 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd', TRUE, NULL);
+
+-- 1 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('093fca06-4129-46ae-a78a-39a306b5e156', 'В каком году произошла Куликовская битва?', 'В каком году произошла Куликовская битва?',
+        '90ed209c-7714-4c2b-b539-2c87799264e7', '7e9fffd6-b1e6-4343-bc4d-2930620436b4', 'fdecef96-6ee3-4d25-803b-26042cb532a7', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1612268394004-457825ae807ab549d7eb4bb8ef070b5d.jpeg');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('bf981085-d11c-4faa-9f01-fcdee0006dd9', TRUE, '1380', '093fca06-4129-46ae-a78a-39a306b5e156');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('483a27d7-98fd-489a-9222-aaaacc123df2', FALSE, '1616', '093fca06-4129-46ae-a78a-39a306b5e156');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('1b4cdaab-d5fe-4571-b31e-5f3c25d0d2d1', FALSE, '1569', '093fca06-4129-46ae-a78a-39a306b5e156');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('2f325d89-3675-4d7e-b2bd-b02aa21f3207', FALSE, '1773', '093fca06-4129-46ae-a78a-39a306b5e156');
+
+-- 2 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('e798c8a1-28ea-497a-8970-c29c3d4e482c', 'Что, образно говоря, держит за пазухой затаивший злобу человек?', 'Что, образно говоря, держит за пазухой затаивший злобу человек?',
+        'ebf7b015-6061-43d1-92e7-3fac5c5802b3', '7e9fffd6-b1e6-4343-bc4d-2930620436b4', 'fdecef96-6ee3-4d25-803b-26042cb532a7', NULL);
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('e2586b6d-76b4-4c03-a989-b857f791311f', FALSE, 'Сюрприз', 'e798c8a1-28ea-497a-8970-c29c3d4e482c');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('aa002c47-d4c3-4c41-80ca-22535655c0e5', FALSE, 'Рогатку', 'e798c8a1-28ea-497a-8970-c29c3d4e482c');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('4dcba59e-d452-4ae4-ab2d-a70176485149', FALSE, 'Паспорт', 'e798c8a1-28ea-497a-8970-c29c3d4e482c');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('a4ecc2fc-0d19-4210-9bf3-4b4bf84f81bd', TRUE, 'Камень', 'e798c8a1-28ea-497a-8970-c29c3d4e482c');
+
+-- 3 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('55e41994-5f41-4acd-8ec7-9964da4286f4', 'Где на земном шаре день равен ночи в течение всего года?', 'Где на земном шаре день равен ночи в течение всего года?',
+        'ebf7b015-6061-43d1-92e7-3fac5c5802b3', '7e9fffd6-b1e6-4343-bc4d-2930620436b4', 'fdecef96-6ee3-4d25-803b-26042cb532a7', NULL);
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('c08f8aa3-61f2-486f-9e73-7e46112d04fa', TRUE, 'На экваторе', '55e41994-5f41-4acd-8ec7-9964da4286f4');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('d33704b5-9804-44b9-8e41-d04e762f832a', FALSE, 'На полюсах', '55e41994-5f41-4acd-8ec7-9964da4286f4');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('1ba3ce67-aa10-49a3-8407-94b8e770ca6f', FALSE, 'На полярном круге', '55e41994-5f41-4acd-8ec7-9964da4286f4');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('5e30a5ff-60d7-49bb-8180-d50622339189', FALSE, 'На нулевом меридиане', '55e41994-5f41-4acd-8ec7-9964da4286f4');
+
+-- 4 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('04f2d789-7816-4fb5-b3ad-7de9ed953f74', 'В какой из этих стран один из официальных языков - французский?', 'В какой из этих стран один из официальных языков - французский?',
+        'c2a658e6-ea92-4df8-bc06-620089ffb187', '7e9fffd6-b1e6-4343-bc4d-2930620436b4', 'fdecef96-6ee3-4d25-803b-26042cb532a7', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1612298418025-f6aff354da9556bc39b3c6db8b2b9b41.jpeg');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('89eede7b-b856-4668-af6b-bf76c505859d', FALSE, 'Эквадор', '04f2d789-7816-4fb5-b3ad-7de9ed953f74');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('48a0974f-b2aa-474f-96be-54b907f60f18', TRUE, 'Республика Гаити', '04f2d789-7816-4fb5-b3ad-7de9ed953f74');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('13a02527-7649-43eb-b9b2-9ecfd4c88ee3', FALSE, 'Кения', '04f2d789-7816-4fb5-b3ad-7de9ed953f74');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('13694ad5-b0c0-46ee-8f9d-d434ad66c79a', FALSE, 'Венесуэла', '04f2d789-7816-4fb5-b3ad-7de9ed953f74');
+
+-- 5 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('2656b0ae-e603-4690-ad98-9f1aa29888c2', 'Как футболисты называют внешнюю сторону стопы?', 'Как футболисты называют внешнюю сторону стопы?',
+        'ed677e4d-ce26-4e75-8a9b-1be83b5b39d7', '7e9fffd6-b1e6-4343-bc4d-2930620436b4', 'fdecef96-6ee3-4d25-803b-26042cb532a7', NULL);
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('b5735246-9b92-4af2-a522-8018d0f3a390', FALSE, 'Датчанка', '2656b0ae-e603-4690-ad98-9f1aa29888c2');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('3284f317-e8fe-4043-a08d-66f6ae2f8ce9', FALSE, 'Финка', '2656b0ae-e603-4690-ad98-9f1aa29888c2');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('4d6d1213-00e0-47e3-8d9d-8fcdfeabfb36', FALSE, 'Норвежка', '2656b0ae-e603-4690-ad98-9f1aa29888c2');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('e05a9224-8c7e-4db8-b6c8-deabdbcfa5b6', TRUE, 'Шведка', '2656b0ae-e603-4690-ad98-9f1aa29888c2');
+
+-- 6 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('c32b98d4-c48f-4283-b6ec-105566e0ee92', 'У человека семь шейных позвонков. А сколько их у жирафа?', 'У человека семь шейных позвонков. А сколько их у жирафа?',
+        'dad69283-f7c4-47aa-a754-69a2525b43cd', '7e9fffd6-b1e6-4343-bc4d-2930620436b4', '0458cc5b-8871-4807-98e8-68451f3b1f0b', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1612299575921-unnamed.jpg');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('1967af2d-faff-461e-8c6f-fc670336619e', FALSE, '10', 'c32b98d4-c48f-4283-b6ec-105566e0ee92');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('2972de6e-5fca-4944-bc65-5dc3bca4cba1', FALSE, '21', 'c32b98d4-c48f-4283-b6ec-105566e0ee92');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('d943494e-93dd-41e5-9bbb-8041066793d7', TRUE, '7', 'c32b98d4-c48f-4283-b6ec-105566e0ee92');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('5f5fa493-1338-405a-b7e5-d978e37cea7d', FALSE, '15', 'c32b98d4-c48f-4283-b6ec-105566e0ee92');
+
+-- 7 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('8b2a5628-f2cd-4b40-9f0a-5fae1322d810', 'Что журнал «Тайм» однажды признал «Человеком года»?', 'Что журнал «Тайм» однажды признал «Человеком года»?',
+        '634572e8-6926-463d-8712-c699b4821cdc', '7e9fffd6-b1e6-4343-bc4d-2930620436b4', '0458cc5b-8871-4807-98e8-68451f3b1f0b', NULL);
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('4fc2d344-cef4-443c-bd63-fae478f82cf7', TRUE, 'Компьютер', '8b2a5628-f2cd-4b40-9f0a-5fae1322d810');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('5343ece4-e0bd-4aff-9e18-b2c56b50eb1a', FALSE, 'Телефон', '8b2a5628-f2cd-4b40-9f0a-5fae1322d810');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('6fe0381e-6f44-40d0-a6a0-686faf5c8e68', FALSE, 'Телевизор', '8b2a5628-f2cd-4b40-9f0a-5fae1322d810');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('7572ab87-e627-4e3c-b07f-1dbee8039d28', FALSE, 'Космический корабль', '8b2a5628-f2cd-4b40-9f0a-5fae1322d810');
+
+-- 8 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('82881e75-4a71-45d1-897e-1dedadb508e4', 'Кто автор антиутопического романа "О дивный новый мир"?', 'Кто автор антиутопического романа "О дивный новый мир"?',
+        '5fb660e7-5425-46da-9b33-6a8fc4c716a0', '7e9fffd6-b1e6-4343-bc4d-2930620436b4', '0458cc5b-8871-4807-98e8-68451f3b1f0b', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1612300515578-68f6758f5a51b7c3145c8db23c71596e.jpeg');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('59cf63bb-8c71-4e10-8ca2-e6f82a989e18', FALSE, 'Рэй Брэдбери', '82881e75-4a71-45d1-897e-1dedadb508e4');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('89f4f01e-f23e-4d0b-9b15-83764d35a362', FALSE, 'Джордж Оруэлл', '82881e75-4a71-45d1-897e-1dedadb508e4');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('630b526f-53fa-4222-a076-3d24e879dec1', TRUE, 'Олдос Хаксли', '82881e75-4a71-45d1-897e-1dedadb508e4');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('27237539-dac6-4e0a-98ca-00cf09300f13', FALSE, 'Сомерсет Моэм', '82881e75-4a71-45d1-897e-1dedadb508e4');
+
+-- 9 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('476b124a-11ca-4032-9af8-fd4c51ac9cd7', 'С каким философом Екатерина II вела дружескую переписку?', 'С каким философом Екатерина II вела дружескую переписку?',
+        '90ed209c-7714-4c2b-b539-2c87799264e7', '7e9fffd6-b1e6-4343-bc4d-2930620436b4', '0458cc5b-8871-4807-98e8-68451f3b1f0b', NULL);
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('3e89163e-4b30-4cd0-843b-6a174e20ac94', FALSE, 'Паскаль', '476b124a-11ca-4032-9af8-fd4c51ac9cd7');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('66ec952b-8f5a-42b4-9e41-c799624698d3', TRUE, 'Вольтер', '476b124a-11ca-4032-9af8-fd4c51ac9cd7');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('3e608bb8-516b-482a-ad9d-bc1e05cc16c1', FALSE, 'Руссо', '476b124a-11ca-4032-9af8-fd4c51ac9cd7');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('0f3007b9-96f6-476a-a746-448e5df382ab', FALSE, 'Декарт', '476b124a-11ca-4032-9af8-fd4c51ac9cd7');
+
+-- 10 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('1fe96a0e-6a04-4b2f-97cb-f4bb7de3fca0', 'В каком городе был проведён первый международный кинофестиваль?', 'В каком городе был проведён первый международный кинофестиваль?',
+        'ebf7b015-6061-43d1-92e7-3fac5c5802b3', '7e9fffd6-b1e6-4343-bc4d-2930620436b4', '0458cc5b-8871-4807-98e8-68451f3b1f0b', NULL);
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('f8340abd-2daf-43d6-9383-d86939438202', FALSE, 'Берлин', '1fe96a0e-6a04-4b2f-97cb-f4bb7de3fca0');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('ad989bb6-9a2a-437b-bb91-d0824f83736f', FALSE, 'Париж', '1fe96a0e-6a04-4b2f-97cb-f4bb7de3fca0');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('8234a1e9-b2b3-40b4-9921-f58a133792ef', TRUE, 'Венеция', '1fe96a0e-6a04-4b2f-97cb-f4bb7de3fca0');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('909c44bb-6e9b-4215-85a5-385e8216629d', FALSE, 'Канн', '1fe96a0e-6a04-4b2f-97cb-f4bb7de3fca0');
+
+-- 11 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('5ea1f6f4-3527-4d55-8e7a-a677bd65a483', 'Как называется самая глубокая точка поверхности Земли, находящаяся на дне Марианской впадины?', 'Как называется самая глубокая точка поверхности Земли, находящаяся на дне Марианской впадины?',
+        'c2a658e6-ea92-4df8-bc06-620089ffb187', '7e9fffd6-b1e6-4343-bc4d-2930620436b4', 'd401d941-6883-45c5-9038-4bbd9f63bb3c', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1612364422440-185a7872c4fddfc2b8b0d3c780a21e49.jpeg');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('11a553b1-dceb-45dd-ab4b-3b5750b3d349', FALSE, 'Черное Логово', '5ea1f6f4-3527-4d55-8e7a-a677bd65a483');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('c5180d4f-e0ee-46fc-bf6b-59379fe304b5', FALSE, 'Филиппинская плита', '5ea1f6f4-3527-4d55-8e7a-a677bd65a483');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('850bd6bd-0988-477d-a90b-4fc305ddae18', TRUE, 'Бездна Челленджера', '5ea1f6f4-3527-4d55-8e7a-a677bd65a483');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('23421ceb-bd1a-42f5-9aad-81435036434a', FALSE, 'Кермадек', '5ea1f6f4-3527-4d55-8e7a-a677bd65a483');
+
+-- 12 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('5c35c84f-2f38-45fb-94a9-bce05f33759f', 'В какой из этих столиц бывших союзных республик раньше появилось метро?', 'В какой из этих столиц бывших союзных республик раньше появилось метро?',
+        '634572e8-6926-463d-8712-c699b4821cdc', '7e9fffd6-b1e6-4343-bc4d-2930620436b4', 'd401d941-6883-45c5-9038-4bbd9f63bb3c', NULL);
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('4d6fc15d-9bc2-4c49-b34e-d5fb9a9a9dc6', FALSE, 'Баку', '5c35c84f-2f38-45fb-94a9-bce05f33759f');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('6096f797-7213-4d29-99df-f57909bc4250', FALSE, 'Минск', '5c35c84f-2f38-45fb-94a9-bce05f33759f');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('33de15b4-2f49-4b8c-9b04-d06712a47bbc', TRUE, 'Тбилиси', '5c35c84f-2f38-45fb-94a9-bce05f33759f');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('c2a4e832-1548-494a-be26-f8899fe0ceac', FALSE, 'Ереван', '5c35c84f-2f38-45fb-94a9-bce05f33759f');
+
+-- 13 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('6cff4ce5-3cda-47de-9b46-4d4bdf3b7a0f', 'Какое имя не принимал ни один папа римский?', 'Какое имя не принимал ни один папа римский?',
+        '634572e8-6926-463d-8712-c699b4821cdc', '7e9fffd6-b1e6-4343-bc4d-2930620436b4', 'd401d941-6883-45c5-9038-4bbd9f63bb3c', NULL);
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('15fa78e1-437f-462a-8da0-cc0de6f85341', FALSE, 'Валентин', '6cff4ce5-3cda-47de-9b46-4d4bdf3b7a0f');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('d24d5191-7983-4fa7-bb70-b4a013a37b84', FALSE, 'Евгений', '6cff4ce5-3cda-47de-9b46-4d4bdf3b7a0f');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('d525b847-b87b-4507-922a-5d0d3bef212f', FALSE, 'Виктор', '6cff4ce5-3cda-47de-9b46-4d4bdf3b7a0f');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('a9ee2908-0301-42a5-a16d-848f29b176e3', TRUE, 'Георгий', '6cff4ce5-3cda-47de-9b46-4d4bdf3b7a0f');
+
+-- 14 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('6b563085-eda8-42e3-a32a-073a6d45e2dc', 'Что в свободное время мастерил химик Д. И. Менделеев?', 'Что в свободное время мастерил химик Д. И. Менделеев?',
+        '634572e8-6926-463d-8712-c699b4821cdc', '7e9fffd6-b1e6-4343-bc4d-2930620436b4', 'd401d941-6883-45c5-9038-4bbd9f63bb3c', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1612365672292-mendeleev.jpg');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('a57900e7-bf6b-4696-91e4-f29f34f98b17', TRUE, 'Чемоданы', '6b563085-eda8-42e3-a32a-073a6d45e2dc');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('2fb64bb8-43a2-4298-8fd5-032416004c66', FALSE, 'Игрушки', '6b563085-eda8-42e3-a32a-073a6d45e2dc');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('f56818a9-cc05-41f0-a6f8-3abb44c57f17', FALSE, 'Прялки', '6b563085-eda8-42e3-a32a-073a6d45e2dc');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('6be99a86-97b3-4cdb-9e4f-68b5453f21ec', FALSE, 'Табуретки', '6b563085-eda8-42e3-a32a-073a6d45e2dc');
+
+-- 15 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('b69a5a6b-662d-480d-ac95-c64eed7dd5c7', 'Реки с каким названием нет на территории России?', 'Реки с каким названием нет на территории России?',
+        'c2a658e6-ea92-4df8-bc06-620089ffb187', '7e9fffd6-b1e6-4343-bc4d-2930620436b4', 'd401d941-6883-45c5-9038-4bbd9f63bb3c', NULL);
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('5778a226-5576-44c5-bb8b-a9fae2200e7d', FALSE, 'Шея', 'b69a5a6b-662d-480d-ac95-c64eed7dd5c7');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('f492c798-1e00-4f97-8d2f-d47377913d68', FALSE, 'Уста', 'b69a5a6b-662d-480d-ac95-c64eed7dd5c7');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('656a6332-32d9-40db-88e6-77dfe215f83f', TRUE, 'Спина', 'b69a5a6b-662d-480d-ac95-c64eed7dd5c7');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('8b6e1dbd-ceb9-40f2-87f3-ac55830de456', FALSE, 'Палец', 'b69a5a6b-662d-480d-ac95-c64eed7dd5c7');

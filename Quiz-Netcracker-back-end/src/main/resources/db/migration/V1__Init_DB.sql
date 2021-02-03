@@ -61,6 +61,7 @@ create table game_access (
      game_id uuid,
      player_id uuid,
      access boolean,
+     activation_code varchar(255),
      primary key (id)
 );
 create table users (

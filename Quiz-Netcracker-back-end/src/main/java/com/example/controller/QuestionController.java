@@ -42,7 +42,7 @@ public class QuestionController {
     @GetMapping()
     public List<QuestionDto> getQuestions() {
         return questionService.findAllQuestion().stream()
-                .map(mapper::toShortDto)
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -54,7 +54,7 @@ public class QuestionController {
     @GetMapping("/game/{gameId}")
     public List<QuestionDto> getQuestionsByGameId(@PathVariable UUID gameId) {
         return questionService.getQuestionsByGameId(gameId).stream()
-                .map(mapper::toShortDto)
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
