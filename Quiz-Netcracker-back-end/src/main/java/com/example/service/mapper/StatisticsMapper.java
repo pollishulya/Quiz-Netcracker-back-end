@@ -13,13 +13,11 @@ import java.util.stream.Collectors;
 @Component
 public class StatisticsMapper implements Mapper<Statistics, StatisticsDto> {
 
-    private final GameService gameService;
     private final AnswerService answerService;
     private final PlayerService playerService;
 
     @Autowired
-    public StatisticsMapper(GameService gameService, AnswerService answerService, PlayerService playerService) {
-        this.gameService = gameService;
+    public StatisticsMapper(AnswerService answerService, PlayerService playerService) {
         this.answerService = answerService;
         this.playerService = playerService;
     }

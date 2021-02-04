@@ -23,6 +23,8 @@ public class Statistics {
     @ManyToOne(fetch = FetchType.LAZY)
     private Player player;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Question question;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Answer answer;

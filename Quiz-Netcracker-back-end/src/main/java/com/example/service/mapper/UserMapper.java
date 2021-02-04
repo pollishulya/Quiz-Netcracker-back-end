@@ -8,12 +8,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper implements Mapper<User, UserDto> {
-    private final GameService gameService;
-
-    @Autowired
-    public UserMapper(GameService gameService) {
-        this.gameService = gameService;
-    }
 
     @Override
     public UserDto toDto(User entity) {
@@ -24,6 +18,7 @@ public class UserMapper implements Mapper<User, UserDto> {
         userDto.setPassword(entity.getPassword());
         userDto.setRole(entity.getRole());
         userDto.setActive(entity.isActive());
+        userDto.setActivationCode(entity.getActivationCode());
         return userDto;
     }
 

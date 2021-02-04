@@ -27,7 +27,6 @@ public class StatisticsServiceImpl implements StatisticsService {
     private final GameService gameService;
     private final PlayerService playerService;
     private final QuestionService questionService;
-    private final AnswerService answerService;
     private final QuestionMapper questionMapper;
     private final AnswerMapper answerMapper;
     private final MessageSource messageSource;
@@ -41,11 +40,11 @@ public class StatisticsServiceImpl implements StatisticsService {
         this.gameService = gameService;
         this.playerService = playerService;
         this.questionService = questionService;
-        this.answerService = answerService;
         this.questionMapper = questionMapper;
         this.answerMapper = answerMapper;
         this.messageSource = messageSource;
     }
+
 
     @Override
     public List<Statistics> findStatisticsByPlayerId(UUID id) {
@@ -61,11 +60,16 @@ public class StatisticsServiceImpl implements StatisticsService {
         UUID playerId = playerService.findPlayerByUserId(userId).getId();
 
         for (Statistics s : findStatisticsByPlayerId(playerId)) {
-            if (s.getAnswer().getQuestion().getGame().getId().equals(gameId)) {
+            if (s.getQuestion().getGame().getId().equals(gameId)) {
                 for (Question question : questions) {
-                    if (s.getAnswer().getQuestion().getId().equals(question.getId())) {
-                        gameStatisticsDto.add(new GameStatisticsDto(questionMapper.toDto(question),
-                                answerMapper.toDto(s.getAnswer()), getPercent(question.getId())));
+                    if (s.getQuestion().getId().equals(question.getId())) {
+                        if (s.getAnswer() == null) {
+                            gameStatisticsDto.add(new GameStatisticsDto(questionMapper.toDto(question),
+                                    null, getPercent(question.getId())));
+                        } else {
+                            gameStatisticsDto.add(new GameStatisticsDto(questionMapper.toDto(question),
+                                    answerMapper.toDto(s.getAnswer()), getPercent(question.getId())));
+                        }
                     }
                 }
             }
@@ -77,6 +81,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     public Statistics save(Statistics statistics) {
         return statisticsRepository.save(statistics);
     }
+
 
     @Override
     public void delete(UUID id) {
@@ -124,13 +129,11 @@ public class StatisticsServiceImpl implements StatisticsService {
         double all = 0;
         Question question = questionService.getQuestionById(questionId);
         List<Statistics> statistics = statisticsRepository.findAll();
-        for (Answer answer : question.getAnswersSet()) {
-            for (Statistics s : statistics) {
-                if (s.getAnswer().equals(answer)) {
-                    all++;
-                    if (answer.getRight()) {
-                        number++;
-                    }
+        for (Statistics s : statistics) {
+            if (s.getQuestion().equals(question)) {
+                all++;
+                if (s.getAnswer() != null && s.getAnswer().getRight()) {
+                    number++;
                 }
             }
         }

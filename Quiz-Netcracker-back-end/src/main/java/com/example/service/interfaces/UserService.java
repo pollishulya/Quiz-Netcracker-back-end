@@ -14,6 +14,7 @@ public interface UserService {
     void deleteUser(UUID userId);
     User getUserById(UUID userId);
     User findUserByUsername(String userName);
-    boolean activateUser(String code);
+//    boolean activateUser(String code);
+    boolean activateUser(String mail, String code);
     User blockUser(UUID userId);
 }
