@@ -94,7 +94,7 @@ alter table questions
 alter table statictics
     add constraint statictics_answer_fk foreign key (answer_id) references answers;
 alter table statictics
-    add constraint statictics_question_fk foreign key (question_id) references players;
+    add constraint statictics_question_fk foreign key (question_id) references questions;
 alter table statictics
     add constraint statictics_player_fk foreign key (player_id) references players;
 alter table game_access
