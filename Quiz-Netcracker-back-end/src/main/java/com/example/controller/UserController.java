@@ -1,7 +1,9 @@
 package com.example.controller;
 
+import com.example.dto.ActivateCodeDto;
 import com.example.dto.UserDto;
-import com.example.model.*;
+import com.example.model.RoleList;
+import com.example.model.User;
 import com.example.repository.PlayerRepository;
 import com.example.security.LoginModel;
 import com.example.service.impl.AmazonClient;
@@ -44,7 +46,7 @@ public class UserController {
 
     @GetMapping("/findAllUsers")
     public List<UserDto> getUsers() {
-        return userService.findAllUser().stream().map(mapper:: toShortDto).collect(Collectors.toList());
+        return userService.findAllUser().stream().map(mapper::toShortDto).collect(Collectors.toList());
     }
 
     @GetMapping("/findUser/{userId}")
@@ -61,8 +63,8 @@ public class UserController {
 
     @PutMapping("/update/{userId}")
     public UserDto updateUser(@PathVariable UUID userId,
-                                   @Valid @RequestBody UserDto userDto) {
-        User user= mapper.toEntity(userDto);
+                              @Valid @RequestBody UserDto userDto) {
+        User user = mapper.toEntity(userDto);
         return mapper.toDto(userService.updateUser(userId, user));
     }
 
@@ -74,43 +76,37 @@ public class UserController {
 
     @GetMapping("/{username}")
     public UserDto getOneAccount(@PathVariable String username) {
-            return mapper.toDto(userService.findUserByUsername(username));
+        return mapper.toDto(userService.findUserByUsername(username));
     }
 
     @GetMapping("/check/{username}")
     public UserDto checkAccount(@PathVariable String username) {
         User userFromDb = userService.findUserByUsername(username);
         if (userFromDb == null) {
-            return null;}
-        else{
+            return null;
+        } else {
             return mapper.toDto(userService.findUserByUsername(username));
         }
     }
 
     @PostMapping("/register")
-    UUID singUp(@RequestBody LoginModel loginModel/*, HttpServletRequest request*/){
+    User singUp(@RequestBody LoginModel loginModel/*, HttpServletRequest request*/) {
         User userFacade = new User(loginModel.getUsername(),
                 loginModel.getMail(),
                 bCryptPasswordEncoder.encode(loginModel.getPassword())
         );
         userFacade.setRole(RoleList.ADMIN);
         userService.saveUser(userFacade/*,request.getLocalAddr())*/);
-        User user= userService.findUserByUsername(userFacade.getLogin());
+        User user = userService.findUserByUsername(userFacade.getLogin());
         gameAccessService.createGameAccessByPlayer(user.getId());
-        return userFacade.getId();
+        return userFacade;
     }
 
-
-    @GetMapping("/activate/{code}")
-    public String activate(Model model, @PathVariable String code) {
-        boolean isActivated = userService.activateUser(code);
-        if (isActivated) {
-            model.addAttribute("message", "Ваша активация прошла успешно");
-        } else {
-            model.addAttribute("message", "Код активации не найден!");
-        }
-        model.addAttribute("isActivated", isActivated);
-        return "Ваша активация прошла успешно";
+    @GetMapping("/activate/{mail}/{code}")
+    public ActivateCodeDto activate(Model model, @PathVariable String mail, @PathVariable String code) {
+        ActivateCodeDto dto = new ActivateCodeDto();
+        dto.setText(userService.activateUser(mail, code) ? "Ваша активация прошла успешно!" : "Код активации неверный!");
+        return dto;
     }
 
     @PostMapping(value = "/block/{userId}")

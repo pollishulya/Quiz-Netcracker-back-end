@@ -62,11 +62,16 @@ public class StatisticsServiceImpl implements StatisticsService {
         UUID playerId = playerService.findPlayerByUserId(userId).getId();
 
         for (Statistics s : findStatisticsByPlayerId(playerId)) {
-            if (s.getAnswer().getQuestion().getGame().getId().equals(gameId)) {
+            if (s.getQuestion().getGame().getId().equals(gameId)) {
                 for (Question question : questions) {
-                    if (s.getAnswer().getQuestion().getId().equals(question.getId())) {
-                        gameStatisticsDto.add(new GameStatisticsDto(questionMapper.toDto(question),
-                                answerMapper.toDto(s.getAnswer()), getPercent(question.getId())));
+                    if (s.getQuestion().getId().equals(question.getId())) {
+                        if (s.getAnswer() == null) {
+                            gameStatisticsDto.add(new GameStatisticsDto(questionMapper.toDto(question),
+                                    null, getPercent(question.getId())));
+                        } else {
+                            gameStatisticsDto.add(new GameStatisticsDto(questionMapper.toDto(question),
+                                    answerMapper.toDto(s.getAnswer()), getPercent(question.getId())));
+                        }
                     }
                 }
             }
@@ -84,9 +89,8 @@ public class StatisticsServiceImpl implements StatisticsService {
     public void delete(UUID id) {
         try {
             statisticsRepository.deleteById(id);
-        }
-        catch (RuntimeException exception) {
-            UUID[] args = new UUID[]{ id };
+        } catch (RuntimeException exception) {
+            UUID[] args = new UUID[]{id};
             throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
                     messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
         }
@@ -98,13 +102,11 @@ public class StatisticsServiceImpl implements StatisticsService {
         double all = 0;
         Question question = questionService.getQuestionById(questionId);
         List<Statistics> statistics = statisticsRepository.findAll();
-        for (Answer answer : question.getAnswersSet()) {
-            for (Statistics s : statistics) {
-                if (s.getAnswer().equals(answer)) {
-                    all++;
-                    if(answer.getRight()){
-                        number++;
-                    }
+        for (Statistics s : statistics) {
+            if (s.getQuestion().equals(question)) {
+                all++;
+                if (s.getAnswer() != null && s.getAnswer().getRight()) {
+                    number++;
                 }
             }
         }

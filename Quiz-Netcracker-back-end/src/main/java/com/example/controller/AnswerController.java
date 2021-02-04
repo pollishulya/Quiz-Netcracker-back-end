@@ -5,10 +5,7 @@ import com.example.dto.GameMessage;
 import com.example.exception.ArgumentNotValidException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.model.*;
-import com.example.service.interfaces.AnswerService;
-import com.example.service.interfaces.GameRoomService;
-import com.example.service.interfaces.PlayerService;
-import com.example.service.interfaces.StatisticsService;
+import com.example.service.interfaces.*;
 import com.example.service.mapper.AnswerMapper;
 import com.example.service.validation.group.Create;
 import com.example.service.validation.group.Update;
@@ -38,12 +35,14 @@ public class AnswerController {
     private final GameRoomService gameRoomService;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final MessageSource messageSource;
+    private final QuestionService questionService;
 
     @Autowired
     public AnswerController(AnswerService answerService, AnswerMapper mapper,
                             CustomValidator customValidator, PlayerService playerService,
                             StatisticsService statisticsService, GameRoomService gameRoomService,
-                            SimpMessagingTemplate simpMessagingTemplate, MessageSource messageSource) {
+                            SimpMessagingTemplate simpMessagingTemplate, MessageSource messageSource,
+                            QuestionService questionService) {
         this.answerService = answerService;
         this.mapper = mapper;
         this.customValidator = customValidator;
@@ -52,13 +51,25 @@ public class AnswerController {
         this.gameRoomService = gameRoomService;
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.messageSource = messageSource;
+        this.questionService = questionService;
     }
 
-    @GetMapping("/{answerId}/{playerId}/{gameRoomId}/{numberAnswer}")
-    public AnswerDto getAnswer(@PathVariable UUID answerId, @PathVariable UUID playerId,
+    @GetMapping("/{questionId}/{answerId}/{playerId}/{gameRoomId}/{numberAnswer}")
+    public AnswerDto getAnswer(@PathVariable UUID questionId, @PathVariable String answerId, @PathVariable UUID playerId,
                                @PathVariable UUID gameRoomId,@PathVariable int numberAnswer) throws JsonProcessingException {
-        Answer answer = answerService.getAnswerById(answerId);
-        return saveStatistics(answer, answerId, playerId, gameRoomId, numberAnswer);
+        Answer answer;
+        Question question = questionService.getQuestionById(questionId);
+        if(answerId.equals("null")){
+            Player player = playerService.findPlayerById(playerId);
+            Statistics statistics = new Statistics();
+            statistics.setQuestion(question);
+            statistics.setAnswer(null);
+            statistics.setPlayer(player);
+            statisticsService.save(statistics);
+            return null;
+        }
+        answer = answerService.getAnswerById(UUID.fromString(answerId));
+        return saveStatistics(question, answer, playerId, gameRoomId, numberAnswer);
     }
 
     @GetMapping("/{id}")
@@ -100,11 +111,9 @@ public class AnswerController {
         return ResponseEntity.ok().build();
     }
 
-    private AnswerDto saveStatistics(Answer answer, UUID answerId, UUID playerId,
+    private AnswerDto saveStatistics(Question question, Answer answer, UUID playerId,
                                      UUID gameRoomId, int numberAnswer) throws JsonProcessingException {
         Player player = playerService.findPlayerById(playerId);
-        List<Statistics> statisticsList = statisticsService.findStatisticsByPlayerId(player.getId());
-
         GameMessage gameMessage = new GameMessage(answer.getRight(), playerId, numberAnswer);
         GameRoom gameRoom = gameRoomService.findById(gameRoomId);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -114,12 +123,8 @@ public class AnswerController {
             }
         }
 
-        for (Statistics s : statisticsList) {
-            if (s.getAnswer().getId().equals(answerId)) {
-                return mapper.toDto(answer);
-            }
-        }
         Statistics statistics = new Statistics();
+        statistics.setQuestion(question);
         statistics.setAnswer(answer);
         statistics.setPlayer(player);
         statisticsService.save(statistics);

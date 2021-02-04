@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import com.amazonaws.services.dynamodbv2.xspec.S;
 import com.example.exception.DeleteEntityException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
@@ -50,12 +51,12 @@ public class UserServiceImpl implements UserService {
             return null;
         } else {
             Player player = new Player(user.getMail(), user.getLogin(), user);
-             user.setActive(false); //оставить, когда будет активация через почту
-         //   user.setActive(true);//убрать, когда будет активация через почту
-            user.setActivationCode(UUID.randomUUID().toString());
+            user.setActive(false); //оставить, когда будет активация через почту
+            //   user.setActive(true);//убрать, когда будет активация через почту
+            user.setActivationCode(String.valueOf((int) (Math.random() * 899999 + 100000)));
             String message = String.format(
                     "Hello, %s! \n" +
-                            "Welcome to localhost. Please, visit next link: http://localhost:8085/users/activate/%s",
+                            "Welcome to localhost. Your activation code: %s",
                     user.getLogin(),
                     // urlAddress,
                     user.getActivationCode()
@@ -70,14 +71,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(UUID userId, User userRequest) {
-        UUID[] args = new UUID[]{ userId };
+        UUID[] args = new UUID[]{userId};
         return userRepository.findById(userId).map(user -> {
             user.setLogin(userRequest.getLogin());
             user.setPassword(userRequest.getPassword());
             user.setMail(userRequest.getMail());
             user.setRole(userRequest.getRole());
             return userRepository.save(user);
-        }).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+        }).orElseThrow(() -> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
 
@@ -85,9 +86,8 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(UUID userId) {
         try {
             userRepository.deleteById(userId);
-        }
-        catch (RuntimeException exception) {
-            UUID[] args = new UUID[]{ userId };
+        } catch (RuntimeException exception) {
+            UUID[] args = new UUID[]{userId};
             throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
                     messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
         }
@@ -95,8 +95,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(UUID userId) {
-        UUID[] args = new UUID[]{ userId };
-        return userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+        UUID[] args = new UUID[]{userId};
+        return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
 
@@ -106,9 +106,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean activateUser(String code) {
-        User user = userRepository.findUserByActivationCode(code);
-        if (user == null) {
+    public boolean activateUser(String mail, String code) {
+        User user = userRepository.findUserByMail(mail);
+        if (user == null || !user.getActivationCode().equals(code)) {
             return false;
         }
         user.setActive(true);
@@ -119,10 +119,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User blockUser(UUID userId) {
         User userToBlock = userRepository.findUserById(userId);
-        if(userToBlock.isActive()) {
+        if (userToBlock.isActive()) {
             userToBlock.setActive(false);
-        }
-        else{
+        } else {
             userToBlock.setActive(true);
         }
         return userRepository.save(userToBlock);
