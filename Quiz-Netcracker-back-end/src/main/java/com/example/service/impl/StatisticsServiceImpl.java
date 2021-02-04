@@ -7,10 +7,7 @@ import com.example.model.Question;
 import com.example.dto.GameStatisticsDto;
 import com.example.model.Statistics;
 import com.example.repository.StatisticsRepository;
-import com.example.service.interfaces.GameService;
-import com.example.service.interfaces.PlayerService;
-import com.example.service.interfaces.QuestionService;
-import com.example.service.interfaces.StatisticsService;
+import com.example.service.interfaces.*;
 import com.example.service.mapper.AnswerMapper;
 import com.example.service.mapper.QuestionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +15,11 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
+import static java.util.Comparator.comparing;
 
 @Service
 public class StatisticsServiceImpl implements StatisticsService {
@@ -36,7 +34,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     @Autowired
     public StatisticsServiceImpl(StatisticsRepository statisticsRepository, GameService gameService,
                                  PlayerService playerService, QuestionService questionService,
-                                 QuestionMapper questionMapper, AnswerMapper answerMapper,
+                                 AnswerService answerService, QuestionMapper questionMapper, AnswerMapper answerMapper,
                                  MessageSource messageSource) {
         this.statisticsRepository = statisticsRepository;
         this.gameService = gameService;
@@ -62,11 +60,16 @@ public class StatisticsServiceImpl implements StatisticsService {
         UUID playerId = playerService.findPlayerByUserId(userId).getId();
 
         for (Statistics s : findStatisticsByPlayerId(playerId)) {
-            if (s.getAnswer().getQuestion().getGame().getId().equals(gameId)) {
+            if (s.getQuestion().getGame().getId().equals(gameId)) {
                 for (Question question : questions) {
-                    if (s.getAnswer().getQuestion().getId().equals(question.getId())) {
-                        gameStatisticsDto.add(new GameStatisticsDto(questionMapper.toDto(question),
-                                answerMapper.toDto(s.getAnswer()), getPercent(question.getId())));
+                    if (s.getQuestion().getId().equals(question.getId())) {
+                        if (s.getAnswer() == null) {
+                            gameStatisticsDto.add(new GameStatisticsDto(questionMapper.toDto(question),
+                                    null, getPercent(question.getId())));
+                        } else {
+                            gameStatisticsDto.add(new GameStatisticsDto(questionMapper.toDto(question),
+                                    answerMapper.toDto(s.getAnswer()), getPercent(question.getId())));
+                        }
                     }
                 }
             }
@@ -84,27 +87,53 @@ public class StatisticsServiceImpl implements StatisticsService {
     public void delete(UUID id) {
         try {
             statisticsRepository.deleteById(id);
-        }
-        catch (RuntimeException exception) {
-            UUID[] args = new UUID[]{ id };
+        } catch (RuntimeException exception) {
+            UUID[] args = new UUID[]{id};
             throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
                     messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
         }
     }
 
+    @Override
+    public double getTotalPercentByPlayerId(UUID uuid) {
+        List<Statistics> statisticsByPlayerId = statisticsRepository.getStatisticsByPlayerId(uuid);
+        AtomicInteger rightAns = new AtomicInteger(0);
+        int totalAns = statisticsByPlayerId.size();
+        statisticsByPlayerId
+                .forEach(statistics -> {
+                    if (statistics.getAnswer().getRight()) {
+                        rightAns.incrementAndGet();
+                    }
+                });
+        return ((double) rightAns.get() * 100) / totalAns;
+    }
+
+    @Override
+    public Map<String, Double> getTotalPercentAllPlayers() {
+        Map<String, Double> map = new HashMap<>();
+        playerService.findAllPlayers()
+                .forEach(p -> {
+                    double value = getTotalPercentByPlayerId(p.getId());
+                    if (value <= 1 || value >= 0) {
+                        map.put(p.getName(), value);
+                    }
+                });
+        return map.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).
+                        collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+    }
 
     public double getPercent(UUID questionId) {
         double number = 0;
         double all = 0;
         Question question = questionService.getQuestionById(questionId);
         List<Statistics> statistics = statisticsRepository.findAll();
-        for (Answer answer : question.getAnswersSet()) {
-            for (Statistics s : statistics) {
-                if (s.getAnswer().equals(answer)) {
-                    all++;
-                    if(answer.getRight()){
-                        number++;
-                    }
+        for (Statistics s : statistics) {
+            if (s.getQuestion().equals(question)) {
+                all++;
+                if (s.getAnswer() != null && s.getAnswer().getRight()) {
+                    number++;
                 }
             }
         }
