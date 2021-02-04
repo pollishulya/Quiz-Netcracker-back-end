@@ -4,11 +4,13 @@ import com.example.dto.StatisticsDto;
 import com.example.dto.GameStatisticsDto;
 import com.example.service.interfaces.StatisticsService;
 import com.example.service.mapper.StatisticsMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -41,5 +43,10 @@ public class StatisticsController {
     public ResponseEntity<?> delete(@PathVariable UUID id) {
         statisticsService.delete(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/top")
+    public Map<String, Double> getTotalPercentAllPlayers(){
+        return statisticsService.getTotalPercentAllPlayers();
     }
 }

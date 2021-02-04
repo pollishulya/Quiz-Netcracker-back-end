@@ -464,7 +464,7 @@ VALUES('e919b6a7-4c8f-415c-9042-ac6a7ffb1a51', TRUE, '«Мячом и ступн
 insert into games(id, description, photo, name, player_id)
 VALUES ('7e9fffd6-b1e6-4343-bc4d-2930620436b4', '15 интересных вопросов', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1612267962433-dadd84efdf6e0ec53664fe89a32e7283.jpeg', 'Кто хочет стать миллионером?', 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd');
 
-INSERT INTO game_room(ID, GAME_ID) VALUES ('223dc383-5989-4f12-8197-4826566aa609', '7e9fffd6-b1e6-4343-bc4d-2930620436b4');
+INSERT INTO game_room(id, game_id) VALUES ('223dc383-5989-4f12-8197-4826566aa609', '7e9fffd6-b1e6-4343-bc4d-2930620436b4');
 
 INSERT INTO game_access(id, game_id, player_id, access, activation_code)
 VALUES ('8919f74d-5dbc-4624-a965-72b7c8ff9e9d', '7e9fffd6-b1e6-4343-bc4d-2930620436b4', 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd', TRUE, NULL);
@@ -728,7 +728,7 @@ VALUES('8b6e1dbd-ceb9-40f2-87f3-ac55830de456', FALSE, 'Палец', 'b69a5a6b-66
 insert into games(id, description, photo, name, player_id)
 VALUES ('2948956b-6351-40ff-aab8-0556631cb947', 'Неадекватное Java-интервью', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1612368989641-projets.jpg', 'Программирование', 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd');
 
-INSERT INTO game_room(ID, GAME_ID) VALUES ('44713a6a-6b45-40b5-a248-cf4eb78cb089', '2948956b-6351-40ff-aab8-0556631cb947');
+INSERT INTO game_room(id, game_id) VALUES ('44713a6a-6b45-40b5-a248-cf4eb78cb089', '2948956b-6351-40ff-aab8-0556631cb947');
 
 INSERT INTO game_access(id, game_id, player_id, access, activation_code)
 VALUES ('dd8a39ca-2ade-4dd3-8241-188e98ef4f97', '2948956b-6351-40ff-aab8-0556631cb947', 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd', TRUE, NULL);
@@ -902,3 +902,145 @@ VALUES('490211b5-ce2d-40a8-9971-0a4d1f6998c3', FALSE, '1 и 2', 'fa62248f-2606-4
 
 INSERT INTO answers(id, answer_is_right, title, question_id)
 VALUES('157c1ecd-cf68-48a1-9bde-818eeee71640', FALSE, 'Все', 'fa62248f-2606-4306-87c3-1caad8dc7083');
+
+-- Разрабатываем игру "Netcracker" (запускать может только админ)
+insert into games(id, description, photo, name, player_id)
+VALUES ('58e183eb-86a3-4b29-acb7-76b593418253', 'Факты о Netcracker', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1611576823716-socialmediacard_homepage.png', 'Netcracker', 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd');
+
+INSERT INTO game_room(id, game_id) VALUES ('7b269a3e-b25b-4635-ad2f-a298705f4455', '58e183eb-86a3-4b29-acb7-76b593418253');
+
+INSERT INTO game_access(id, game_id, player_id, access, activation_code)
+VALUES ('3bfa6f65-ca19-4653-9515-be0e93b81dc5', '58e183eb-86a3-4b29-acb7-76b593418253', 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd', TRUE, NULL);
+
+-- 1 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('333a8670-a17f-47b2-9490-d268d0f8b05a', 'Какой год основания компании Netcracker?', 'Какой год основания компании Netcracker?',
+        'feacb6b6-9534-4f1b-9131-2a20a6ec2455', '58e183eb-86a3-4b29-acb7-76b593418253', '0458cc5b-8871-4807-98e8-68451f3b1f0b', NULL);
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('d58dbc15-76ff-4c78-b91e-a1fe5b76cd5f', FALSE, '1990', '333a8670-a17f-47b2-9490-d268d0f8b05a');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('89cb9ab1-786d-4480-ba69-be59c06ad65c', FALSE, '1991', '333a8670-a17f-47b2-9490-d268d0f8b05a');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('d3ae033e-49ad-4c3e-9463-7f6c655d5403', FALSE, '1992', '333a8670-a17f-47b2-9490-d268d0f8b05a');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('fab5d948-bbc1-4346-9b8a-f49a2c4a8f04', TRUE, '1993', '333a8670-a17f-47b2-9490-d268d0f8b05a');
+
+-- 2 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('abb29486-7807-4417-b3d9-1982fd274454', 'В каком городе расположена штаб-квартира Netcracker?', 'В каком городе расположена штаб-квартира Netcracker?',
+        'feacb6b6-9534-4f1b-9131-2a20a6ec2455', '58e183eb-86a3-4b29-acb7-76b593418253', '0458cc5b-8871-4807-98e8-68451f3b1f0b', NULL);
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('8cdee563-909f-4efd-a504-171168a11e2d', FALSE, 'Нью-Йорк', 'abb29486-7807-4417-b3d9-1982fd274454');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('f952c370-9cdb-457e-951a-e55b5f40c095', FALSE, 'Миннеаполис', 'abb29486-7807-4417-b3d9-1982fd274454');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('b3ee2d10-3f85-40c4-928e-440529eb3b78', TRUE, 'Уолтем', 'abb29486-7807-4417-b3d9-1982fd274454');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('a2240f55-6d67-49d8-b9a3-8259e753e0ef', FALSE, 'Спрингфилд', 'abb29486-7807-4417-b3d9-1982fd274454');
+
+-- 3 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('b4aeb5ff-086e-4136-a1f1-7fe91d6faf4d', 'Основатель(и) Netcracker - ...', 'Основатель(и) Netcracker - ...',
+        'feacb6b6-9534-4f1b-9131-2a20a6ec2455', '58e183eb-86a3-4b29-acb7-76b593418253', '0458cc5b-8871-4807-98e8-68451f3b1f0b', NULL);
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('def8843a-4a04-4c30-8bb6-4ced01e1d7b7', TRUE, 'Майкл Файнберг и Бонни Ворд', 'b4aeb5ff-086e-4136-a1f1-7fe91d6faf4d');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('df7266f8-362e-4c9c-b560-92f0f83d27e7', FALSE, 'Гэвин Артурз', 'b4aeb5ff-086e-4136-a1f1-7fe91d6faf4d');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('bdd5c425-79d6-40e4-a0f1-7eae358627ee', FALSE, 'Самуил Джонсон и Адам Уилкер', 'b4aeb5ff-086e-4136-a1f1-7fe91d6faf4d');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('b6cf4360-4633-492f-9610-4d448fbbf21a', FALSE, 'Остин Эндерсон', 'b4aeb5ff-086e-4136-a1f1-7fe91d6faf4d');
+
+-- 4 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('65e121a3-d60b-4c74-b388-4b572353005a', 'Кем в 2008 году была приобретена компания NetСracker?', 'Кем в 2008 году была приобретена компания NetСracker?',
+        'feacb6b6-9534-4f1b-9131-2a20a6ec2455', '58e183eb-86a3-4b29-acb7-76b593418253', '0458cc5b-8871-4807-98e8-68451f3b1f0b', NULL);
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('89e1cf1e-f2ac-4fad-9472-0f0e1c7186db', FALSE, 'Crack', '65e121a3-d60b-4c74-b388-4b572353005a');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('057abf2f-1401-4b28-8d50-daf6c5b1bf46', TRUE, 'NEC', '65e121a3-d60b-4c74-b388-4b572353005a');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('76a902dc-d0e2-43da-8f6f-f65ce9b97ade', FALSE, 'NC', '65e121a3-d60b-4c74-b388-4b572353005a');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('e72751d9-e024-4513-9caa-7ba72bc582d3', FALSE, 'Alto', '65e121a3-d60b-4c74-b388-4b572353005a');
+
+-- 5 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('213e7b1e-c515-4fe4-802f-0d11afc92527', 'Сумма сделки по покупке NetСracker - ...', 'Сумма сделки по покупке NetСracker - ...',
+        'feacb6b6-9534-4f1b-9131-2a20a6ec2455', '58e183eb-86a3-4b29-acb7-76b593418253', '0458cc5b-8871-4807-98e8-68451f3b1f0b', NULL);
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('42ccc2ae-14d2-4cdb-81d7-a12bb362d45c', FALSE, '500 млн долларов', '213e7b1e-c515-4fe4-802f-0d11afc92527');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('3ecd8088-5355-4ae8-84a0-c79312be554e', FALSE, '150 млн долларов', '213e7b1e-c515-4fe4-802f-0d11afc92527');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('d9c5a5cf-8851-437f-adaa-03671f272027', TRUE, '300 млн долларов', '213e7b1e-c515-4fe4-802f-0d11afc92527');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('151a49ae-198c-4a15-8e5a-6a7b46857f44', FALSE, '950 млн долларов', '213e7b1e-c515-4fe4-802f-0d11afc92527');
+
+-- 6 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('4eecb9d1-4d19-4a4f-85f5-f9f651b49e42', 'На чем НЕ специализируется NetСracker?', 'На чем НЕ специализируется NetСracker?',
+        'feacb6b6-9534-4f1b-9131-2a20a6ec2455', '58e183eb-86a3-4b29-acb7-76b593418253', '0458cc5b-8871-4807-98e8-68451f3b1f0b', NULL);
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('418fe216-e6ba-429d-990a-7b42bd7b9937', FALSE, 'OSS', '4eecb9d1-4d19-4a4f-85f5-f9f651b49e42');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('a7f04af0-656c-47d0-8c94-b82de61d6aa4', TRUE, 'NGOSS', '4eecb9d1-4d19-4a4f-85f5-f9f651b49e42');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('2cfad4c4-289f-48c7-96c4-22ea66d5376c', FALSE, 'BSS', '4eecb9d1-4d19-4a4f-85f5-f9f651b49e42');
+
+-- 7 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('68516d74-5284-47a3-a997-791e2c7ed1d8', 'Какого сертификата зрелости была удостоена компания?', 'Какого сертификата зрелости была удостоена компания?',
+        'feacb6b6-9534-4f1b-9131-2a20a6ec2455', '58e183eb-86a3-4b29-acb7-76b593418253', '0458cc5b-8871-4807-98e8-68451f3b1f0b', NULL);
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('e9dc2857-5cd9-4dc2-98cb-fa14865e1b63', FALSE, 'Cobit', '68516d74-5284-47a3-a997-791e2c7ed1d8');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('dd1f5176-1808-47ef-9bed-a066c50d165e', TRUE, 'CMMI', '68516d74-5284-47a3-a997-791e2c7ed1d8');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('840b7b13-3774-4ed6-aadc-7e476f1e8bfd', FALSE, 'ITIL', '68516d74-5284-47a3-a997-791e2c7ed1d8');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('050f536b-05bc-47b1-bf8a-d6e079b3f4f4', FALSE, 'ITSM', '68516d74-5284-47a3-a997-791e2c7ed1d8');
+
+-- 8 вопрос
+INSERT INTO questions(id, description, title, category_id, game_id, level_id, photo)
+VALUES ('13ed1653-ee01-425d-bc3b-750475f911ac', 'Кто НЕ является HR Netcracker?', 'Кто НЕ является HR Netcracker?',
+        'feacb6b6-9534-4f1b-9131-2a20a6ec2455', '58e183eb-86a3-4b29-acb7-76b593418253', '0458cc5b-8871-4807-98e8-68451f3b1f0b', NULL);
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('e2115b34-5557-44dd-a5ac-97301d283de4', FALSE, 'Алина Шавлинская', '13ed1653-ee01-425d-bc3b-750475f911ac');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('fe50dc5f-d2a3-4af0-9312-0e5db4394b92', FALSE, 'Алеся Алюшкевич', '13ed1653-ee01-425d-bc3b-750475f911ac');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('72d10d36-8466-4aa6-8406-dc1d966ab3be', FALSE, 'Ольга Чернецкая', '13ed1653-ee01-425d-bc3b-750475f911ac');
+
+INSERT INTO answers(id, answer_is_right, title, question_id)
+VALUES('c40d2aa9-6b71-404c-9838-e556721d116c', TRUE, 'Надежда Ангарская', '13ed1653-ee01-425d-bc3b-750475f911ac');
