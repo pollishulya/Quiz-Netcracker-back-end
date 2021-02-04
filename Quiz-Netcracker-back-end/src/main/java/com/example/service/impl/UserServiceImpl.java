@@ -1,6 +1,6 @@
 package com.example.service.impl;
 
-import com.amazonaws.services.dynamodbv2.xspec.S;
+import com.example.exception.AuthorizationException;
 import com.example.exception.DeleteEntityException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
@@ -102,7 +102,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserByUsername(String username) {
-        return userRepository.findByLoginOrMail(username, username);
+        User user = userRepository.findByLoginOrMail(username, username);
+        if (user == null) {
+            throw new AuthorizationException(ErrorInfo.AUTHORIZATION_ERROR,
+                    messageSource.getMessage("message.AuthorizationError", null, LocaleContextHolder.getLocale()));
+        }
+        return user;
     }
 
     @Override
