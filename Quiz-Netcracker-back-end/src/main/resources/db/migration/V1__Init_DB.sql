@@ -54,6 +54,7 @@ create table statictics (
     id uuid not null,
     answer_id uuid,
     player_id uuid,
+    question_id uuid,
     primary key (id)
 );
 create table game_access (
@@ -92,6 +93,8 @@ alter table questions
     add constraint questions_level_fk foreign key (level_id) references levels;
 alter table statictics
     add constraint statictics_answer_fk foreign key (answer_id) references answers;
+alter table statictics
+    add constraint statictics_question_fk foreign key (question_id) references players;
 alter table statictics
     add constraint statictics_player_fk foreign key (player_id) references players;
 alter table game_access
