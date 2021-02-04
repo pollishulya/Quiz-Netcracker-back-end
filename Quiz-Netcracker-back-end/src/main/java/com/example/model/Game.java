@@ -24,6 +24,20 @@ public class Game {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "views")
+    private Long views;
+
+    @Column(name = "rating")
+    private Long averageRating;
+
+    //Счётчик оценок игры
+    @Column(name = "ratingCount")
+    private Long ratingCount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "gameCategoryId")
+    private GameCategory gameCategory;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "playerId")
     private Player player;
@@ -38,10 +52,15 @@ public class Game {
     @Column(name = "access")
     private String access;
 
-    public Game(UUID id, String name, String description, Player player, GameRoom gameRoom, String access) {
+    public Game(UUID id, String name, String description, Player player, GameRoom gameRoom,
+                Long views, Long averageRating, Long ratingCount, GameCategory gameCategory) {
         this.id = id;
         this.title = name;
         this.description = description;
+        this.views = views;
+        this.averageRating = averageRating;
+        this.ratingCount = ratingCount;
+        this.gameCategory = gameCategory;
         this.player = player;
         this.access=access;
     }

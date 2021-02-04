@@ -16,5 +16,16 @@ public interface GameService {
     List<Game> findAllGames();
     List<Game> searchGamesByTitle(String title);
 
+    List<Game> findGamesByCategory(String category);
+    List<Game> findAllGamesFilteredByTitle();
+    List<Game> findAllGamesFilteredByRating();
+    List<Game> findAllGamesFilteredByViews();
+
+    List<Game> findByFilter();
+
+    //Game updateGameViews();
+    //Game updateGameRating(Long rate);
+    void saveImage(MultipartFile imageFile) throws Exception;
+
     List<Game> findGameByPlayerId(UUID playerId);
 }
