@@ -35,6 +35,7 @@ public class UserMapper implements Mapper<User, UserDto> {
         user.setLogin(dto.getLogin());
         user.setPassword(dto.getPassword());
         user.setRole(dto.getRole());
+     //   user.setActive(dto.isActive());
         return user;
     }
 
@@ -46,6 +47,7 @@ public class UserMapper implements Mapper<User, UserDto> {
         userDto.setLogin(entity.getLogin());
         userDto.setPassword(entity.getPassword());
         userDto.setRole(entity.getRole());
+        userDto.setActive(entity.isActive());
         return userDto;
     }
 }

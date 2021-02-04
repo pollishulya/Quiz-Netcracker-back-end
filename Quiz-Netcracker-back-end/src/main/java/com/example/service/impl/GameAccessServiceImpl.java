@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import com.example.dto.PlayerDto;
 import com.example.model.Game;
 import com.example.model.GameAccess;
 import com.example.model.Player;
@@ -8,9 +9,9 @@ import com.example.repository.GameRepository;
 import com.example.repository.PlayerRepository;
 import com.example.service.interfaces.GameAccessService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,7 +76,12 @@ public class GameAccessServiceImpl implements GameAccessService {
         if (gameAccess == null) {
             return null;
         }
-        gameAccess.setAccess(true);
+        if(gameAccess.isAccess()) {
+            gameAccess.setAccess(false);
+        }
+        else{
+            gameAccess.setAccess(true);
+        }
         gameAccessRepository.save(gameAccess);
         return gameAccess;
     }
@@ -84,5 +90,34 @@ public class GameAccessServiceImpl implements GameAccessService {
     public GameAccess checkAccess(UUID gameId, UUID playerId){
        GameAccess gameAccess = gameAccessRepository.findGameAccessesByGameIdAndPlayerId(gameId,playerId);
         return gameAccess;
+    }
+
+    @Override
+    public List<Player> getPlayersWithTrueAccess(UUID gameId){
+        List<Player> players = new LinkedList<Player>();
+        List<GameAccess> gameAccesses = gameAccessRepository.findGameAccessesByGameId(gameId)
+                .stream()
+                .peek(gameAccess -> {
+                    if(gameAccess.isAccess()) {
+                        Player player = playerRepository.findPlayerById(gameAccess.getPlayer().getId());
+                        players.add(player);
+                    }
+                })
+                .collect(Collectors.toList());
+        return players;
+    }
+    @Override
+    public List<Player> getPlayersWithFalseAccess(UUID gameId){
+        List<Player> players = new LinkedList<Player>();
+        List<GameAccess> gameAccesses = gameAccessRepository.findGameAccessesByGameId(gameId)
+                .stream()
+                .peek(gameAccess -> {
+                    if(!gameAccess.isAccess()) {
+                        Player player = playerRepository.findPlayerById(gameAccess.getPlayer().getId());
+                        players.add(player);
+                    }
+                })
+                .collect(Collectors.toList());
+        return players;
     }
 }

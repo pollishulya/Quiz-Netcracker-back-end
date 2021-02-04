@@ -47,17 +47,15 @@ public class UserController {
         return userService.findAllUser().stream().map(mapper:: toShortDto).collect(Collectors.toList());
     }
 
+    @GetMapping("/checkAllUsers")
+    public List<UserDto> checkUsers() {
+        return userService.findAllUser().stream().map(mapper:: toShortDto).collect(Collectors.toList());
+    }
+
     @GetMapping("/findUser/{userId}")
     public UserDto getUsers(@PathVariable UUID userId) {
         return mapper.toDto(userService.getUserById(userId));
     }
-
-
-//    @PostMapping("/save")
-//    public UserDto createUser(@Valid @RequestBody UserDto userDto) {
-//        User user= mapper.toEntity(userDto);
-//        return mapper.toDto(userService.saveUser(user));
-//    }
 
     @PutMapping("/update/{userId}")
     public UserDto updateUser(@PathVariable UUID userId,

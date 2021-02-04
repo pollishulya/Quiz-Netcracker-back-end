@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -44,7 +46,7 @@ public class GameAccessController {
 
     @GetMapping("/activate/{gameId}/{playerId}")
     public boolean activate(@PathVariable UUID playerId, @PathVariable UUID gameId) {
-        GameAccess gameAccess=gameAccessService.checkAccess(gameId, playerId);
+        GameAccess gameAccess=gameAccessService.activate(gameId, playerId);
         return gameAccess.isAccess();
     }
 
@@ -52,6 +54,16 @@ public class GameAccessController {
     public boolean checkAccess(@PathVariable UUID playerId, @PathVariable UUID gameId) {
         GameAccess gameAccess=gameAccessService.checkAccess(gameId, playerId);
         return gameAccess.isAccess();
+    }
+
+    @GetMapping("/findPlayersWithTrueAccess/{gameId}")
+    public List<PlayerDto> getPlayersByGameWithTrueAccess( @PathVariable UUID gameId) {
+        return gameAccessService.getPlayersWithTrueAccess(gameId).stream().map(playerMapper::toDto).collect(Collectors.toList());
+    }
+
+    @GetMapping("/findPlayersWithFalseAccess/{gameId}")
+    public List<PlayerDto> getPlayersByGameWithFalseAccess( @PathVariable UUID gameId) {
+        return gameAccessService.getPlayersWithFalseAccess(gameId).stream().map(playerMapper::toDto).collect(Collectors.toList());
     }
 
 }

@@ -14,4 +14,5 @@ public class UserDto {
     String role;
     UUID player;
     boolean active;
+    boolean isActive;
 }

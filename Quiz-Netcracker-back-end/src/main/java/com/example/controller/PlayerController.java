@@ -74,10 +74,10 @@ public class PlayerController {
         return this.amazonClient.putObjectForPlayer(fileUrl, gameId);
     }
 
-    @PostMapping("/register")
-    UUID singUp(@RequestBody LoginModel loginModel/*, HttpServletRequest request*/){
-        Player player = new Player(loginModel.getUsername());
-        playerService.savePlayer(player);
-        return player.getId();
-    }
+//    @PostMapping("/register")
+//    UUID singUp(@RequestBody LoginModel loginModel/*, HttpServletRequest request*/){
+//        Player player = new Player(loginModel.getUsername());
+//        playerService.savePlayer(player);
+//        return player.getId();
+//    }
 }
