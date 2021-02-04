@@ -57,6 +57,41 @@ public class GameController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("/searchByCategory/{category}")
+    public List<GameDto> searchGamesByCategory(@PathVariable String category) {
+        return gameService.findGamesByCategory(category).stream()
+                .map(mapper:: toDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/filterByRating")
+    public List<GameDto> findAllGamesFilteredByRating() {
+        return gameService.findAllGamesFilteredByRating().stream()
+                .map(mapper:: toDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/filterByName")
+    public List<GameDto> findAllGamesFilteredByName() {
+        return gameService.findAllGamesFilteredByTitle().stream()
+                .map(mapper:: toDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/filterByViews")
+    public List<GameDto> findAllGamesFilteredByViews() {
+        return gameService.findAllGamesFilteredByTitle().stream()
+                .map(mapper:: toDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/findByFilter")
+    public List<GameDto> findAllGamesByFilter() {
+        return gameService.findByFilter().stream()
+                .map(mapper:: toDto)
+                .collect(Collectors.toList());
+    }
+
     @GetMapping("/{id}")
     public GameDto getGame(@PathVariable UUID id) {
         return mapper.toDto(gameService.findGameById(id));

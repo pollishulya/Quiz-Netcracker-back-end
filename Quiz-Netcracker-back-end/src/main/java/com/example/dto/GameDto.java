@@ -1,5 +1,6 @@
 package com.example.dto;
 
+import com.example.model.GameCategory;
 import com.example.service.validation.group.Create;
 import com.example.service.validation.group.Update;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -23,5 +24,10 @@ public class GameDto {
     Set<@Valid QuestionDto> questions;
     UUID player;
     String photo;
+    UUID gameCategory;
+    Long averageRating;
+    Long views;
+    Long ratingCount;
+
     String access;
 }
