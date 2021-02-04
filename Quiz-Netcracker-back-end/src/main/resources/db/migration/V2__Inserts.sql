@@ -20,8 +20,8 @@ INSERT INTO categories(id, description, name) VALUES ('dad69283-f7c4-47aa-a754-6
 INSERT INTO categories(id, description, name) VALUES ('feacb6b6-9534-4f1b-9131-2a20a6ec2455', 'IT-сфера', 'IT-сфера');
 
 -- Разрабатываем игру про футбол (запустить может только админ)
-INSERT INTO games(id, description, photo, name, player_id)
-VALUES ('716fb029-148d-4515-8aca-7cb8a604ee24', 'Общие факты о футболе', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1611788079133-myach-futbolnyj-myach-adidas-finale-18-top-training-ball-cw4134.jpg', 'Викторина про футбол', NULL);
+INSERT INTO games(id, description, photo, name, access, player_id)
+VALUES ('716fb029-148d-4515-8aca-7cb8a604ee24', 'Общие факты о футболе', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1611788079133-myach-futbolnyj-myach-adidas-finale-18-top-training-ball-cw4134.jpg', 'Викторина про футбол', 'PUBLIC', NULL);
 
 INSERT INTO players(id, email, name, photo, user_id, game_room_id)
 VALUES ('fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd', 'admin@mail.ru', 'Administrator', NULL, '365924ba-fe34-412d-99b6-dec9554815d9', NULL);
@@ -461,8 +461,8 @@ INSERT INTO answers(id, answer_is_right, title, question_id)
 VALUES('e919b6a7-4c8f-415c-9042-ac6a7ffb1a51', TRUE, '«Мячом и ступней»', '2f78d7e2-88e0-4dd8-8356-48ff525a6db5');
 
 -- Разрабатываем игру "Кто хочет стать миллионером?" (запускать может только админ)
-insert into games(id, description, photo, name, player_id)
-VALUES ('7e9fffd6-b1e6-4343-bc4d-2930620436b4', '15 интересных вопросов', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1612267962433-dadd84efdf6e0ec53664fe89a32e7283.jpeg', 'Кто хочет стать миллионером?', 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd');
+insert into games(id, description, photo, name, access, player_id)
+VALUES ('7e9fffd6-b1e6-4343-bc4d-2930620436b4', '15 интересных вопросов', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1612267962433-dadd84efdf6e0ec53664fe89a32e7283.jpeg', 'Кто хочет стать миллионером?', 'PUBLIC', 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd');
 
 INSERT INTO game_room(id, game_id) VALUES ('223dc383-5989-4f12-8197-4826566aa609', '7e9fffd6-b1e6-4343-bc4d-2930620436b4');
 
@@ -725,8 +725,8 @@ INSERT INTO answers(id, answer_is_right, title, question_id)
 VALUES('8b6e1dbd-ceb9-40f2-87f3-ac55830de456', FALSE, 'Палец', 'b69a5a6b-662d-480d-ac95-c64eed7dd5c7');
 
 -- Разрабатываем игру "Программирование" (запускать может только админ)
-insert into games(id, description, photo, name, player_id)
-VALUES ('2948956b-6351-40ff-aab8-0556631cb947', 'Неадекватное Java-интервью', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1612368989641-projets.jpg', 'Программирование', 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd');
+insert into games(id, description, photo, name, access, player_id)
+VALUES ('2948956b-6351-40ff-aab8-0556631cb947', 'Неадекватное Java-интервью', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1612368989641-projets.jpg', 'Программирование', 'PUBLIC', 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd');
 
 INSERT INTO game_room(id, game_id) VALUES ('44713a6a-6b45-40b5-a248-cf4eb78cb089', '2948956b-6351-40ff-aab8-0556631cb947');
 
@@ -904,8 +904,8 @@ INSERT INTO answers(id, answer_is_right, title, question_id)
 VALUES('157c1ecd-cf68-48a1-9bde-818eeee71640', FALSE, 'Все', 'fa62248f-2606-4306-87c3-1caad8dc7083');
 
 -- Разрабатываем игру "Netcracker" (запускать может только админ)
-insert into games(id, description, photo, name, player_id)
-VALUES ('58e183eb-86a3-4b29-acb7-76b593418253', 'Факты о Netcracker', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1611576823716-socialmediacard_homepage.png', 'Netcracker', 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd');
+insert into games(id, description, photo, name, access, player_id)
+VALUES ('58e183eb-86a3-4b29-acb7-76b593418253', 'Факты о Netcracker', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1611576823716-socialmediacard_homepage.png', 'Netcracker', 'PRIVATE', 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd');
 
 INSERT INTO game_room(id, game_id) VALUES ('7b269a3e-b25b-4635-ad2f-a298705f4455', '58e183eb-86a3-4b29-acb7-76b593418253');
 
