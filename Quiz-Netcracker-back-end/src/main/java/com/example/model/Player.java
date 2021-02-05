@@ -46,12 +46,17 @@ public class Player {
         this.name = name;
     }
 
+    public Player(String name, String email) {
+        this.name = name;
+        this.email=email;
+    }
+
     public Player(String name) {
         this.name = name;
     }
 
-    public Player(String mail, String name, User user) {
-        this.name = name;
+    public Player(String mail, String login, User user) {
+        this.name = login;
         this.email = mail;
         this.user = user;
     }

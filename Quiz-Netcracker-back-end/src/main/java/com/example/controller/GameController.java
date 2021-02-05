@@ -4,6 +4,7 @@ import com.example.dto.GameDto;
 import com.example.exception.ArgumentNotValidException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.model.Game;
+import com.example.model.GameFilterRequest;
 import com.example.model.Photo;
 import com.example.model.Response;
 import com.example.service.impl.AmazonClient;
@@ -53,6 +54,41 @@ public class GameController {
     public List<GameDto> searchGamesByTitle(@PathVariable String title) {
         return gameService.searchGamesByTitle(title).stream()
                 .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/searchByCategory/{category}")
+    public List<GameDto> searchGamesByCategory(@PathVariable String category) {
+        return gameService.findGamesByCategory(category).stream()
+                .map(mapper:: toDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/filterByRating")
+    public List<GameDto> findAllGamesFilteredByRating() {
+        return gameService.findAllGamesFilteredByRating().stream()
+                .map(mapper:: toDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/filterByName")
+    public List<GameDto> findAllGamesFilteredByName() {
+        return gameService.findAllGamesFilteredByTitle().stream()
+                .map(mapper:: toDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/filterByViews")
+    public List<GameDto> findAllGamesFilteredByViews() {
+        return gameService.findAllGamesFilteredByTitle().stream()
+                .map(mapper:: toDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/findByFilter/{request}")
+    public List<GameDto> findAllGamesByFilter(@PathVariable GameFilterRequest request) {
+        return gameService.findByFilter(request).stream()
+                .map(mapper:: toDto)
                 .collect(Collectors.toList());
     }
 

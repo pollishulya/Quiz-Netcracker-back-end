@@ -15,5 +15,6 @@ public interface PlayerRepository extends JpaRepository<Player, UUID> {
     Player findPlayerById(UUID id);
     Player findPlayerByName(String id);
     Player getPlayerByUserId(UUID id);
+    Player deletePlayerByUserId(UUID id);
 
 }
