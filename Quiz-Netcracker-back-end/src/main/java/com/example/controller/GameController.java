@@ -4,6 +4,7 @@ import com.example.dto.GameDto;
 import com.example.exception.ArgumentNotValidException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.model.Game;
+import com.example.model.GameFilterRequest;
 import com.example.model.Photo;
 import com.example.model.Response;
 import com.example.repository.GamePageRepository;
@@ -85,9 +86,9 @@ public class GameController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/findByFilter")
-    public List<GameDto> findAllGamesByFilter() {
-        return gameService.findByFilter().stream()
+    @GetMapping("/findByFilter/{request}")
+    public List<GameDto> findAllGamesByFilter(@PathVariable GameFilterRequest request) {
+        return gameService.findByFilter(request).stream()
                 .map(mapper:: toDto)
                 .collect(Collectors.toList());
     }

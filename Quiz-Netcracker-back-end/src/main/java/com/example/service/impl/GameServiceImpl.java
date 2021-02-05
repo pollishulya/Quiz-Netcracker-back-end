@@ -1,16 +1,16 @@
 package com.example.service.impl;
 
-import com.example.dto.GameDto;
-import com.example.dto.GameFilter;
 import com.example.exception.DeleteEntityException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.model.Game;
+import com.example.model.GameFilterRequest;
 import com.example.model.Question;
 import com.example.repository.GameRepository;
 import com.example.service.interfaces.GameAccessService;
 import com.example.service.interfaces.GameService;
-import com.example.util.QPredicates;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.CollectionExpression;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import com.example.service.interfaces.QuestionService;
@@ -18,16 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.model.QGame;
 import javax.persistence.EntityManager;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Predicate;
-import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,13 +38,13 @@ public class GameServiceImpl implements GameService {
     public GameServiceImpl(GameRepository gameRepository,
                            QuestionService questionService,
                            MessageSource messageSource,
-                           EntityManager entityManager) {
-    public GameServiceImpl(GameRepository gameRepository, QuestionService questionService, MessageSource messageSource, GameAccessService gameAccessService) {
+                           EntityManager entityManager,
+                           GameAccessService gameAccessService) {
+        this.gameAccessService = gameAccessService;
         this.gameRepository = gameRepository;
         this.questionService = questionService;
         this.messageSource = messageSource;
         this.entityManager = entityManager;
-        this.gameAccessService = gameAccessService;
     }
 
     @Override
@@ -70,20 +65,49 @@ public class GameServiceImpl implements GameService {
 
 
     @Override
-    public List<Game> findByFilter(GameDto dto) {
+    public List<Game> findByFilter(GameFilterRequest request) {
 
-        GameFilter filter = GameFilter.builder();
+//        GameFilter filter = GameFilter.builder()
+//                .build();
+//
+//        Predicate predicate = QPredicates.builder()
+//                .add(filter.getTitle(), request.title::containsIgnoreCase)
+//                .add(filter.getDescripton(), request.description::containsIgnoreCase)
+//                .add(filter.getViews(), request.views::containsIgnoreCase)
+//                .add(filter.getRatingCount(), request.ratingCount::containsIgnoreCase)
+//                .add(filter.getAverageRating(), request.averageRating::containsIgnoreCase)
+//                .buildAnd();
+//        Iterable<Game> result = GameRepository.findByFilter(predicate);
 
-        Predicate predicate = QPredicates.builder()
-                .add(filter.getTitle(), Game.title::containsIgnoreCase)
-                .add(filter.getDescripton(), Game.description::containsIgnoreCase)
-                .add(filter.getViews(), Game.views::containsIgnoreCase)
-                .add(filter.getRatingCount(), Game.ratingCount::containsIgnoreCase)
-                .add(filter.getAverageRating(), Game.averageRating::containsIgnoreCase)
-                .buildAnd();
-        Iterable<Game> result = GameRepository.findByFilter(predicate);
+        BooleanBuilder predicate = new BooleanBuilder();
 
-        return new result;
+        if (request.getTitle() != null && !request.getTitle().isEmpty()) {
+            predicate.and(QGame.game.title.in(request.getTitle()));
+        }
+        if (request.getDescription() != null && !request.getDescription().isEmpty()) {
+            predicate.and(QGame.game.description.in(request.getDescription()));
+        }
+        if (request.getViews() != null) {
+            predicate.and(QGame.game.views.in(request.getViews()));
+        }
+        if (request.getRatingCount() != null) {
+            predicate.and(QGame.game.ratingCount.in(request.getRatingCount()));
+        }
+        if (request.getAverageRating() != null) {
+            predicate.and(QGame.game.averageRating.in(request.getAverageRating()));
+        }
+        if (request.getGameCategory() != null) {
+            predicate.and(QGame.game.gameCategory.title.in((CollectionExpression<?, ? extends String>) request.getGameCategory()));
+        }
+
+
+
+        return (List<Game>) gameRepository.findAll(predicate);
+    }
+
+    @Override
+    public void saveImage(MultipartFile imageFile) throws Exception {
+
     }
 
 

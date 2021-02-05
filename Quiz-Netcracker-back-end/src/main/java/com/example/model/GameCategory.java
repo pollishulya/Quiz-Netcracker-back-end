@@ -2,6 +2,7 @@ package com.example.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
@@ -20,7 +21,8 @@ public class GameCategory {
     private UUID id;
 
     @Column(name = "name")
-    private String title;
+    @Getter
+    public String title;
 
     @Column(name = "description")
     private String description;

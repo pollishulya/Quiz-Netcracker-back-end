@@ -1,6 +1,7 @@
 package com.example.service.interfaces;
 
 import com.example.model.Game;
+import com.example.model.GameFilterRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
@@ -21,7 +22,7 @@ public interface GameService {
     List<Game> findAllGamesFilteredByRating();
     List<Game> findAllGamesFilteredByViews();
 
-    List<Game> findByFilter();
+    List<Game> findByFilter(GameFilterRequest request);
 
     //Game updateGameViews();
     //Game updateGameRating(Long rate);
