@@ -11,7 +11,10 @@ public enum ErrorInfo {
     RESOURCE_NOT_FOUND("title.ResourceNotFound", "0002", HttpStatus.NOT_FOUND),
     INTERNAL_SERVER_ERROR("title.InternalServerError", "0003", HttpStatus.INTERNAL_SERVER_ERROR),
     DELETE_ENTITY_ERROR("title.DeleteEntityError", "0004", HttpStatus.NOT_FOUND),
-    AUTHORIZATION_ERROR("title.AuthorizationError", "0005", HttpStatus.BAD_REQUEST);
+    AUTHORIZATION_ERROR("title.AuthorizationError", "0005", HttpStatus.BAD_REQUEST),
+    INVALID_EMAIL_ERROR("title.InvalidEmail", "0006", HttpStatus.BAD_REQUEST),
+    INVALID_ACTIVATION_CODE_ERROR("title.InvalidActivationCode", "0007", HttpStatus.BAD_REQUEST),
+    NON_EXISTING_MAIL_ERROR("title.NonExistingMailError", "0008", HttpStatus.BAD_REQUEST);
 
     private final String errorTitle;
     private final String errorCode;
