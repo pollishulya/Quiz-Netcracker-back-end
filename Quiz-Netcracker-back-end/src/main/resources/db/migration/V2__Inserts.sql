@@ -1,7 +1,7 @@
 -- Заполняем уровни сложности
-INSERT INTO levels (id, description, title) VALUES ('fdecef96-6ee3-4d25-803b-26042cb532a7', 'Easy', 'Easy');
-INSERT INTO levels (id, description, title) VALUES ('0458cc5b-8871-4807-98e8-68451f3b1f0b', 'Middle', 'Middle');
-INSERT INTO levels (id, description, title) VALUES ('d401d941-6883-45c5-9038-4bbd9f63bb3c', 'High', 'High');
+INSERT INTO levels (id, description, title) VALUES ('fdecef96-6ee3-4d25-803b-26042cb532a7', 'Простой', 'Простой');
+INSERT INTO levels (id, description, title) VALUES ('0458cc5b-8871-4807-98e8-68451f3b1f0b', 'Средний', 'Средний');
+INSERT INTO levels (id, description, title) VALUES ('d401d941-6883-45c5-9038-4bbd9f63bb3c', 'Сложный', 'Сложный');
 
 -- Инициализируем админа
 INSERT INTO users (id, activation_code, active, login, mail, password, role)
