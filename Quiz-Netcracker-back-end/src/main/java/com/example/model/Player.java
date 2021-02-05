@@ -41,17 +41,17 @@ public class Player {
         this.user = user;
     }
 
-    public Player(String login, User user) {
+    public Player(String name, User user) {
         this.user = user;
-        this.name = login;
+        this.name = name;
     }
 
     public Player(String name) {
         this.name = name;
     }
 
-    public Player(String mail, String login, User user) {
-        this.name = login;
+    public Player(String mail, String name, User user) {
+        this.name = name;
         this.email = mail;
         this.user = user;
     }

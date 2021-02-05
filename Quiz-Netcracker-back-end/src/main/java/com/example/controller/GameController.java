@@ -6,7 +6,6 @@ import com.example.exception.detail.ErrorInfo;
 import com.example.model.Game;
 import com.example.model.Photo;
 import com.example.model.Response;
-import com.example.repository.GamePageRepository;
 import com.example.service.impl.AmazonClient;
 import com.example.service.interfaces.GamePageService;
 import com.example.service.interfaces.GameService;
@@ -53,7 +52,7 @@ public class GameController {
     @GetMapping("/searchByTitle/{title}")
     public List<GameDto> searchGamesByTitle(@PathVariable String title) {
         return gameService.searchGamesByTitle(title).stream()
-                .map(mapper:: toDto)
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -71,13 +70,14 @@ public class GameController {
         return new Response(gameDtoList, pageResult.getTotalPages(),
                 pageResult.getNumber(), pageResult.getSize());
     }
+
     @GetMapping("/getByTitle/{title}")
     public GameDto getGameByTitle(@PathVariable String title) {
-       return mapper.toDto(gameService.findGameByTitle(title));
+        return mapper.toDto(gameService.findGameByTitle(title));
     }
 
     @GetMapping("/player/{playerId}")
-    public List<GameDto> getGamesByPlayerId(@PathVariable UUID playerId){
+    public List<GameDto> getGamesByPlayerId(@PathVariable UUID playerId) {
         return gameService.findGameByPlayerId(playerId).stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
@@ -86,6 +86,13 @@ public class GameController {
     @GetMapping()
     public List<GameDto> getGames() {
         return gameService.findAllGames().stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/public-game")
+    public List<GameDto> getPublicGames() {
+        return gameService.findPublicGames().stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
@@ -120,8 +127,8 @@ public class GameController {
     @PostMapping("/uploadFile")
     public Photo uploadFile(@RequestPart(value = "file") MultipartFile file) {
         Photo photo = new Photo();
-         photo.setPhoto(this.amazonClient.uploadFile(file));
-         return photo;
+        photo.setPhoto(this.amazonClient.uploadFile(file));
+        return photo;
     }
 
     @DeleteMapping("/deleteFile")
@@ -131,7 +138,7 @@ public class GameController {
 
     @PostMapping("/updateFile/{gameId}")
     public GameDto updateFile(@RequestPart(value = "url") String fileUrl,
-                             @PathVariable UUID gameId) {
+                              @PathVariable UUID gameId) {
         return this.amazonClient.putObject(fileUrl, gameId);
     }
 }

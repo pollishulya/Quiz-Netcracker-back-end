@@ -17,4 +17,6 @@ public interface GameService {
     List<Game> searchGamesByTitle(String title);
 
     List<Game> findGameByPlayerId(UUID playerId);
+
+    List<Game> findPublicGames();
 }

@@ -3,7 +3,9 @@ package com.example.controller;
 
 import com.example.dto.GameRoomDto;
 import com.example.model.GameRoom;
+import com.example.model.Player;
 import com.example.service.interfaces.GameRoomService;
+import com.example.service.interfaces.PlayerService;
 import com.example.service.mapper.GameRoomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

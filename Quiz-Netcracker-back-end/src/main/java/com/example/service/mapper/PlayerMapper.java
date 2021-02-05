@@ -4,18 +4,15 @@ import com.example.dto.PlayerDto;
 import com.example.model.Player;
 import com.example.model.User;
 import com.example.repository.UserRepository;
-import com.example.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PlayerMapper implements Mapper<Player, PlayerDto> {
-   // private final UserService userService;
     private final UserRepository userRepository;
 
     @Autowired
     public PlayerMapper( UserRepository userRepository) {
-        //this.userService = userService;
         this.userRepository = userRepository;
     }
 
@@ -24,6 +21,9 @@ public class PlayerMapper implements Mapper<Player, PlayerDto> {
         PlayerDto playerDto = new PlayerDto();
         playerDto.setId(entity.getId());
         playerDto.setName(entity.getName());
+        if(entity.getUser()==null){
+            return playerDto;
+        }
         playerDto.setEmail(entity.getEmail());
         playerDto.setPhoto(entity.getPhoto());
         playerDto.setUser(entity.getUser().getId());
@@ -47,9 +47,6 @@ public class PlayerMapper implements Mapper<Player, PlayerDto> {
         PlayerDto playerDto = new PlayerDto();
         playerDto.setId(entity.getId());
         playerDto.setName(entity.getName());
-        playerDto.setEmail(entity.getEmail());
-//        playerDto.setPhoto(entity.getPhoto());
-  //      playerDto.setUser(entity.getUser().getId());
         return playerDto;
     }
 }
