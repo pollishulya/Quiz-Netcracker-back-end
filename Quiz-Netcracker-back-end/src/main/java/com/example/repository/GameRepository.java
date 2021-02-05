@@ -3,7 +3,7 @@ package com.example.repository;
 import com.example.dto.GameDto;
 import com.example.dto.GameFilter;
 import com.example.model.Game;
-import com.example.model.QGame;
+//import com.example.model.QGame;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.support.Querydsl;
@@ -12,7 +12,8 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface GameRepository extends ExCustomRepository<Game, QGame,UUID> {
+//public interface GameRepository extends ExCustomRepository<Game, QGame,UUID> {
+public interface GameRepository extends JpaRepository<Game, UUID> {
     Game findGameById(UUID id);
     Game findGameByTitle(String title);
 

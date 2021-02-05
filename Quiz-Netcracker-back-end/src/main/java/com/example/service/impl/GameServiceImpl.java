@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.model.QGame;
+//import com.example.model.QGame;
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Set;
@@ -79,30 +79,31 @@ public class GameServiceImpl implements GameService {
 //                .buildAnd();
 //        Iterable<Game> result = GameRepository.findByFilter(predicate);
 
-        BooleanBuilder predicate = new BooleanBuilder();
+//        BooleanBuilder predicate = new BooleanBuilder();
 
-        if (request.getTitle() != null && !request.getTitle().isEmpty()) {
-            predicate.and(QGame.game.title.in(request.getTitle()));
-        }
-        if (request.getDescription() != null && !request.getDescription().isEmpty()) {
-            predicate.and(QGame.game.description.in(request.getDescription()));
-        }
-        if (request.getViews() != null) {
-            predicate.and(QGame.game.views.in(request.getViews()));
-        }
-        if (request.getRatingCount() != null) {
-            predicate.and(QGame.game.ratingCount.in(request.getRatingCount()));
-        }
-        if (request.getAverageRating() != null) {
-            predicate.and(QGame.game.averageRating.in(request.getAverageRating()));
-        }
-        if (request.getGameCategory() != null) {
-            predicate.and(QGame.game.gameCategory.title.in((CollectionExpression<?, ? extends String>) request.getGameCategory()));
-        }
+//        if (request.getTitle() != null && !request.getTitle().isEmpty()) {
+//            predicate.and(QGame.game.title.in(request.getTitle()));
+//        }
+//        if (request.getDescription() != null && !request.getDescription().isEmpty()) {
+//            predicate.and(QGame.game.description.in(request.getDescription()));
+//        }
+//        if (request.getViews() != null) {
+//            predicate.and(QGame.game.views.in(request.getViews()));
+//        }
+//        if (request.getRatingCount() != null) {
+//            predicate.and(QGame.game.ratingCount.in(request.getRatingCount()));
+//        }
+//        if (request.getAverageRating() != null) {
+//            predicate.and(QGame.game.averageRating.in(request.getAverageRating()));
+//        }
+//        if (request.getGameCategory() != null) {
+//            predicate.and(QGame.game.gameCategory.title.in((CollectionExpression<?, ? extends String>) request.getGameCategory()));
+//        }
 
 
 
-        return (List<Game>) gameRepository.findAll(predicate);
+//        return (List<Game>) gameRepository.findAll(predicate);
+        return null;
     }
 
     @Override
