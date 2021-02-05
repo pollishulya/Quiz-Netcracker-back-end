@@ -50,6 +50,11 @@ public class Player {
         this.name = name;
     }
 
+    public Player(String login, String email) {
+        this.name = login;
+        this.email=email;
+    }
+
     public Player(String mail, String login, User user) {
         this.name = login;
         this.email = mail;

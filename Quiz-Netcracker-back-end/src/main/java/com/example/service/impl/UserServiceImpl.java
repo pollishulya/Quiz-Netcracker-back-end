@@ -9,6 +9,7 @@ import com.example.model.User;
 import com.example.repository.PlayerRepository;
 import com.example.repository.UserRepository;
 import com.example.service.interfaces.GameAccessService;
+import com.example.service.interfaces.PlayerService;
 import com.example.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -28,12 +29,14 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MailSender mailSender;
     private final MessageSource messageSource;
+    private final PlayerService playerService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PlayerRepository playerRepository, GameAccessService gameAccessService, MessageSource messageSource, MailSender mailSender) {
+    public UserServiceImpl(UserRepository userRepository, PlayerRepository playerRepository, GameAccessService gameAccessService, MessageSource messageSource, MailSender mailSender, PlayerService playerService) {
         this.userRepository = userRepository;
         this.playerRepository = playerRepository;
         this.gameAccessService = gameAccessService;
+        this.playerService = playerService;
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
         this.messageSource = messageSource;
         this.mailSender = mailSender;
@@ -77,6 +80,9 @@ public class UserServiceImpl implements UserService {
             user.setPassword(userRequest.getPassword());
             user.setMail(userRequest.getMail());
             user.setRole(userRequest.getRole());
+            Player player1=playerRepository.getPlayerByUserId(userId);
+            Player player2=new Player(user.getLogin(),user.getMail());
+            playerService.updatePlayer(player1.getId(),player2);
             return userRepository.save(user);
         }).orElseThrow(() -> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
@@ -85,6 +91,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(UUID userId) {
         try {
+            Player player=playerRepository.getPlayerByUserId(userId);
+            playerRepository.deleteById(player.getId());
             userRepository.deleteById(userId);
         } catch (RuntimeException exception) {
             UUID[] args = new UUID[]{userId};

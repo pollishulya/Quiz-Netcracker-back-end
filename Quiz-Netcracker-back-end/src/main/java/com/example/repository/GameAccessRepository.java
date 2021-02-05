@@ -12,10 +12,12 @@ import java.util.UUID;
 
 @Repository
 public interface GameAccessRepository extends JpaRepository<GameAccess, UUID> {
+    GameAccess findGameAccessById(UUID id);
     GameAccess findGameAccessByActivationCode(String code);
     GameAccess findGameAccessesByGameIdAndPlayerId(UUID gameId, UUID playerId);
     GameAccess findGameAccessesByPlayer( UUID playerId);
     GameAccess findGameAccessesByPlayerId(UUID playerId);
     List<GameAccess> findGameAccessesByGameId(UUID id);
- //   List<Player> find(UUID id);
+    GameAccess findGameAccessesByActivationCode(String code);
+    List<GameAccess> deleteAllByGameId(UUID gameId);
 }
