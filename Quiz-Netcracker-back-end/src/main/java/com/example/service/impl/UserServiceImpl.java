@@ -27,9 +27,9 @@ public class UserServiceImpl implements UserService {
     private final PlayerRepository playerRepository;
     private final GameAccessService gameAccessService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PlayerService playerService;
     private final MailSender mailSender;
     private final MessageSource messageSource;
-    private final PlayerService playerService;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, PlayerRepository playerRepository, GameAccessService gameAccessService, MessageSource messageSource, MailSender mailSender, PlayerService playerService) {

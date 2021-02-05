@@ -46,6 +46,11 @@ public class Player {
         this.name = login;
     }
 
+    public Player(String login, String email) {
+        this.name = login;
+        this.email=email;
+    }
+
     public Player(String name) {
         this.name = name;
     }
