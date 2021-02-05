@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AnswersSetConstraint {
-    String message() default "Answer title is null or duplicate";
+    String message() default "message.DuplicateAnswer";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
