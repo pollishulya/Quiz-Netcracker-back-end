@@ -57,7 +57,7 @@ public class GameAccessServiceImpl implements GameAccessService {
         List<Game> games = gameRepository.findAll()
                 .stream()
                 .peek(game -> {
-                    if(game.getAccess().equals("PRIVATE")) {
+                    if(game.getAccess()=="PRIVATE") {
                         GameAccess gameAccess = new GameAccess();
                         gameAccess.setGame(game);
                         gameAccess.setPlayer(player);
