@@ -29,4 +29,6 @@ public interface GameService {
     void saveImage(MultipartFile imageFile) throws Exception;
 
     List<Game> findGameByPlayerId(UUID playerId);
+
+    List<Game> findPublicGames();
 }

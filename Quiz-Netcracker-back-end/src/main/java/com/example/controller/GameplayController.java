@@ -2,7 +2,7 @@ package com.example.controller;
 
 import com.example.dto.GameRoomDto;
 import com.example.model.GameRoom;
-import com.example.dto.LikePlayer;
+import com.example.dto.ActionsToPlayer;
 import com.example.model.Player;
 import com.example.service.interfaces.GameRoomService;
 import com.example.service.mapper.GameRoomMapper;
@@ -29,12 +29,12 @@ public class GameplayController {
         this.mapper = mapper;
     }
 
-    @MessageMapping("/gameplay")
-    public void send(@Payload LikePlayer likePlayer) throws JsonProcessingException {
+    @MessageMapping("/like-player")
+    public void send(@Payload ActionsToPlayer actionsToPlayer) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        for (Player player : gameRoomService.findById(likePlayer.getGameRoomId()).getPlayers()) {
-            if (likePlayer.getRecipientId().equals(player.getId())) {
-                simpMessagingTemplate.convertAndSend("/topic/game/" + likePlayer.getRecipientId(), objectMapper.writeValueAsString(likePlayer.getName()));
+        for (Player player : gameRoomService.findById(actionsToPlayer.getGameRoomId()).getPlayers()) {
+            if (actionsToPlayer.getRecipientId().equals(player.getId())) {
+                simpMessagingTemplate.convertAndSend("/topic/game/" + actionsToPlayer.getRecipientId(), objectMapper.writeValueAsString(actionsToPlayer.getName()));
             }
         }
     }
@@ -63,6 +63,16 @@ public class GameplayController {
         ObjectMapper mapper = new ObjectMapper();
         for (Player player : gameRoom.getPlayers()) {
             simpMessagingTemplate.convertAndSend("/topic/game/" + player.getId(), mapper.writeValueAsString(gameRoom.getPlayers()));
+        }
+    }
+
+    @MessageMapping("/delete-player")
+    public void sendDeletePlayer(@Payload ActionsToPlayer actionsToPlayer) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        for (Player player : gameRoomService.findById(actionsToPlayer.getGameRoomId()).getPlayers()) {
+            if (actionsToPlayer.getRecipientId().equals(player.getId())) {
+                simpMessagingTemplate.convertAndSend("/topic/game/" + actionsToPlayer.getRecipientId(), objectMapper.writeValueAsString("delete"));
+            }
         }
     }
 }

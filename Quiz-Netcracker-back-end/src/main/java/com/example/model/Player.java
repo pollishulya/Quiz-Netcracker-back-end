@@ -41,13 +41,13 @@ public class Player {
         this.user = user;
     }
 
-    public Player(String login, User user) {
+    public Player(String name, User user) {
         this.user = user;
-        this.name = login;
+        this.name = name;
     }
 
-    public Player(String login, String email) {
-        this.name = login;
+    public Player(String name, String email) {
+        this.name = name;
         this.email=email;
     }
 

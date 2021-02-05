@@ -48,6 +48,16 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
+    public Player findGuest(String name) {
+        return playerRepository.findPlayerByName(name);
+    }
+
+    @Override
+    public void deletePlayer(UUID id) {
+        playerRepository.deleteById(id);
+    }
+
+    @Override
     public Player savePlayer(Player player) {
         return playerRepository.save(player);
     }
@@ -63,10 +73,4 @@ public class PlayerServiceImpl implements PlayerService {
         }).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
-//
-//    @Override
-//    public void deletePlayer(UUID playerId) {
-//        playerRepository.deleteById(playerId);
-//    }
-
 }

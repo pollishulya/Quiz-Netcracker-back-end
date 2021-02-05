@@ -62,7 +62,11 @@ public class GameRoomServiceImpl implements GameRoomService {
                 ObjectMapper mapper = new ObjectMapper();
                 Set<PlayerDto> dtoSet = new HashSet<>();
                 for (Player entity: gameRoom.getPlayers()) {
-                    dtoSet.add(playerMapper.toDto(entity));
+                    if(entity.getUser() == null){
+                        dtoSet.add(playerMapper.toShortDto(entity));
+                    } else {
+                        dtoSet.add(playerMapper.toDto(entity));
+                    }
                 }
                 for (Player playerInGameRoom : gameRoom.getPlayers()) {
                     if (!playerInGameRoom.getId().equals(playerId)) {

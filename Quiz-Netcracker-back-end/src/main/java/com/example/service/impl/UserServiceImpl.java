@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     private final MessageSource messageSource;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PlayerRepository playerRepository, GameAccessService gameAccessService, PlayerService playerService, MessageSource messageSource, MailSender mailSender) {
+    public UserServiceImpl(UserRepository userRepository, PlayerRepository playerRepository, GameAccessService gameAccessService, MessageSource messageSource, MailSender mailSender, PlayerService playerService) {
         this.userRepository = userRepository;
         this.playerRepository = playerRepository;
         this.gameAccessService = gameAccessService;

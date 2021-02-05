@@ -4,6 +4,8 @@ import com.example.exception.DeleteEntityException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.model.Game;
+import com.example.model.GameAccess;
+import com.example.model.Player;
 import com.example.model.GameFilterRequest;
 import com.example.model.Question;
 import com.example.repository.GameRepository;
@@ -160,9 +162,26 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    public List<Game> findPublicGames() {
+        return gameRepository.findGameByAccess("PUBLIC");
+    }
+
+    @Override
     public void deleteGame(UUID id) {
         try {
-            gameRepository.deleteById(id);
+            List<GameAccess> gameAccesses=gameAccessService.getGameAccessesByGameId(id);
+            if(gameAccesses==null){
+                gameRepository.deleteById(id);
+            }
+           else {
+                gameAccessService.getGameAccessesByGameId(id)
+                        .stream()
+                        .peek(gameAccess -> {
+                           gameAccessService.delete(gameAccess.getId());
+                        })
+                        .collect(Collectors.toList());
+               gameRepository.deleteById(id);
+            }
         }
         catch (RuntimeException exception) {
             UUID[] args = new UUID[]{ id };
@@ -186,6 +205,10 @@ public class GameServiceImpl implements GameService {
             game.setViews(gameReq.getViews());
 
             game.setPhoto(gameReq.getPhoto());
+            game.setAccess(gameReq.getAccess());
+            if(game.getAccess().equals("PUBLIC"))
+            {  gameAccessService.deleteGameAccess(game.getId());}
+            else { gameAccessService.createGameAccessByGame(game.getId()); }
             if (gameReq.getQuestions() != null) {
                 Set<Question> questions = gameReq.getQuestions()
                         .stream()

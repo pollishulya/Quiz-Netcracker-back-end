@@ -1,10 +1,10 @@
 package com.example.service.impl;
 
+import com.example.dto.GameStatisticsDto;
 import com.example.exception.DeleteEntityException;
 import com.example.exception.detail.ErrorInfo;
-import com.example.model.Answer;
+import com.example.model.Player;
 import com.example.model.Question;
-import com.example.dto.GameStatisticsDto;
 import com.example.model.Statistics;
 import com.example.repository.StatisticsRepository;
 import com.example.service.interfaces.*;
@@ -19,8 +19,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static java.util.Comparator.comparing;
-
 @Service
 public class StatisticsServiceImpl implements StatisticsService {
     private final StatisticsRepository statisticsRepository;
@@ -30,12 +28,13 @@ public class StatisticsServiceImpl implements StatisticsService {
     private final QuestionMapper questionMapper;
     private final AnswerMapper answerMapper;
     private final MessageSource messageSource;
+    private final UserService userService;
 
     @Autowired
     public StatisticsServiceImpl(StatisticsRepository statisticsRepository, GameService gameService,
                                  PlayerService playerService, QuestionService questionService,
-                                 AnswerService answerService, QuestionMapper questionMapper, AnswerMapper answerMapper,
-                                 MessageSource messageSource) {
+                                 QuestionMapper questionMapper, AnswerMapper answerMapper,
+                                 MessageSource messageSource, UserService userService) {
         this.statisticsRepository = statisticsRepository;
         this.gameService = gameService;
         this.playerService = playerService;
@@ -43,6 +42,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         this.questionMapper = questionMapper;
         this.answerMapper = answerMapper;
         this.messageSource = messageSource;
+        this.userService = userService;
     }
 
 
@@ -101,7 +101,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         int totalAns = statisticsByPlayerId.size();
         statisticsByPlayerId
                 .forEach(statistics -> {
-                    if (statistics.getAnswer().getRight()) {
+                    if (statistics.getAnswer() != null && statistics.getAnswer().getRight()) {
                         rightAns.incrementAndGet();
                     }
                 });
@@ -111,8 +111,9 @@ public class StatisticsServiceImpl implements StatisticsService {
     @Override
     public Map<String, Double> getTotalPercentAllPlayers() {
         Map<String, Double> map = new HashMap<>();
-        playerService.findAllPlayers()
-                .forEach(p -> {
+        userService.findAllUser()
+                .forEach(u -> {
+                    Player p = playerService.findPlayerByUserId(u.getId());
                     double value = getTotalPercentByPlayerId(p.getId());
                     if (value <= 1 || value >= 0) {
                         map.put(p.getName(), value);
