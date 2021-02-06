@@ -94,7 +94,7 @@ public class GameController {
 
     @GetMapping("/{id}")
     public GameDto getGame(@PathVariable UUID id) {
-        return mapper.toShortDto(gameService.findGameById(id));
+        return mapper.toDto(gameService.findGameById(id));
     }
 
     @GetMapping("/short/{id}")
