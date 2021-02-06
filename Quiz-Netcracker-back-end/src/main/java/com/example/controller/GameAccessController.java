@@ -1,6 +1,7 @@
 package com.example.controller;
 
 
+import com.example.dto.GameAccessDto;
 import com.example.dto.GameDto;
 import com.example.dto.PlayerDto;
 import com.example.model.GameAccess;
@@ -47,6 +48,10 @@ public class GameAccessController {
 //        GameAccess gameAccess=gameAccessService.activate(gameId, playerId);
 //        return gameAccess.isAccess();
 //    }
+    @GetMapping("/{gameId}/{playerId}")
+    public GameAccessDto getGameAccess(@PathVariable UUID playerId, @PathVariable UUID gameId) {
+        return gameAccessMapper.toDto(gameAccessService.getGameAccess(gameId, playerId));
+    }
 
     @GetMapping("/sendActivateCode/{gameId}/{playerId}")
     public String sendActivateCode(@PathVariable UUID playerId, @PathVariable UUID gameId) {
@@ -60,9 +65,8 @@ public class GameAccessController {
     }
 
     @GetMapping("/deactivate/{gameId}/{playerId}")
-    public GameAccess deactivate(@PathVariable UUID playerId, @PathVariable UUID gameId) {
-        GameAccess gameAccess=gameAccessService.deactivateGame(gameId, playerId);
-        return gameAccess;
+    public GameAccessDto deactivate(@PathVariable UUID playerId, @PathVariable UUID gameId) {
+        return gameAccessMapper.toDto(gameAccessService.deactivateGame(gameId, playerId));
     }
 
     @GetMapping("/check/{gameId}/{playerId}")

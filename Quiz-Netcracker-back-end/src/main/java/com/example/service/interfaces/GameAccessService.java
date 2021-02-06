@@ -19,6 +19,7 @@ public interface GameAccessService {
   GameAccess activateGame(String code);
   String sendActivateCode(UUID gameId, UUID playerId);
   GameAccess deactivateGame(UUID gameId, UUID playerId);
+  GameAccess getGameAccess(UUID gameId, UUID playerId);
   List<GameAccess> deleteGameAccess(UUID gameId);
   List<GameAccess> getGameAccessesByGameId(UUID gameId);
   void delete(UUID id);

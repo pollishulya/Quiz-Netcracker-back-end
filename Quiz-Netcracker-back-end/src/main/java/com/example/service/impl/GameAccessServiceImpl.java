@@ -122,6 +122,12 @@ public class GameAccessServiceImpl implements GameAccessService {
     }
 
     @Override
+    public GameAccess getGameAccess(UUID gameId, UUID playerId) {
+        GameAccess gameAccess = gameAccessRepository.findGameAccessesByGameIdAndPlayerId(gameId, playerId);
+        return gameAccess;
+    }
+
+    @Override
     public String sendActivateCode(UUID gameId, UUID playerId) {
         Game game = gameRepository.findGameById(gameId);
         Player player = playerRepository.findPlayerById(playerId);

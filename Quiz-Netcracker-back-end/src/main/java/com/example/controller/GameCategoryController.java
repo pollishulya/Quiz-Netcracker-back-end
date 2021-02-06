@@ -35,10 +35,10 @@ public class GameCategoryController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{gameCategoryId}")
-    public GameCategoryDto getGames(@PathVariable UUID gameCategoryId) {
-        return mapper.toDto(gameCategoryService.findGameCategoryById(gameCategoryId));
-    }
+//    @GetMapping("/{gameCategoryId}")
+//    public GameCategoryDto getGames(@PathVariable UUID gameCategoryId) {
+//        return mapper.toDto(gameCategoryService.findGameCategoryById(gameCategoryId));
+//    }
 
     @PostMapping("/save")
     public GameCategoryDto createGameCategory(@Valid @RequestBody GameCategoryDto gameCategoryDto) {
