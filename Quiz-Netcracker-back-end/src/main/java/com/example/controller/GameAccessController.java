@@ -54,9 +54,9 @@ public class GameAccessController {
     }
 
         @GetMapping("/activate/{code}")
-    public GameAccess activate(@PathVariable String code) {
+    public boolean activate(@PathVariable String code) {
         GameAccess gameAccess=gameAccessService.activateGame(code);
-        return gameAccess;
+        return gameAccess.isAccess();
     }
 
     @GetMapping("/deactivate/{gameId}/{playerId}")

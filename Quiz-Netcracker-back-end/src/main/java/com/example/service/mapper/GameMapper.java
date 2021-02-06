@@ -35,7 +35,7 @@ public class GameMapper implements Mapper<Game, GameDto> {
         gameDto.setTitle(entity.getTitle());
 
         gameDto.setAverageRating(entity.getAverageRating());
-        gameDto.setGameCategory(entity.getGameCategory().getId());
+      //  gameDto.setGameCategory(entity.getGameCategory().getId());
 
         gameDto.setViews(entity.getViews());
         gameDto.setRatingCount(entity.getRatingCount());
