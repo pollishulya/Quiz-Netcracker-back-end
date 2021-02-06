@@ -56,22 +56,10 @@ public class UserServiceImpl implements UserService {
             Player player = new Player(user.getMail(), user.getLogin(), user);
             user.setActive(false); //оставить, когда будет активация через почту
             //   user.setActive(true);//убрать, когда будет активация через почту
-//            user.setActivationCode(String.valueOf((int) (Math.random() * 899999 + 100000)));
-//            String message = String.format(
-//                    "Hello, %s! \n" +
-//                            "Welcome to localhost. Your activation code: %s",
-//                    user.getLogin(),
-//                    // urlAddress,
-//                    user.getActivationCode()
-//            );
-//            mailSender.send(user.getMail(), "Activation code", message);
-//            userRepository.save(user);
-//            playerRepository.save(player);
-
             user.setActivationCode(UUID.randomUUID().toString());
             String message = String.format(
                     "Hello, %s! \n" +
-                            "Welcome to localhost. Please, visit next link: http://localhost:8443/users/activate/%s",
+                            "Welcome to localhost. Please, visit next link: http://localhost:4200/activate/%s",
                     user.getLogin(),
                     // urlAddress,
                     user.getActivationCode()
@@ -79,7 +67,6 @@ public class UserServiceImpl implements UserService {
             mailSender.send(user.getMail(), "Activation code", message);
             userRepository.save(user);
             playerRepository.save(player);
-
             return user;
         }
     }
