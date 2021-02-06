@@ -18,11 +18,21 @@ create table game_room (
 );
 create table games (
     id uuid not null,
-    description varchar(255),
+    description varchar(2048),
     photo varchar(255),
     name varchar(255),
     access varchar(255),
+    views int8,
+    rating int8,
+    rating_count int8,
     player_id uuid,
+    game_category_id uuid,
+    primary key (id)
+);
+create table game_categories (
+    id uuid not null,
+    description varchar(255),
+    name varchar(255),
     primary key (id)
 );
 create table levels (
@@ -81,6 +91,8 @@ alter table game_room
     add constraint game_room_game_fk foreign key (game_id) references games;
 alter table games
     add constraint games_player_fk foreign key (player_id) references players;
+alter table games
+    add constraint games_game_category_fk foreign key (game_category_id) references game_categories;
 alter table players
     add constraint players_user_fk foreign key (user_id) references users;
 alter table players
