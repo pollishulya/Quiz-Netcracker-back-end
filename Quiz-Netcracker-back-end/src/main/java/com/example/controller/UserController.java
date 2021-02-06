@@ -123,19 +123,31 @@ public class UserController {
         return userFacade;
     }
 
-    @GetMapping("/activate/{mail}/{code}")
-    public ActivateCodeDto activate(Model model, @PathVariable String mail, @PathVariable String code) {
-        if (!customValidator.validateByRegexp(mail, "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$")) {
-            throw new InvalidEmailException(ErrorInfo.INVALID_EMAIL_ERROR,
-                    messageSource.getMessage("message.InvalidEmail", null, LocaleContextHolder.getLocale()));
+//    @GetMapping("/activate/{mail}/{code}")
+//    public ActivateCodeDto activate(Model model, @PathVariable String mail, @PathVariable String code) {
+//        if (!customValidator.validateByRegexp(mail, "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$")) {
+//            throw new InvalidEmailException(ErrorInfo.INVALID_EMAIL_ERROR,
+//                    messageSource.getMessage("message.InvalidEmail", null, LocaleContextHolder.getLocale()));
+//        }
+//        if (!customValidator.validateByRegexp(code, "^[0-9]{6}$")) {
+//            throw new InvalidActivationCodeException(ErrorInfo.INVALID_ACTIVATION_CODE_ERROR,
+//                    messageSource.getMessage("message.InvalidActivationCode", null, LocaleContextHolder.getLocale()));
+//        }
+//        ActivateCodeDto dto = new ActivateCodeDto();
+//        dto.setText(userService.activateUser(mail, code) ? "Ваша активация прошла успешно!" : "Код активации неверный!");
+//        return dto;
+//    }
+
+    @GetMapping("/activate/{code}")
+    public String activate(Model model, @PathVariable String code) {
+        boolean isActivated = userService.activateUser(code);
+        if (isActivated) {
+            model.addAttribute("message", "Ваша активация прошла успешно");
+        } else {
+            model.addAttribute("message", "Код активации не найден!");
         }
-        if (!customValidator.validateByRegexp(code, "^[0-9]{6}$")) {
-            throw new InvalidActivationCodeException(ErrorInfo.INVALID_ACTIVATION_CODE_ERROR,
-                    messageSource.getMessage("message.InvalidActivationCode", null, LocaleContextHolder.getLocale()));
-        }
-        ActivateCodeDto dto = new ActivateCodeDto();
-        dto.setText(userService.activateUser(mail, code) ? "Ваша активация прошла успешно!" : "Код активации неверный!");
-        return dto;
+        model.addAttribute("isActivated", isActivated);
+        return "Ваша активация прошла успешно";
     }
 
     @PostMapping(value = "/block/{userId}")

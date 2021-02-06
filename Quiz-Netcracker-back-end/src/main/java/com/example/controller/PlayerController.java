@@ -46,7 +46,8 @@ public class PlayerController {
     }
 
     @GetMapping("/guest/{name}")
-    public PlayerDto getGuest(@PathVariable String name) {
+    public PlayerDto getGuest(@PathVariable String name) throws InterruptedException {
+        Thread.sleep(100);
         return mapper.toShortDto(this.playerService.findGuest(name));
     }
 
