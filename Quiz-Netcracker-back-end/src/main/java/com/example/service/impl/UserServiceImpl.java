@@ -56,10 +56,10 @@ public class UserServiceImpl implements UserService {
             Player player = new Player(user.getMail(), user.getLogin(), user);
             user.setActive(false); //оставить, когда будет активация через почту
             //   user.setActive(true);//убрать, когда будет активация через почту
-            user.setActivationCode(String.valueOf((int) (Math.random() * 899999 + 100000)));
+            user.setActivationCode(UUID.randomUUID().toString());
             String message = String.format(
                     "Hello, %s! \n" +
-                            "Welcome to localhost. Your activation code: %s",
+                            "Welcome to localhost. Please, visit next link: http://localhost:4200/activate/%s",
                     user.getLogin(),
                     // urlAddress,
                     user.getActivationCode()
@@ -67,7 +67,6 @@ public class UserServiceImpl implements UserService {
             mailSender.send(user.getMail(), "Activation code", message);
             userRepository.save(user);
             playerRepository.save(player);
-
             return user;
         }
     }
@@ -118,9 +117,19 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+//    @Override
+//    public boolean activateUser(String mail, String code) {
+//        User user = userRepository.findUserByMail(mail);
+//        if (user == null || !user.getActivationCode().equals(code)) {
+//            return false;
+//        }
+//        user.setActive(true);
+//        userRepository.save(user);
+//        return true;
+//    }
     @Override
-    public boolean activateUser(String mail, String code) {
-        User user = userRepository.findUserByMail(mail);
+    public boolean activateUser(String code) {
+        User user = userRepository.findUserByActivationCode(code);
         if (user == null || !user.getActivationCode().equals(code)) {
             return false;
         }

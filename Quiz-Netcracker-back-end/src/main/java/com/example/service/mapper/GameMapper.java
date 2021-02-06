@@ -78,8 +78,12 @@ public class GameMapper implements Mapper<Game, GameDto> {
     @Override
     public GameDto toShortDto(Game entity) {
         GameDto gameDto = new GameDto();
+        gameDto.setId(entity.getId());
         gameDto.setTitle(entity.getTitle());
         gameDto.setDescription(entity.getDescription());
+        gameDto.setPhoto(entity.getPhoto());
+        gameDto.setPlayer(entity.getPlayer().getId());
+        gameDto.setAccess(entity.getAccess());
         return gameDto;
     }
 }

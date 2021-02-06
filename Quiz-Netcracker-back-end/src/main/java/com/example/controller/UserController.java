@@ -123,18 +123,10 @@ public class UserController {
         return userFacade;
     }
 
-    @GetMapping("/activate/{mail}/{code}")
-    public ActivateCodeDto activate(Model model, @PathVariable String mail, @PathVariable String code) {
-        if (!customValidator.validateByRegexp(mail, "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$")) {
-            throw new InvalidEmailException(ErrorInfo.INVALID_EMAIL_ERROR,
-                    messageSource.getMessage("message.InvalidEmail", null, LocaleContextHolder.getLocale()));
-        }
-        if (!customValidator.validateByRegexp(code, "^[0-9]{6}$")) {
-            throw new InvalidActivationCodeException(ErrorInfo.INVALID_ACTIVATION_CODE_ERROR,
-                    messageSource.getMessage("message.InvalidActivationCode", null, LocaleContextHolder.getLocale()));
-        }
+    @GetMapping("/activate/{code}")
+    public ActivateCodeDto activate(Model model, @PathVariable String code) {
         ActivateCodeDto dto = new ActivateCodeDto();
-        dto.setText(userService.activateUser(mail, code) ? "Ваша активация прошла успешно!" : "Код активации неверный!");
+        dto.setText(userService.activateUser(code) ? "Ваша активация прошла успешно!" : "Код активации неверный!");
         return dto;
     }
 

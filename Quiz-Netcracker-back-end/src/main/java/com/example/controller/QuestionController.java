@@ -54,7 +54,7 @@ public class QuestionController {
     @GetMapping("/game/{gameId}")
     public List<QuestionDto> getQuestionsByGameId(@PathVariable UUID gameId) {
         return questionService.getQuestionsByGameId(gameId).stream()
-                .map(mapper::toDto)
+                .map(mapper::toShortDto)
                 .collect(Collectors.toList());
     }
 

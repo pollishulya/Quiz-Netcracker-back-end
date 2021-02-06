@@ -44,7 +44,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player findPlayerByUserId(UUID user) {
-        return playerRepository.getPlayerByUserId(user);
+        return playerRepository.findPlayerByUserId(user);
     }
 
     @Override
