@@ -94,7 +94,12 @@ public class GameController {
 
     @GetMapping("/{id}")
     public GameDto getGame(@PathVariable UUID id) {
-        return mapper.toDto(gameService.findGameById(id));
+        return mapper.toShortDto(gameService.findGameById(id));
+    }
+
+    @GetMapping("/short/{id}")
+    public GameDto getShortGameById(@PathVariable UUID id) {
+        return mapper.toShortDto(gameService.findGameById(id));
     }
 
     @GetMapping("/pageable")
@@ -102,7 +107,7 @@ public class GameController {
                          @RequestParam(name = "size", defaultValue = "3") int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Game> pageResult = gamePageService.findAll(pageRequest);
-        List<GameDto> gameDtoList = pageResult.getContent().stream().map(mapper::toDto).collect(Collectors.toList());
+        List<GameDto> gameDtoList = pageResult.getContent().stream().map(mapper::toShortDto).collect(Collectors.toList());
         return new Response(gameDtoList, pageResult.getTotalPages(),
                 pageResult.getNumber(), pageResult.getSize());
     }
@@ -115,7 +120,7 @@ public class GameController {
     @GetMapping("/player/{playerId}")
     public List<GameDto> getGamesByPlayerId(@PathVariable UUID playerId) {
         return gameService.findGameByPlayerId(playerId).stream()
-                .map(mapper::toDto)
+                .map(mapper::toShortDto)
                 .collect(Collectors.toList());
     }
 
@@ -129,7 +134,7 @@ public class GameController {
     @GetMapping("/public-game")
     public List<GameDto> getPublicGames() {
         return gameService.findPublicGames().stream()
-                .map(mapper::toDto)
+                .map(mapper::toShortDto)
                 .collect(Collectors.toList());
     }
 

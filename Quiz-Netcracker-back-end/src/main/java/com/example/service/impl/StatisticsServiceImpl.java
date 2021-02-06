@@ -52,12 +52,12 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public List<GameStatisticsDto> findStatisticsByPlayerIdAndGameId(UUID gameId, UUID userId) {
+    public List<GameStatisticsDto> findStatisticsByPlayerIdAndGameId(UUID gameId, UUID id) {
         List<GameStatisticsDto> gameStatisticsDto = new ArrayList<>();
 
         Set<Question> questions = gameService.findGameById(gameId).getQuestions();
 
-        UUID playerId = playerService.findPlayerByUserId(userId).getId();
+        UUID playerId = playerService.findPlayerById(id).getId();
 
         for (Statistics s : findStatisticsByPlayerId(playerId)) {
             if (s.getQuestion().getGame().getId().equals(gameId)) {
