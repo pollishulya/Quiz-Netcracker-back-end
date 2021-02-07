@@ -7,6 +7,7 @@ import com.example.exception.InvalidUserActivationException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.model.Player;
+import com.example.model.RoleList;
 import com.example.model.User;
 import com.example.repository.PlayerRepository;
 import com.example.repository.UserRepository;
@@ -57,8 +58,8 @@ public class UserServiceImpl implements UserService {
                     messageSource.getMessage("message.ExistingUserError", null, LocaleContextHolder.getLocale()));
         } else {
             Player player = new Player(user.getMail(), user.getLogin(), user);
-            user.setActive(false); //оставить, когда будет активация через почту
-            //   user.setActive(true);//убрать, когда будет активация через почту
+            user.setRole(RoleList.USER);
+            user.setActive(false);
             user.setActivationCode(UUID.randomUUID().toString());
             String message = String.format(
                     "Hello, %s! \n" +

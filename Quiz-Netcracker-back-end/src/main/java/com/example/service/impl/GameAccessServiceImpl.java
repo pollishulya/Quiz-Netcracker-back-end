@@ -1,6 +1,7 @@
 package com.example.service.impl;
 
 import com.example.exception.DeleteEntityException;
+import com.example.exception.InvalidActivationCodeException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.model.Game;
@@ -102,24 +103,24 @@ public class GameAccessServiceImpl implements GameAccessService {
         return player;
     }
 
-    @Override
-    public GameAccess activate(UUID gameId, UUID playerId) {
-        GameAccess gameAccess = gameAccessRepository.findGameAccessesByGameIdAndPlayerId(gameId, playerId);
-        if (gameAccess == null) {
-            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
-        }
-        gameAccess.setAccess(!gameAccess.isAccess());
-        gameAccessRepository.save(gameAccess);
-        return gameAccess;
-    }
+//    @Override
+//    public GameAccess activate(UUID gameId, UUID playerId) {
+//        GameAccess gameAccess = gameAccessRepository.findGameAccessesByGameIdAndPlayerId(gameId, playerId);
+//        if (gameAccess == null) {
+//            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+//                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+//        }
+//        gameAccess.setAccess(!gameAccess.isAccess());
+//        gameAccessRepository.save(gameAccess);
+//        return gameAccess;
+//    }
 
     @Override
     public GameAccess activateGame(String code) {
         GameAccess gameAccess = gameAccessRepository.findGameAccessesByActivationCode(code);
         if (gameAccess == null) {
-            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+            throw new InvalidActivationCodeException(ErrorInfo.INVALID_ACTIVATION_CODE_ERROR,
+                    messageSource.getMessage("message.InvalidActivationCode", new Object[]{null}, LocaleContextHolder.getLocale()));
         }
         else {
             gameAccess.setAccess(true);

@@ -4,12 +4,15 @@ package com.example.controller;
 import com.example.dto.GameAccessDto;
 import com.example.dto.GameDto;
 import com.example.dto.PlayerDto;
+import com.example.exception.ResourceNotFoundException;
+import com.example.exception.detail.ErrorInfo;
 import com.example.model.GameAccess;
 import com.example.service.interfaces.GameAccessService;
 import com.example.service.mapper.GameAccessMapper;
 import com.example.service.mapper.GameMapper;
 import com.example.service.mapper.PlayerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,24 +46,22 @@ public class GameAccessController {
         return gameMapper.toDto(gameAccessService.createGameAccessByGame(userId));
     }
 
-//    @GetMapping("/activate/{gameId}/{playerId}")
-//    public boolean activate(@PathVariable UUID playerId, @PathVariable UUID gameId) {
-//        GameAccess gameAccess=gameAccessService.activate(gameId, playerId);
-//        return gameAccess.isAccess();
-//    }
     @GetMapping("/{gameId}/{playerId}")
     public GameAccessDto getGameAccess(@PathVariable UUID playerId, @PathVariable UUID gameId) {
         return gameAccessMapper.toDto(gameAccessService.getGameAccess(gameId, playerId));
     }
 
     @GetMapping("/sendActivateCode/{gameId}/{playerId}")
-    public String sendActivateCode(@PathVariable UUID playerId, @PathVariable UUID gameId) {
-        return gameAccessService.sendActivateCode(gameId, playerId);
+    public void sendActivateCode(@PathVariable UUID playerId, @PathVariable UUID gameId) {
+        gameAccessService.sendActivateCode(gameId, playerId);
     }
 
         @GetMapping("/activate/{code}")
     public boolean activate(@PathVariable String code) {
         GameAccess gameAccess=gameAccessService.activateGame(code);
+            if (gameAccess == null) {
+                return false;
+            }
         return gameAccess.isAccess();
     }
 
