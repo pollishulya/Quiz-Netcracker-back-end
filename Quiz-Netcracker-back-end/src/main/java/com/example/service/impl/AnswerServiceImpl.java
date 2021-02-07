@@ -43,6 +43,10 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     public Answer updateAnswer(UUID id, Answer answerReq)
     {
+        if (id == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
         UUID[] args = new UUID[]{ id };
         return answerRepository.findById(id).map(answer->{
             answer.setTitle(answerReq.getTitle());
@@ -54,6 +58,10 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public Answer getAnswerById(UUID id) {
+        if (id == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
         UUID[] args = new UUID[]{ id };
         return answerRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));

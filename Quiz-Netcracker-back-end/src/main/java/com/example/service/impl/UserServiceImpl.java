@@ -2,6 +2,8 @@ package com.example.service.impl;
 
 import com.example.exception.AuthorizationException;
 import com.example.exception.DeleteEntityException;
+import com.example.exception.ExistingUserException;
+import com.example.exception.InvalidUserActivationException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.model.Player;
@@ -51,7 +53,8 @@ public class UserServiceImpl implements UserService {
     public User saveUser(User user/*, String urlAddress*/) {
         User userFromDb = userRepository.findByLoginOrMail(user.getLogin(), user.getMail());
         if (userFromDb != null) {
-            return null;
+            throw new ExistingUserException(ErrorInfo.EXISTING_USER_ERROR,
+                    messageSource.getMessage("message.ExistingUserError", null, LocaleContextHolder.getLocale()));
         } else {
             Player player = new Player(user.getMail(), user.getLogin(), user);
             user.setActive(false); //оставить, когда будет активация через почту
@@ -73,6 +76,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(UUID userId, User userRequest) {
+        if (userId == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
         UUID[] args = new UUID[]{userId};
         return userRepository.findById(userId).map(user -> {
             user.setLogin(userRequest.getLogin());
@@ -109,6 +116,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserByUsername(String username) {
+        if (username == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
         User user = userRepository.findByLoginOrMail(username, username);
         if (user == null) {
             throw new AuthorizationException(ErrorInfo.AUTHORIZATION_ERROR,
@@ -131,7 +142,8 @@ public class UserServiceImpl implements UserService {
     public boolean activateUser(String code) {
         User user = userRepository.findUserByActivationCode(code);
         if (user == null || !user.getActivationCode().equals(code)) {
-            return false;
+            throw new InvalidUserActivationException(ErrorInfo.INVALID_USER_ACTIVATION_ERROR,
+                    messageSource.getMessage("message.InvalidUserActivationError", null, LocaleContextHolder.getLocale()));
         }
         user.setActive(true);
         userRepository.save(user);
@@ -140,12 +152,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User blockUser(UUID userId) {
-        User userToBlock = userRepository.findUserById(userId);
-        if (userToBlock.isActive()) {
-            userToBlock.setActive(false);
-        } else {
-            userToBlock.setActive(true);
+        if (userId == null) {
+            throw new InvalidUserActivationException(ErrorInfo.INVALID_USER_ACTIVATION_ERROR,
+                    messageSource.getMessage("message.InvalidUserActivationError", null, LocaleContextHolder.getLocale()));
         }
+        User userToBlock = userRepository.findUserById(userId);
+        userToBlock.setActive(!userToBlock.isActive());
         return userRepository.save(userToBlock);
     }
 

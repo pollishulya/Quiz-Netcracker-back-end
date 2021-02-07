@@ -12,6 +12,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -28,7 +29,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category findCategoryById(UUID id) {
-        UUID[] args = new UUID[]{ id };
+        if (id == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
+        Object[] args = new Object[]{ id };
         return categoryRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
@@ -45,6 +50,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category updateCategory(UUID categoryId, Category categoryRequest) {
+        if (categoryId == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
         UUID[] args = new UUID[]{ categoryId };
         return categoryRepository.findById(categoryId).map(category -> {
             category.setDescription(categoryRequest.getDescription());
