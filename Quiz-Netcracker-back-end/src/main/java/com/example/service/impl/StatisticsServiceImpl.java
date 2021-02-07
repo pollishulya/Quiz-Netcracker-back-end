@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import com.example.dto.GameDto;
 import com.example.dto.GameStatisticsDto;
 import com.example.exception.DeleteEntityException;
 import com.example.exception.detail.ErrorInfo;
@@ -9,6 +10,7 @@ import com.example.model.Statistics;
 import com.example.repository.StatisticsRepository;
 import com.example.service.interfaces.*;
 import com.example.service.mapper.AnswerMapper;
+import com.example.service.mapper.GameMapper;
 import com.example.service.mapper.QuestionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -29,12 +31,13 @@ public class StatisticsServiceImpl implements StatisticsService {
     private final AnswerMapper answerMapper;
     private final MessageSource messageSource;
     private final UserService userService;
+    private final GameMapper gameMapper;
 
     @Autowired
     public StatisticsServiceImpl(StatisticsRepository statisticsRepository, GameService gameService,
                                  PlayerService playerService, QuestionService questionService,
                                  QuestionMapper questionMapper, AnswerMapper answerMapper,
-                                 MessageSource messageSource, UserService userService) {
+                                 MessageSource messageSource, UserService userService, GameMapper gameMapper) {
         this.statisticsRepository = statisticsRepository;
         this.gameService = gameService;
         this.playerService = playerService;
@@ -43,6 +46,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         this.answerMapper = answerMapper;
         this.messageSource = messageSource;
         this.userService = userService;
+        this.gameMapper = gameMapper;
     }
 
 
@@ -84,14 +88,16 @@ public class StatisticsServiceImpl implements StatisticsService {
 
 
     @Override
-    public void delete(UUID id) {
+    public void delete(UUID playerId, UUID gameId) {
         try {
-            List<Statistics> statistics = statisticsRepository.getStatisticsByPlayerId(id);
+            List<Statistics> statistics = statisticsRepository.getStatisticsByPlayerId(playerId);
             for (Statistics statistic : statistics) {
-                statisticsRepository.deleteById(statistic.getId());
+                if (statistic.getAnswer().getQuestion().getGame().getId().equals(gameId)) {
+                    statisticsRepository.deleteById(statistic.getId());
+                }
             }
         } catch (RuntimeException exception) {
-            UUID[] args = new UUID[]{id};
+            UUID[] args = new UUID[]{playerId};
             throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
                     messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
         }
@@ -109,6 +115,16 @@ public class StatisticsServiceImpl implements StatisticsService {
                     }
                 });
         return ((double) rightAns.get() * 100) / totalAns;
+    }
+
+    @Override
+    public Set<GameDto> findGameByPlayerIdAndGameId(UUID playerId) {
+        Set<GameDto> dto = new HashSet<>();
+        List<Statistics> statistics = statisticsRepository.getStatisticsByPlayerId(playerId);
+        for (Statistics statistic : statistics) {
+            dto.add(gameMapper.toDto(gameService.findGameById(statistic.getQuestion().getGame().getId())));
+        }
+        return dto;
     }
 
     @Override

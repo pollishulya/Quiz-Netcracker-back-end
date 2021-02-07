@@ -1,16 +1,17 @@
 package com.example.controller;
 
-import com.example.dto.StatisticsDto;
+import com.example.dto.GameDto;
 import com.example.dto.GameStatisticsDto;
+import com.example.dto.StatisticsDto;
 import com.example.service.interfaces.StatisticsService;
 import com.example.service.mapper.StatisticsMapper;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -34,19 +35,24 @@ public class StatisticsController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{userId}/{gameId}")
-    public List<GameStatisticsDto> getStatisticsByPlayerAndGame(@PathVariable UUID gameId, @PathVariable UUID userId) {
-        return statisticsService.findStatisticsByPlayerIdAndGameId(gameId,userId);
+    @GetMapping("/{playerId}/{gameId}")
+    public List<GameStatisticsDto> getStatisticsByPlayerAndGame(@PathVariable UUID gameId, @PathVariable UUID playerId) {
+        return statisticsService.findStatisticsByPlayerIdAndGameId(gameId, playerId);
     }
 
-    @DeleteMapping("/delete/{playerId}")
-    public ResponseEntity<?> deleteStatistics(@PathVariable UUID playerId) {
-        statisticsService.delete(playerId);
+    @GetMapping("/game/{playerId}")
+    public Set<GameDto> getGameByPlayer(@PathVariable UUID playerId) {
+        return statisticsService.findGameByPlayerIdAndGameId(playerId);
+    }
+
+    @DeleteMapping("/delete/{playerId}/{gameId}")
+    public ResponseEntity<?> deleteStatistics(@PathVariable UUID playerId, @PathVariable UUID gameId) {
+        statisticsService.delete(playerId, gameId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/top")
-    public Map<String, Double> getTotalPercentAllPlayers(){
+    public Map<String, Double> getTotalPercentAllPlayers() {
         return statisticsService.getTotalPercentAllPlayers();
     }
 }
