@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import com.example.exception.DeleteEntityException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.model.Answer;
@@ -41,6 +42,10 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Question updateQuestion(UUID questionId, Question questionRequest) {
+        if (questionId == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
         UUID[] args = new UUID[]{ questionId };
         return questionRepository.findById(questionId).map(question -> {
             question.setTitle(questionRequest.getTitle());
@@ -59,11 +64,26 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public void deleteQuestion(UUID questionId) {
-        questionRepository.deleteById(questionId);
+        if (questionId == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
+        try {
+            questionRepository.deleteById(questionId);
+        }
+        catch (RuntimeException exception) {
+            UUID[] args = new UUID[]{ questionId };
+            throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
+                    messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
+        }
     }
 
     @Override
     public Question getQuestionById(UUID questionId) {
+        if (questionId == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
         UUID[] args = new UUID[]{ questionId };
         return questionRepository.findById(questionId).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale()))) ;
@@ -71,11 +91,19 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<Question> getQuestionsByCategoryId(UUID categoryId) {
+        if (categoryId == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
         return questionRepository.getQuestionByCategoryId(categoryId);
     }
 
     @Override
     public List<Question> getQuestionsByGameId(UUID id) {
+        if (id == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
         return questionRepository.getQuestionByGameId(id);
     }
 

@@ -3,6 +3,8 @@ package com.example.security;
 import com.auth0.jwt.JWT;
 import com.example.service.interfaces.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,11 +25,16 @@ import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager;
     BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserService userService;
+    private final MessageSource messageSource;
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager,
-                                   UserService userRepository) {
+                                   UserService userService,
+                                   MessageSource messageSource) {
         this.authenticationManager = authenticationManager;
         bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        this.userService = userService;
+        this.messageSource = messageSource;
     }
 
     @CrossOrigin(origins = "http://localhost:4200", maxAge = 10000)
@@ -59,19 +66,22 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             return authenticationManager.authenticate(authenticationToken);
         } catch (BadCredentialsException e) {
             try {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Wrong password");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                        messageSource.getMessage("message.WrongPassword", null, LocaleContextHolder.getLocale()));
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
         } catch (NullPointerException e) {
             try {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Wrong userName");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                        messageSource.getMessage("message.WrongUsername", null, LocaleContextHolder.getLocale()));
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
         } catch (InternalAuthenticationServiceException e) {
             try {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "NonUnique userName");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                        messageSource.getMessage("message.WrongUsername", null, LocaleContextHolder.getLocale()));
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
