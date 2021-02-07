@@ -150,7 +150,7 @@ public class GameController {
 
     @PutMapping("/update/{id}")
     public GameDto updateGame(@PathVariable UUID id,
-                              @RequestBody GameDto gameDto) {
+                              @RequestBody GameDto gameDto) throws Error, Exception {
         Map<String, String> propertyViolation = customValidator.validate(gameDto, Update.class);
         if (!propertyViolation.isEmpty()) {
             throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);

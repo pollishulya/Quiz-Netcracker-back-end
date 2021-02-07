@@ -206,9 +206,9 @@ public class GameServiceImpl implements GameService {
 
             game.setPhoto(gameReq.getPhoto());
             game.setAccess(gameReq.getAccess());
-            if(game.getAccess().equals("PUBLIC"))
-            {  gameAccessService.deleteGameAccess(game.getId());}
-            else { gameAccessService.createGameAccessByGame(game.getId()); }
+//            if(game.getAccess().equals("PUBLIC"))
+//            {  gameAccessService.deleteGameAccess(game.getId());}
+//            else { gameAccessService.createGameAccessByGame(game.getId()); }
             if (gameReq.getQuestions() != null) {
                 Set<Question> questions = gameReq.getQuestions()
                         .stream()

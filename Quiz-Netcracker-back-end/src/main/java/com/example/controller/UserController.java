@@ -128,7 +128,7 @@ public class UserController {
                 loginModel.getMail(),
                 bCryptPasswordEncoder.encode(loginModel.getPassword())
         );
-        userFacade.setRole(RoleList.ADMIN);
+        userFacade.setRole(RoleList.USER);
         userService.saveUser(userFacade/*,request.getLocalAddr())*/);
         User user = userService.findUserByUsername(userFacade.getLogin());
         gameAccessService.createGameAccessByPlayer(user.getId());

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -17,17 +18,18 @@ import java.util.UUID;
 @Data
 public class GameDto {
     UUID id;
-    @NotEmpty(message = "message.GameTitleNotValid", groups = {Create.class, Update.class})
+    @NotBlank(message = "message.GameTitleNotValid", groups = {Create.class, Update.class})
     String title;
-    @NotEmpty(message = "message.GameDescriptionNotValid", groups = {Create.class, Update.class})
+    @NotBlank(message = "message.GameDescriptionNotValid", groups = {Create.class, Update.class})
     String description;
     Set<@Valid QuestionDto> questions;
+    @NotNull(message = "message.PlayerIdNotValid", groups = {Create.class, Update.class})
     UUID player;
     String photo;
     UUID gameCategory;
     Long averageRating;
     Long views;
     Long ratingCount;
-
+    @NotNull(message = "message.AccessNotValid", groups = {Create.class, Update.class})
     String access;
 }
