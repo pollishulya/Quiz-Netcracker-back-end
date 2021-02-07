@@ -50,24 +50,22 @@ public class GameAccessController {
         return gameMapper.toDto(gameAccessService.createGameAccessByGame(userId));
     }
 
-//    @GetMapping("/activate/{gameId}/{playerId}")
-//    public boolean activate(@PathVariable UUID playerId, @PathVariable UUID gameId) {
-//        GameAccess gameAccess=gameAccessService.activate(gameId, playerId);
-//        return gameAccess.isAccess();
-//    }
     @GetMapping("/{gameId}/{playerId}")
     public GameAccessDto getGameAccess(@PathVariable UUID playerId, @PathVariable UUID gameId) {
         return gameAccessMapper.toDto(gameAccessService.getGameAccess(gameId, playerId));
     }
 
     @GetMapping("/sendActivateCode/{gameId}/{playerId}")
-    public String sendActivateCode(@PathVariable UUID playerId, @PathVariable UUID gameId) {
-        return gameAccessService.sendActivateCode(gameId, playerId);
+    public void sendActivateCode(@PathVariable UUID playerId, @PathVariable UUID gameId) {
+        gameAccessService.sendActivateCode(gameId, playerId);
     }
 
         @GetMapping("/activate/{code}")
     public boolean activate(@PathVariable String code) {
         GameAccess gameAccess=gameAccessService.activateGame(code);
+            if (gameAccess == null) {
+                return false;
+            }
         return gameAccess.isAccess();
     }
 

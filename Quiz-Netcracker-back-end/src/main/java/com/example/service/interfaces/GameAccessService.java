@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface GameAccessService {
   Game createGameAccessByGame(UUID id);
   Player createGameAccessByPlayer(UUID id);
-  GameAccess activate(UUID gameId, UUID playerId);
+//  GameAccess activate(UUID gameId, UUID playerId);
   GameAccess checkAccess(UUID gameId, UUID playerId);
   List<Player> getPlayersWithTrueAccess(UUID gameId);
   List<Player> getPlayersWithFalseAccess(UUID gameId);
