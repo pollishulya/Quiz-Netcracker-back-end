@@ -2,6 +2,8 @@ package com.example.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
 import java.util.Set;
 import java.util.UUID;
 
@@ -9,7 +11,9 @@ import java.util.UUID;
 @Data
 public class GameCategoryDto {
     UUID id;
+    @NotBlank(message = "message.InvalidGameCategoryTitle")
     String title;
+    @NotBlank(message = "message.InvalidGameCategoryDescription")
     String description;
 }
 

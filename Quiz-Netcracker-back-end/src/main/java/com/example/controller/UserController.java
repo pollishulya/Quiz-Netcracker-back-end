@@ -5,7 +5,10 @@ import com.example.dto.UserDto;
 import com.example.exception.ArgumentNotValidException;
 import com.example.exception.InvalidActivationCodeException;
 import com.example.exception.InvalidEmailException;
+import com.example.exception.QuizBaseException;
+import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
+import com.example.exception.detail.ExceptionDetails;
 import com.example.model.RoleList;
 import com.example.model.User;
 import com.example.repository.PlayerRepository;
@@ -20,12 +23,14 @@ import com.example.service.validation.validator.CustomValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -100,7 +105,8 @@ public class UserController {
     public UserDto checkAccount(@PathVariable String username) {
         User userFromDb = userService.findUserByUsername(username);
         if (userFromDb == null) {
-            return null;
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{ null }, LocaleContextHolder.getLocale()));
         } else {
             return mapper.toDto(userService.findUserByUsername(username));
         }

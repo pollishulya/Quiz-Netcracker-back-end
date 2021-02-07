@@ -2,6 +2,7 @@ package com.example.security;
 
 import com.example.model.RoleList;
 import com.example.service.interfaces.UserService;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,10 +22,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserService userService;
     private final UserPrincipalDetailsService userPrincipalDetailsService;
+    private final MessageSource messageSource;
 
-    public SecurityConfiguration(UserService userService, UserPrincipalDetailsService userPrincipalDetailsService) {
+    public SecurityConfiguration(UserService userService, UserPrincipalDetailsService userPrincipalDetailsService,
+                                 MessageSource messageSource) {
         this.userService = userService;
         this.userPrincipalDetailsService = userPrincipalDetailsService;
+        this.messageSource = messageSource;
     }
 
     @Override
@@ -34,7 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(),this.userService))
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(),this.userService, messageSource))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(),this.userService))
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST,"/login").permitAll()

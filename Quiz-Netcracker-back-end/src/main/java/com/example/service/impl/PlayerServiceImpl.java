@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import com.example.exception.DeleteEntityException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.model.Player;
@@ -32,11 +33,19 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player findPlayer(String property) {
+        if (property == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
         return playerRepository.findPlayerByEmailAndName(property, property).get();
     }
 
     @Override
     public Player findPlayerById(UUID id) {
+        if (id == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
         UUID[] args = new UUID[]{ id };
         return playerRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
@@ -44,17 +53,37 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player findPlayerByUserId(UUID user) {
-        return playerRepository.findPlayerByUserId(user);
+        if (user == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
+        return playerRepository.getPlayerByUserId(user);
     }
 
     @Override
     public Player findGuest(String name) {
-        return playerRepository.findPlayerByName(name);
+        if (name == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
+        Player player = playerRepository.findPlayerByName(name);
+        if (player == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
+        return player;
     }
 
     @Override
     public void deletePlayer(UUID id) {
-        playerRepository.deleteById(id);
+        try {
+            playerRepository.deleteById(id);
+        }
+        catch (RuntimeException exception) {
+            UUID[] args = new UUID[]{ id };
+            throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
+                    messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
+        }
     }
 
     @Override

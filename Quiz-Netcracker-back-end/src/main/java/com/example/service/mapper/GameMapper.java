@@ -46,7 +46,7 @@ public class GameMapper implements Mapper<Game, GameDto> {
                 .stream()
                 .map(questionMapper::toDto)
                 .collect(Collectors.toSet()));
-      //  gameDto.setPlayer(entity.getPlayer().getId());
+        gameDto.setPlayer(entity.getPlayer().getId());
         gameDto.setAccess(entity.getAccess());
         return gameDto;
     }
@@ -55,13 +55,13 @@ public class GameMapper implements Mapper<Game, GameDto> {
     public Game toEntity(GameDto dto) {
         Player player = playerService.findPlayerByUserId(dto.getPlayer());
         Game game = new Game();
-        //GameCategory gameCategory = gameCategoryService.findGameCategoryById(dto.getGameCategory());
+//        GameCategory gameCategory = gameCategoryService.findGameCategoryById(dto.getGameCategory());
         game.setId(dto.getId());
         game.setDescription(dto.getDescription());
         game.setTitle(dto.getTitle());
 
         game.setAverageRating(dto.getAverageRating());
-        //game.setGameCategory(gameCategory);
+//        game.setGameCategory(gameCategory);
         game.setViews(dto.getViews());
         game.setRatingCount(dto.getRatingCount());
 

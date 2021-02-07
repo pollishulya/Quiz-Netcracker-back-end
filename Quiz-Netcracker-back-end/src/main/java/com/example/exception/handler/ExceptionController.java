@@ -1,5 +1,6 @@
 package com.example.exception.handler;
 
+import com.example.exception.AuthorizationException;
 import com.example.exception.QuizBaseException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.exception.detail.ExceptionDetails;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.Date;
 
@@ -33,8 +35,11 @@ public class ExceptionController {
         return new ResponseEntity<>(exceptionDetails, httpStatus);
     }
 
-//    @ExceptionHandler(RuntimeException.class)
-//    public ResponseEntity<?> runtimeExceptionHandler(RuntimeException exception) {
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<?> runtimeExceptionHandler(Exception exception) {
+//        if (exception instanceof AuthorizationException) {
+//            quizBaseExceptionHandling((AuthorizationException) exception);
+//        }
 //        String errorTitle = ErrorInfo.INTERNAL_SERVER_ERROR.getErrorTitle();
 //        ExceptionDetails exceptionDetails = new ExceptionDetails();
 //        exceptionDetails.setErrorTitle(messageSource.getMessage(errorTitle, null, LocaleContextHolder.getLocale()));

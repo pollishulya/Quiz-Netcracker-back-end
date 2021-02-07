@@ -14,7 +14,9 @@ public enum ErrorInfo {
     AUTHORIZATION_ERROR("title.AuthorizationError", "0005", HttpStatus.BAD_REQUEST),
     INVALID_EMAIL_ERROR("title.InvalidEmail", "0006", HttpStatus.BAD_REQUEST),
     INVALID_ACTIVATION_CODE_ERROR("title.InvalidActivationCode", "0007", HttpStatus.BAD_REQUEST),
-    NON_EXISTING_MAIL_ERROR("title.NonExistingMailError", "0008", HttpStatus.BAD_REQUEST);
+    NON_EXISTING_MAIL_ERROR("title.NonExistingMailError", "0008", HttpStatus.BAD_REQUEST),
+    EXISTING_USER_ERROR("title.ExistingUserError", "0009", HttpStatus.BAD_REQUEST),
+    INVALID_USER_ACTIVATION_ERROR("title.InvalidUserActivationError", "0010", HttpStatus.BAD_REQUEST);
 
     private final String errorTitle;
     private final String errorCode;

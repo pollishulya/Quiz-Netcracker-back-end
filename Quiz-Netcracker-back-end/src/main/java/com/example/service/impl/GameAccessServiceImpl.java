@@ -1,6 +1,7 @@
 package com.example.service.impl;
 
 import com.example.exception.DeleteEntityException;
+import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.model.Game;
 import com.example.model.GameAccess;
@@ -43,7 +44,16 @@ public class GameAccessServiceImpl implements GameAccessService {
 
     @Override
     public Game createGameAccessByGame(UUID id) {
+        if (id == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
         Game game = gameRepository.findGameById(id);
+        if (game == null) {
+            UUID[] args = new UUID[]{ id };
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale()));
+        }
         if (game.getAccess().equals("PRIVATE")) {
             List<Player> players = playerRepository.findAll()
                     .stream()
@@ -66,7 +76,16 @@ public class GameAccessServiceImpl implements GameAccessService {
 
     @Override
     public Player createGameAccessByPlayer(UUID id) {
+        if (id == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
         Player player = playerRepository.getPlayerByUserId(id);
+        if (player == null) {
+            UUID[] args = new UUID[]{ id };
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale()));
+        }
         List<Game> games = gameRepository.findAll()
                 .stream()
                 .peek(game -> {
@@ -87,7 +106,8 @@ public class GameAccessServiceImpl implements GameAccessService {
     public GameAccess activate(UUID gameId, UUID playerId) {
         GameAccess gameAccess = gameAccessRepository.findGameAccessesByGameIdAndPlayerId(gameId, playerId);
         if (gameAccess == null) {
-            return null;
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
         }
         gameAccess.setAccess(!gameAccess.isAccess());
         gameAccessRepository.save(gameAccess);
@@ -98,7 +118,8 @@ public class GameAccessServiceImpl implements GameAccessService {
     public GameAccess activateGame(String code) {
         GameAccess gameAccess = gameAccessRepository.findGameAccessesByActivationCode(code);
         if (gameAccess == null) {
-            return null;
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
         }
         else {
             gameAccess.setAccess(true);
@@ -112,7 +133,8 @@ public class GameAccessServiceImpl implements GameAccessService {
     public GameAccess deactivateGame(UUID gameId, UUID playerId) {
         GameAccess gameAccess = gameAccessRepository.findGameAccessesByGameIdAndPlayerId(gameId,playerId);
         if (gameAccess == null) {
-            return null;
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
         }
         if(gameAccess.isAccess()) {
             gameAccess.setAccess(false);
@@ -132,7 +154,8 @@ public class GameAccessServiceImpl implements GameAccessService {
         Game game = gameRepository.findGameById(gameId);
         Player player = playerRepository.findPlayerById(playerId);
         if (game == null||player==null) {
-            return null;
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
         }
         else {
             GameAccess gameAccess = gameAccessRepository.findGameAccessesByGameIdAndPlayerId(gameId,playerId);
@@ -150,6 +173,10 @@ public class GameAccessServiceImpl implements GameAccessService {
 
     @Override
     public GameAccess checkAccess(UUID gameId, UUID playerId) {
+        if (gameId == null || playerId==null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
         return gameAccessRepository.findGameAccessesByGameIdAndPlayerId(gameId, playerId);
     }
 
@@ -185,6 +212,10 @@ public class GameAccessServiceImpl implements GameAccessService {
 
     @Override
     public  List<GameAccess> deleteGameAccess(UUID gameId) {
+        if (gameId == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
         List<GameAccess> gameAccesses = gameAccessRepository.deleteAllByGameId(gameId);
         return gameAccesses;
     }
