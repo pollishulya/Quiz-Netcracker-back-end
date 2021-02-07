@@ -4,12 +4,16 @@ package com.example.controller;
 import com.example.dto.GameAccessDto;
 import com.example.dto.GameDto;
 import com.example.dto.PlayerDto;
+import com.example.exception.InvalidGameAccessException;
+import com.example.exception.detail.ErrorInfo;
 import com.example.model.GameAccess;
 import com.example.service.interfaces.GameAccessService;
 import com.example.service.mapper.GameAccessMapper;
 import com.example.service.mapper.GameMapper;
 import com.example.service.mapper.PlayerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,13 +28,16 @@ public class GameAccessController {
     private final GameMapper gameMapper;
     private final GameAccessMapper gameAccessMapper;
     private final GameAccessService gameAccessService;
+    private final MessageSource messageSource;
 
     @Autowired
-    public GameAccessController( PlayerMapper playerMapper, GameMapper gameMapper, GameAccessMapper gameAccessMapper, GameAccessService gameAccessService) {
+    public GameAccessController( PlayerMapper playerMapper, GameMapper gameMapper, GameAccessMapper gameAccessMapper,
+                                 GameAccessService gameAccessService, MessageSource messageSource) {
         this.gameMapper = gameMapper;
         this.playerMapper = playerMapper;
         this.gameAccessMapper = gameAccessMapper;
         this.gameAccessService = gameAccessService;
+        this.messageSource = messageSource;
     }
 
     @GetMapping("/players/{userId}")
@@ -72,6 +79,10 @@ public class GameAccessController {
     @GetMapping("/check/{gameId}/{playerId}")
     public boolean checkAccess(@PathVariable UUID playerId, @PathVariable UUID gameId) {
         GameAccess gameAccess=gameAccessService.checkAccess(gameId, playerId);
+        if (gameAccess == null) {
+            throw new InvalidGameAccessException(ErrorInfo.INVALID_GAME_ACCESS_ERROR,
+                    messageSource.getMessage("message.InvalidGameAccessError", null, LocaleContextHolder.getLocale()));
+        }
         return gameAccess.isAccess();
     }
 

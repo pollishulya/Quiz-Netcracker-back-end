@@ -54,23 +54,23 @@ public class GameAccessServiceImpl implements GameAccessService {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                     messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale()));
         }
-        if (game.getAccess().equals("PRIVATE")) {
-            List<Player> players = playerRepository.findAll()
-                    .stream()
-                    .peek(player -> {
-                        GameAccess gameAccess = new GameAccess();
-                        gameAccess.setGame(game);
-                        gameAccess.setPlayer(player);
-                        if (game.getPlayer().getId() == player.getId()) {
-                            gameAccess.setAccess(true);
-                        } else {
-                            gameAccess.setAccess(false);
-                        }
-                        gameAccess.setActivationCode(String.valueOf((int) (Math.random() * 899999 + 100000)));
-                        gameAccessRepository.save(gameAccess);
-                    })
-                    .collect(Collectors.toList());
-        }
+        List<Player> players = playerRepository.findAll()
+                .stream()
+                .peek(player -> {
+                    GameAccess gameAccess = new GameAccess();
+                    gameAccess.setGame(game);
+                    gameAccess.setPlayer(player);
+                    if (game.getPlayer().getId() == player.getId()) {
+                        gameAccess.setAccess(true);
+                    } else {
+                        gameAccess.setAccess(false);
+                    }
+                    gameAccess.setActivationCode(String.valueOf((int) (Math.random() * 899999 + 100000)));
+                    gameAccessRepository.save(gameAccess);
+                })
+                .collect(Collectors.toList());
+//        if (game.getAccess().equals("PRIVATE")) {
+//        }
         return game;
     }
 
@@ -89,14 +89,14 @@ public class GameAccessServiceImpl implements GameAccessService {
         List<Game> games = gameRepository.findAll()
                 .stream()
                 .peek(game -> {
-                    if(game.getAccess()=="PRIVATE") {
-                        GameAccess gameAccess = new GameAccess();
-                        gameAccess.setGame(game);
-                        gameAccess.setPlayer(player);
-                        gameAccess.setAccess(false);
-                        gameAccess.setActivationCode(String.valueOf((int) (Math.random() * 899999 + 100000)));
-                        gameAccessRepository.save(gameAccess);
-                    }
+                    GameAccess gameAccess = new GameAccess();
+                    gameAccess.setGame(game);
+                    gameAccess.setPlayer(player);
+                    gameAccess.setAccess(false);
+                    gameAccess.setActivationCode(String.valueOf((int) (Math.random() * 899999 + 100000)));
+                    gameAccessRepository.save(gameAccess);
+//                    if(game.getAccess()=="PRIVATE") {
+//                    }
                 })
                 .collect(Collectors.toList());
         return player;
