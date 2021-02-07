@@ -1,17 +1,16 @@
 package com.example.controller;
 
 import com.example.dto.ActivateCodeDto;
+import com.example.dto.GameDto;
 import com.example.dto.UserDto;
 import com.example.exception.ArgumentNotValidException;
-import com.example.exception.InvalidActivationCodeException;
-import com.example.exception.InvalidEmailException;
 import com.example.exception.detail.ErrorInfo;
-import com.example.model.RoleList;
-import com.example.model.User;
+import com.example.model.*;
 import com.example.repository.PlayerRepository;
 import com.example.security.LoginModel;
 import com.example.service.impl.AmazonClient;
 import com.example.service.interfaces.GameAccessService;
+import com.example.service.interfaces.UserPageService;
 import com.example.service.interfaces.UserService;
 import com.example.service.mapper.UserMapper;
 import com.example.service.validation.group.Create;
@@ -19,13 +18,13 @@ import com.example.service.validation.group.Update;
 import com.example.service.validation.validator.CustomValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -44,16 +43,18 @@ public class UserController {
     private final GameAccessService gameAccessService;
     private final CustomValidator customValidator;
     private final MessageSource messageSource;
+    private final UserPageService userPageService;
 
 
     @Autowired
     public UserController(UserService userService, UserMapper mapper, PlayerRepository playerRepository, AmazonClient amazonClient,
-                          GameAccessService gameAccessService, CustomValidator customValidator, MessageSource messageSource) {
+                          GameAccessService gameAccessService, CustomValidator customValidator, MessageSource messageSource, UserPageService userPageService) {
         this.userService = userService;
         this.mapper = mapper;
         this.playerRepository = playerRepository;
         this.amazonClient = amazonClient;
         this.gameAccessService = gameAccessService;
+        this.userPageService = userPageService;
         bCryptPasswordEncoder = new BCryptPasswordEncoder();
         this.customValidator = customValidator;
         this.messageSource = messageSource;
@@ -133,5 +134,15 @@ public class UserController {
     @PostMapping(value = "/block/{userId}")
     public UserDto blockUser(@PathVariable UUID userId) {
         return mapper.toDto(userService.blockUser(userId));
+    }
+
+    @GetMapping("/pageable")
+    public ResponseUser list(@RequestParam(name = "page", defaultValue = "0") int page,
+                         @RequestParam(name = "size", defaultValue = "3") int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<User> pageResult = userPageService.findAll(pageRequest);
+        List<UserDto> userDtoList = pageResult.getContent().stream().map(mapper::toShortDto).collect(Collectors.toList());
+        return new ResponseUser(userDtoList, pageResult.getTotalPages(),
+                pageResult.getNumber(), pageResult.getSize());
     }
 }

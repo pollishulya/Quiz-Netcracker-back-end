@@ -9,8 +9,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Response {
-    private List<GameDto> games;
+public class ResponseUser {
+    private List<UserDto> users;
     private int totalPages;
     private int pageNumber;
     private int pageSize;
