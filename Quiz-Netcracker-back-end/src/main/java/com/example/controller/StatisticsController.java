@@ -39,9 +39,9 @@ public class StatisticsController {
         return statisticsService.findStatisticsByPlayerIdAndGameId(gameId,userId);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable UUID id) {
-        statisticsService.delete(id);
+    @DeleteMapping("/delete/{playerId}")
+    public ResponseEntity<?> deleteStatistics(@PathVariable UUID playerId) {
+        statisticsService.delete(playerId);
         return ResponseEntity.ok().build();
     }
 

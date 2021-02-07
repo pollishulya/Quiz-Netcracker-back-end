@@ -86,7 +86,10 @@ public class StatisticsServiceImpl implements StatisticsService {
     @Override
     public void delete(UUID id) {
         try {
-            statisticsRepository.deleteById(id);
+            List<Statistics> statistics = statisticsRepository.getStatisticsByPlayerId(id);
+            for (Statistics statistic : statistics) {
+                statisticsRepository.deleteById(statistic.getId());
+            }
         } catch (RuntimeException exception) {
             UUID[] args = new UUID[]{id};
             throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
