@@ -20,6 +20,7 @@ import java.util.UUID;
 public class GameDto {
     UUID id;
     @NotBlank(message = "message.GameTitleNotValid", groups = {Create.class, Update.class})
+    @Size(min = 4, max = 24)
     String title;
     @NotBlank(message = "message.GameDescriptionNotValid", groups = {Create.class, Update.class})
     String description;

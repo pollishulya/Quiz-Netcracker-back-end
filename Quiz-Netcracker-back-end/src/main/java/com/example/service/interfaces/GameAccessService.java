@@ -22,5 +22,6 @@ public interface GameAccessService {
   GameAccess getGameAccess(UUID gameId, UUID playerId);
   List<GameAccess> deleteGameAccess(UUID gameId);
   List<GameAccess> getGameAccessesByGameId(UUID gameId);
+  public List <GameAccess> updateGameAccess(Game game);
   void delete(UUID id);
 }

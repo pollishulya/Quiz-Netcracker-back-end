@@ -147,9 +147,7 @@ public class GameController {
     }
 
     @PostMapping("/save")
-    public GameDto createGame(@Valid @RequestBody GameDto gameDto) {
-        System.out.println(gameDto.getId());
-
+    public GameDto createGame(@RequestBody GameDto gameDto) {
         Map<String, String> propertyViolation = customValidator.validate(gameDto, Create.class);
         if (!propertyViolation.isEmpty()) {
             throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
