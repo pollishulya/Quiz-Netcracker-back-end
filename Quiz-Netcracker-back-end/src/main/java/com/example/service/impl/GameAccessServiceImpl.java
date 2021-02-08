@@ -61,7 +61,7 @@ public class GameAccessServiceImpl implements GameAccessService {
                     GameAccess gameAccess = new GameAccess();
                     gameAccess.setGame(game);
                     gameAccess.setPlayer(player);
-                    if (game.getPlayer().getId() == player.getId()) {
+                    if (game.getPlayer().getId() == player.getId()||game.getAccess().equals("PUBLIC")) {
                         gameAccess.setAccess(true);
                     } else {
                         gameAccess.setAccess(false);
@@ -93,7 +93,9 @@ public class GameAccessServiceImpl implements GameAccessService {
                     GameAccess gameAccess = new GameAccess();
                     gameAccess.setGame(game);
                     gameAccess.setPlayer(player);
-                    gameAccess.setAccess(false);
+                    if (game.getAccess().equals("PRIVATE"))
+                    {  gameAccess.setAccess(false);}
+                    else {gameAccess.setAccess(true); }
                     gameAccess.setActivationCode(String.valueOf((int) (Math.random() * 899999 + 100000)));
                     gameAccessRepository.save(gameAccess);
 //                    if(game.getAccess()=="PRIVATE") {
@@ -179,6 +181,31 @@ public class GameAccessServiceImpl implements GameAccessService {
                     messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
         }
         return gameAccessRepository.findGameAccessesByGameIdAndPlayerId(gameId, playerId);
+    }
+
+    @Override
+    public List <GameAccess> updateGameAccess(Game game){;
+        if (game == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
+        List<GameAccess> gameAccesses = gameAccessRepository.findGameAccessesByGameId(game.getId())
+                .stream()
+                .peek(gameAccess -> {
+//                    gameAccessRepository.findById(gameA).map(user -> {
+//                    GameAccess gameAccess = new GameAccess();
+                    gameAccess.setGame(game);
+                    if (game.getAccess().equals("PUBLIC")) {
+                        gameAccess.setAccess(true);
+                    } else {
+                        gameAccess.setAccess(false);
+                    }
+                    gameAccess.setPlayer(game.getPlayer());
+                    gameAccess.setActivationCode(String.valueOf((int) (Math.random() * 899999 + 100000)));
+                    gameAccessRepository.save(gameAccess);//}
+                })
+                .collect(Collectors.toList());
+        return gameAccesses;
     }
 
     @Override

@@ -3,19 +3,11 @@ package com.example.service.impl;
 import com.example.exception.DeleteEntityException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
-import com.example.model.Game;
-import com.example.model.GameAccess;
-import com.example.model.Player;
-import com.example.model.GameFilterRequest;
-import com.example.model.Question;
+import com.example.model.*;
 import com.example.repository.GameRepository;
-import com.example.service.interfaces.GameAccessService;
-import com.example.service.interfaces.GameService;
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.CollectionExpression;
+import com.example.service.interfaces.*;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import com.example.service.interfaces.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,18 +27,20 @@ public class GameServiceImpl implements GameService {
     private final MessageSource messageSource;
     private final EntityManager entityManager;
     private final GameAccessService gameAccessService;
+    private final GameRoomService gameRoomService;
 
     @Autowired
     public GameServiceImpl(GameRepository gameRepository,
                            QuestionService questionService,
                            MessageSource messageSource,
                            EntityManager entityManager,
-                           GameAccessService gameAccessService) {
+                           GameAccessService gameAccessService, GameRoomService gameRoomService) {
         this.gameAccessService = gameAccessService;
         this.gameRepository = gameRepository;
         this.questionService = questionService;
         this.messageSource = messageSource;
         this.entityManager = entityManager;
+        this.gameRoomService = gameRoomService;
     }
 
     @Override
@@ -170,7 +164,9 @@ public class GameServiceImpl implements GameService {
     public void deleteGame(UUID id) {
         try {
             List<GameAccess> gameAccesses=gameAccessService.getGameAccessesByGameId(id);
-            if(gameAccesses==null){
+       //     List<Statistics> statistics=statisticsService.findStatisticsByGameId(id);
+            List<GameRoom> gameRooms = gameRoomService.findByGameId(id);
+            if(gameAccesses==null/*&&gameRooms==null*/){
                 gameRepository.deleteById(id);
             }
            else {
@@ -180,8 +176,17 @@ public class GameServiceImpl implements GameService {
                            gameAccessService.delete(gameAccess.getId());
                         })
                         .collect(Collectors.toList());
+//                gameRoomService.findByGameId(id)
+//                        .stream()
+//                        .peek(gameRoom -> {
+//                            gameRoomService.delete(gameRoom.getId());
+//                        })
+//                        .collect(Collectors.toList());
+
                gameRepository.deleteById(id);
             }
+
+
         }
         catch (RuntimeException exception) {
             UUID[] args = new UUID[]{ id };
@@ -206,9 +211,7 @@ public class GameServiceImpl implements GameService {
 
             game.setPhoto(gameReq.getPhoto());
             game.setAccess(gameReq.getAccess());
-//            if(game.getAccess().equals("PUBLIC"))
-//            {  gameAccessService.deleteGameAccess(game.getId());}
-//            else { gameAccessService.createGameAccessByGame(game.getId()); }
+             gameAccessService.updateGameAccess(game);
             if (gameReq.getQuestions() != null) {
                 Set<Question> questions = gameReq.getQuestions()
                         .stream()

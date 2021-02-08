@@ -47,6 +47,12 @@ public class GameRoomServiceImpl implements GameRoomService {
     }
 
     @Override
+    public List<GameRoom> findByGameId(UUID id) {
+        UUID[] args = new UUID[]{ id };
+        return gameRoomRepository.findGameRoomByGameId(id);
+    }
+
+    @Override
     public GameRoom save(GameRoom gameRoom) {
         return gameRoomRepository.save(gameRoom);
     }
