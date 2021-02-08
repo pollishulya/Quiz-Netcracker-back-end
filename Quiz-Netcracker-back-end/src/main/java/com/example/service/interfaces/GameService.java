@@ -17,10 +17,11 @@ public interface GameService {
     List<Game> findAllGames();
     List<Game> searchGamesByTitle(String title);
 
-    List<Game> findGamesByCategory(String category);
+    List<Game> findGamesByCategory(UUID gameCategoryId);
     List<Game> findAllGamesFilteredByTitle();
     List<Game> findAllGamesFilteredByRating();
     List<Game> findAllGamesFilteredByViews();
+    List<Game> findTopViewedGames();
 
     List<Game> findByFilter(GameFilterRequest request);
 

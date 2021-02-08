@@ -1,5 +1,6 @@
 package com.example.dto;
 
+import com.example.model.Game;
 import com.example.model.GameCategory;
 import com.example.service.validation.group.Create;
 import com.example.service.validation.group.Update;
@@ -26,6 +27,7 @@ public class GameDto {
     @NotNull(message = "message.PlayerIdNotValid", groups = {Create.class, Update.class})
     UUID player;
     String photo;
+
     UUID gameCategory;
     Long averageRating;
     Long views;

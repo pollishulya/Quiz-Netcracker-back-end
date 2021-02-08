@@ -28,11 +28,11 @@ public class GameCategoryServiceImpl implements GameCategoryService {
 
     @Override
     public GameCategory findGameCategoryById(UUID id) {
-        UUID[] args = new UUID[]{ id };
         if (id == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale()));
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
         }
+        Object[] args = new Object[]{ id };
         return gameCategoryRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }

@@ -57,9 +57,16 @@ public class GameController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/searchByCategory/{category}")
-    public List<GameDto> searchGamesByCategory(@PathVariable String category) {
-        return gameService.findGamesByCategory(category).stream()
+    @GetMapping("/topViewed")
+    public List<GameDto> findTopViewedGames() {
+        return gameService.findTopViewedGames().stream()
+                .map(mapper:: toDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/searchByCategory/{id}")
+    public List<GameDto> searchGamesByCategory(@PathVariable UUID id) {
+        return gameService.findGamesByCategory(id).stream()
                 .map(mapper:: toDto)
                 .collect(Collectors.toList());
     }
@@ -80,13 +87,14 @@ public class GameController {
 
     @GetMapping("/filterByViews")
     public List<GameDto> findAllGamesFilteredByViews() {
-        return gameService.findAllGamesFilteredByTitle().stream()
+        return gameService.findAllGamesFilteredByViews().stream()
                 .map(mapper:: toDto)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/findByFilter/{request}")
-    public List<GameDto> findAllGamesByFilter(@PathVariable GameFilterRequest request) {
+    @GetMapping("/findByFilter")
+    public List<GameDto> findAllGamesByFilter(@RequestBody GameFilterRequest request) {
+
         return gameService.findByFilter(request).stream()
                 .map(mapper:: toDto)
                 .collect(Collectors.toList());
@@ -140,6 +148,8 @@ public class GameController {
 
     @PostMapping("/save")
     public GameDto createGame(@Valid @RequestBody GameDto gameDto) {
+        System.out.println(gameDto.getId());
+
         Map<String, String> propertyViolation = customValidator.validate(gameDto, Create.class);
         if (!propertyViolation.isEmpty()) {
             throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
