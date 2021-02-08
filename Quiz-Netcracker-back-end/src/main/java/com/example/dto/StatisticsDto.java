@@ -9,7 +9,6 @@ import java.util.UUID;
 @Data
 public class StatisticsDto {
     UUID id;
-    UUID question;
     UUID answer;
     UUID player;
 }
