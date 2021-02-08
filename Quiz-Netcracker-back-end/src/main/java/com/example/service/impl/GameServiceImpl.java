@@ -25,22 +25,18 @@ public class GameServiceImpl implements GameService {
     private final GameRepository gameRepository;
     private final QuestionService questionService;
     private final MessageSource messageSource;
-    private final EntityManager entityManager;
     private final GameAccessService gameAccessService;
-    private final GameRoomService gameRoomService;
 
     @Autowired
     public GameServiceImpl(GameRepository gameRepository,
                            QuestionService questionService,
                            MessageSource messageSource,
                            EntityManager entityManager,
-                           GameAccessService gameAccessService, GameRoomService gameRoomService) {
+                           GameAccessService gameAccessService) {
         this.gameAccessService = gameAccessService;
         this.gameRepository = gameRepository;
         this.questionService = questionService;
         this.messageSource = messageSource;
-        this.entityManager = entityManager;
-        this.gameRoomService = gameRoomService;
     }
 
     @Override
@@ -164,8 +160,6 @@ public class GameServiceImpl implements GameService {
     public void deleteGame(UUID id) {
         try {
             List<GameAccess> gameAccesses=gameAccessService.getGameAccessesByGameId(id);
-       //     List<Statistics> statistics=statisticsService.findStatisticsByGameId(id);
-            List<GameRoom> gameRooms = gameRoomService.findByGameId(id);
             if(gameAccesses==null/*&&gameRooms==null*/){
                 gameRepository.deleteById(id);
             }
