@@ -19,7 +19,9 @@ public class QuestionDto {
     String title;
     @NotNull(message = "message.QuestionDescriptionNotValid", groups = {Create.class, Update.class} )
     String description;
+    @NotNull(message = "message.CategoryNotValid", groups = {Create.class, Update.class})
     UUID category;
+    @NotNull(message = "message.LevelNotValid", groups = {Create.class, Update.class})
     UUID level;
     UUID game;
     String photo;
