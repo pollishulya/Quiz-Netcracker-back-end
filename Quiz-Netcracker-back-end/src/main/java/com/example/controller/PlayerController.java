@@ -66,8 +66,7 @@ public class PlayerController {
     }
 
     @PutMapping("/update/{playerId}")
-    public PlayerDto updatePlayer(@PathVariable UUID playerId,
-                                  @Valid @RequestBody PlayerDto playerDto) {
+    public PlayerDto updatePlayer(@PathVariable UUID playerId, @RequestBody PlayerDto playerDto) {
         if (!customValidator.validateByRegexp(playerDto.getEmail(), "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$")) {
             throw new InvalidEmailException(ErrorInfo.INVALID_EMAIL_ERROR,
                     messageSource.getMessage("message.InvalidEmail", null, LocaleContextHolder.getLocale()));
@@ -78,9 +77,7 @@ public class PlayerController {
 
     @PostMapping("/uploadFile")
     public Photo uploadFile(@RequestPart(value = "file") MultipartFile file) {
-        Photo photo = new Photo();
-        photo.setPhoto(this.amazonClient.uploadFile(file));
-        return photo;
+        return new Photo(this.amazonClient.uploadFile(file));
     }
 
     @PostMapping("/register-guest")

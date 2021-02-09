@@ -2,15 +2,13 @@ package com.example.controller;
 
 
 import com.example.dto.GameRoomDto;
-import com.example.model.GameRoom;
-import com.example.model.Player;
 import com.example.service.interfaces.GameRoomService;
-import com.example.service.interfaces.PlayerService;
 import com.example.service.mapper.GameRoomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -28,8 +26,7 @@ public class GameRoomController {
 
     @PostMapping("/save")
     public GameRoomDto save(@RequestBody GameRoomDto gameRoomDto) {
-        GameRoom gameRoom = gameRoomMapper.toEntity(gameRoomDto);
-        return gameRoomMapper.toDto(gameRoomService.save(gameRoom));
+        return gameRoomMapper.toDto(gameRoomService.save(gameRoomMapper.toEntity(gameRoomDto)));
     }
 
     @GetMapping("/{gameId}/{playerId}")
@@ -49,12 +46,7 @@ public class GameRoomController {
     }
 
     @DeleteMapping("/{gameRoomId}/{playerId}")
-    public Object deletePlayer(@PathVariable UUID gameRoomId, @PathVariable UUID playerId) {
-        GameRoom gameRoom = gameRoomService.findById(gameRoomId);
-        gameRoom.getPlayers().removeIf(player -> player.getId().equals(playerId));
-        if (gameRoom.getPlayers().size() == 0) {
-            return delete(gameRoomId);
-        }
-        return gameRoomMapper.toDto(gameRoomService.save(gameRoom));
+    public Optional<GameRoomDto> deletePlayer(@PathVariable UUID gameRoomId, @PathVariable UUID playerId) {
+        return gameRoomService.getOptionalGameRoom(gameRoomId, playerId);
     }
 }

@@ -23,8 +23,7 @@ public class PhotoController {
 
     @PostMapping("/uploadFile")
     public Photo uploadFile(@RequestPart(value = "file") MultipartFile file) {
-        Photo photo = new Photo();
-        photo.setPhoto(this.amazonClient.uploadFile(file));
-        return photo;
+
+        return new Photo(this.amazonClient.uploadFile(file));
     }
 }

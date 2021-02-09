@@ -1,6 +1,6 @@
 package com.example.model;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
@@ -9,9 +9,10 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "categories")
 @Data
+@Table(name = "categories")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Category {
     @Id
     @GeneratedValue
@@ -24,11 +25,4 @@ public class Category {
 
     @Column(name = "description")
     private String description;
-
-    @Builder
-    public Category(UUID id, String name, String description) {
-        this.id = id;
-        this.title = name;
-        this.description = description;
-    }
 }

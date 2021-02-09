@@ -22,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -60,43 +59,42 @@ public class GameController {
     @GetMapping("/topViewed")
     public List<GameDto> findTopViewedGames() {
         return gameService.findTopViewedGames().stream()
-                .map(mapper:: toDto)
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/searchByCategory/{id}")
     public List<GameDto> searchGamesByCategory(@PathVariable UUID id) {
         return gameService.findGamesByCategory(id).stream()
-                .map(mapper:: toDto)
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/filterByRating")
     public List<GameDto> findAllGamesFilteredByRating() {
         return gameService.findAllGamesFilteredByRating().stream()
-                .map(mapper:: toDto)
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/filterByName")
     public List<GameDto> findAllGamesFilteredByName() {
         return gameService.findAllGamesFilteredByTitle().stream()
-                .map(mapper:: toDto)
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/filterByViews")
     public List<GameDto> findAllGamesFilteredByViews() {
         return gameService.findAllGamesFilteredByViews().stream()
-                .map(mapper:: toDto)
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/findByFilter")
     public List<GameDto> findAllGamesByFilter(@RequestBody GameFilterRequest request) {
-
         return gameService.findByFilter(request).stream()
-                .map(mapper:: toDto)
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -167,17 +165,15 @@ public class GameController {
         return mapper.toDto(gameService.updateGame(id, game));
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteGame(@PathVariable UUID id) {
-        gameService.deleteGame(id);
+    @DeleteMapping("/delete/{gameId}/{playerId}}")
+    public ResponseEntity<?> deleteGame(@PathVariable UUID gameId, @PathVariable UUID playerId) {
+        gameService.deleteGame(gameId, playerId);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/uploadFile")
     public Photo uploadFile(@RequestPart(value = "file") MultipartFile file) {
-        Photo photo = new Photo();
-        photo.setPhoto(this.amazonClient.uploadFile(file));
-        return photo;
+        return new Photo(this.amazonClient.uploadFile(file));
     }
 
     @DeleteMapping("/deleteFile")

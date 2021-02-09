@@ -12,7 +12,6 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -33,8 +32,8 @@ public class CategoryServiceImpl implements CategoryService {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                     messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
         }
-        Object[] args = new Object[]{ id };
-        return categoryRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+        Object[] args = new Object[]{id};
+        return categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
 
@@ -54,12 +53,12 @@ public class CategoryServiceImpl implements CategoryService {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                     messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
         }
-        UUID[] args = new UUID[]{ categoryId };
+        UUID[] args = new UUID[]{categoryId};
         return categoryRepository.findById(categoryId).map(category -> {
             category.setDescription(categoryRequest.getDescription());
             category.setTitle(categoryRequest.getTitle());
             return categoryRepository.save(category);
-        }).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+        }).orElseThrow(() -> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
 
@@ -67,9 +66,8 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteCategory(UUID categoryId) {
         try {
             categoryRepository.deleteById(categoryId);
-        }
-        catch (RuntimeException exception) {
-            UUID[] args = new UUID[]{ categoryId };
+        } catch (RuntimeException exception) {
+            UUID[] args = new UUID[]{categoryId};
             throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
                     messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
         }
