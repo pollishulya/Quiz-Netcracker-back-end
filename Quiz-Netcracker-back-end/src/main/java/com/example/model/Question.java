@@ -1,10 +1,6 @@
 package com.example.model;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -12,10 +8,10 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "questions")
 @Data
-@Builder
+@Table(name = "questions")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Question {
     @Id
     @GeneratedValue
@@ -30,18 +26,19 @@ public class Question {
     private String description;
 
     @EqualsAndHashCode.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "categoryId")
     private Category category;
 
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "levelId")
     private Level level;
 
     @EqualsAndHashCode.Exclude
-    @ToString.Exclude
     @ManyToOne
+    @ToString.Exclude
     private Game game;
 
     @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, orphanRemoval = true)
@@ -50,16 +47,4 @@ public class Question {
 
     @Column(name = "photo")
     private String photo;
-
-    @Builder
-    public Question(UUID id, String title, String description, Category category, Level level, Game game, Set<Answer> answersSet, String photo) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.category = category;
-        this.level = level;
-        this.game = game;
-        this.answersSet = answersSet;
-        this.photo = photo;
-    }
 }

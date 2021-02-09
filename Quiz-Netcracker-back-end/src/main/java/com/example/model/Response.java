@@ -1,9 +1,9 @@
 package com.example.model;
 
 import com.example.dto.GameDto;
-import com.example.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.*;
+
 import java.util.List;
 
 @NoArgsConstructor
