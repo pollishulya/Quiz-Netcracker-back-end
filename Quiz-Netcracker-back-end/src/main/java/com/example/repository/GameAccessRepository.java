@@ -1,9 +1,6 @@
 package com.example.repository;
 
 import com.example.model.GameAccess;
-import com.example.model.Player;
-import com.example.model.Statistics;
-import com.example.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,8 +10,12 @@ import java.util.UUID;
 @Repository
 public interface GameAccessRepository extends JpaRepository<GameAccess, UUID> {
     GameAccess findGameAccessById(UUID id);
+
     GameAccess findGameAccessesByGameIdAndPlayerId(UUID gameId, UUID playerId);
+
     List<GameAccess> findGameAccessesByPlayerId(UUID playerId);
+
     List<GameAccess> findGameAccessesByGameId(UUID id);
+
     GameAccess findGameAccessesByActivationCode(String code);
 }

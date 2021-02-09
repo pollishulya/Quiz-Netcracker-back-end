@@ -12,8 +12,6 @@ public interface PlayerService {
 
     List<Player> findAllPlayers();
 
-    Player findPlayer(String property);
-
     Player findPlayerById(UUID id);
 
     Player findPlayerByUserId(UUID player);

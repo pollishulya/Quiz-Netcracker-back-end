@@ -1,10 +1,8 @@
 package com.example.service.interfaces;
 
-import com.example.dto.PlayerDto;
 import com.example.model.Game;
 import com.example.model.GameAccess;
 import com.example.model.Player;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,7 +12,6 @@ public interface GameAccessService {
 
     Player createGameAccessByPlayer(UUID id);
 
-    //  GameAccess activate(UUID gameId, UUID playerId);
     GameAccess checkAccess(UUID gameId, UUID playerId);
 
     List<Player> getPlayersWithTrueAccess(UUID gameId);
@@ -27,13 +24,11 @@ public interface GameAccessService {
 
     GameAccess deactivateGame(UUID gameId, UUID playerId);
 
-    GameAccess getGameAccess(UUID gameId, UUID playerId);
-
-    List<GameAccess> deleteGameAccess(UUID gameId);
-
     List<GameAccess> getGameAccessesByGameId(UUID gameId);
 
-    public List<GameAccess> updateGameAccess(Game game);
+    List<GameAccess> getGameAccessesByPlayerId(UUID gameId);
 
-    void delete(UUID id);
+    List<GameAccess> updateGameAccess(Game game);
+
+    void deleteGameAccess(UUID id);
 }

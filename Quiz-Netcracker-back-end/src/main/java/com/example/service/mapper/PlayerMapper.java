@@ -47,9 +47,6 @@ public class PlayerMapper implements Mapper<Player, PlayerDto> {
         PlayerDto playerDto = new PlayerDto();
         playerDto.setId(entity.getId());
         playerDto.setName(entity.getName());
-//        playerDto.setUser(entity.getUser().getId());
-//        player.setEmail(dto.getEmail());
-//        player.setPhoto(dto.getPhoto());
         return playerDto;
     }
 }

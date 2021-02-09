@@ -30,19 +30,9 @@ public class PlayerServiceImpl implements PlayerService {
         this.gameAccessService = gameAccessService;
     }
 
-
     @Override
     public List<Player> findAllPlayers() {
         return playerRepository.findAll();
-    }
-
-    @Override
-    public Player findPlayer(String property) {
-        if (property == null) {
-            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
-        }
-        return playerRepository.findPlayerByEmailAndName(property, property).get();
     }
 
     @Override
@@ -62,7 +52,7 @@ public class PlayerServiceImpl implements PlayerService {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                     messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
         }
-        return playerRepository.getPlayerByUserId(user);
+        return playerRepository.findPlayerByUserId(user);
     }
 
     @Override
@@ -90,7 +80,7 @@ public class PlayerServiceImpl implements PlayerService {
                 gameAccessService.getGameAccessesByGameId(id)
                         .stream()
                         .peek(gameAccess -> {
-                            gameAccessService.delete(gameAccess.getId());
+                            gameAccessService.deleteGameAccess(gameAccess.getId());
                         })
                         .collect(Collectors.toList());
                 playerRepository.deleteById(id);

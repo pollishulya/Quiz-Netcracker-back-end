@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -31,17 +30,14 @@ public class PlayerController {
     private final CustomValidator customValidator;
     private final MessageSource messageSource;
 
-    public PlayerController(PlayerService playerService, PlayerMapper mapper, AmazonClient amazonClient, CustomValidator customValidator, MessageSource messageSource) {
+    public PlayerController(PlayerService playerService, PlayerMapper mapper,
+                            AmazonClient amazonClient, CustomValidator customValidator,
+                            MessageSource messageSource) {
         this.playerService = playerService;
         this.mapper = mapper;
         this.amazonClient = amazonClient;
         this.customValidator = customValidator;
         this.messageSource = messageSource;
-    }
-
-    @GetMapping("/{userProperty}")
-    public PlayerDto getPlayer(@PathVariable String userProperty) {
-        return mapper.toDto(playerService.findPlayer(userProperty));
     }
 
     @GetMapping("/id/{id}")
@@ -102,10 +98,4 @@ public class PlayerController {
         return this.amazonClient.putObjectForPlayer(fileUrl, gameId);
     }
 
-//    @PostMapping("/register")
-//    UUID singUp(@RequestBody LoginModel loginModel/*, HttpServletRequest request*/){
-//        Player player = new Player(loginModel.getUsername());
-//        playerService.savePlayer(player);
-//        return player.getId();
-//    }
 }
