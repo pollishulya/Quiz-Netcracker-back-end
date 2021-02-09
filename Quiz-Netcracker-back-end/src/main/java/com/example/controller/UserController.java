@@ -12,7 +12,6 @@ import com.example.exception.detail.ExceptionDetails;
 import com.example.model.RoleList;
 import com.example.model.User;
 import com.example.model.*;
-import com.example.repository.PlayerRepository;
 import com.example.security.LoginModel;
 import com.example.service.impl.AmazonClient;
 import com.example.service.interfaces.GameAccessService;
@@ -48,7 +47,6 @@ public class UserController {
     private final UserService userService;
     private final UserMapper mapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final PlayerRepository playerRepository;
     private final AmazonClient amazonClient;
     private final GameAccessService gameAccessService;
     private final CustomValidator customValidator;
@@ -57,11 +55,10 @@ public class UserController {
 
 
     @Autowired
-    public UserController(UserService userService, UserMapper mapper, PlayerRepository playerRepository, AmazonClient amazonClient,
+    public UserController(UserService userService, UserMapper mapper,  AmazonClient amazonClient,
                           GameAccessService gameAccessService, CustomValidator customValidator, MessageSource messageSource, UserPageService userPageService) {
         this.userService = userService;
         this.mapper = mapper;
-        this.playerRepository = playerRepository;
         this.amazonClient = amazonClient;
         this.gameAccessService = gameAccessService;
         this.userPageService = userPageService;

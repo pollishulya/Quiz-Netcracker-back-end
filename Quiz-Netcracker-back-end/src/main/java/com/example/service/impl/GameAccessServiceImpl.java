@@ -105,18 +105,6 @@ public class GameAccessServiceImpl implements GameAccessService {
         return player;
     }
 
-//    @Override
-//    public GameAccess activate(UUID gameId, UUID playerId) {
-//        GameAccess gameAccess = gameAccessRepository.findGameAccessesByGameIdAndPlayerId(gameId, playerId);
-//        if (gameAccess == null) {
-//            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-//                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
-//        }
-//        gameAccess.setAccess(!gameAccess.isAccess());
-//        gameAccessRepository.save(gameAccess);
-//        return gameAccess;
-//    }
-
     @Override
     public GameAccess activateGame(String code) {
         GameAccess gameAccess = gameAccessRepository.findGameAccessesByActivationCode(code);
@@ -239,16 +227,6 @@ public class GameAccessServiceImpl implements GameAccessService {
     }
 
     @Override
-    public  List<GameAccess> deleteGameAccess(UUID gameId) {
-        if (gameId == null) {
-            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
-        }
-        List<GameAccess> gameAccesses = gameAccessRepository.deleteAllByGameId(gameId);
-        return gameAccesses;
-    }
-
-    @Override
     public void delete(UUID id) {
         try {
             GameAccess gameAccess=gameAccessRepository.findGameAccessById(id);
@@ -258,5 +236,11 @@ public class GameAccessServiceImpl implements GameAccessService {
             throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
                     messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
         }
+    }
+
+    @Override
+    public List<GameAccess> getGameAccessesByPlayerId(UUID id) {
+        List<GameAccess> gameAccesses=gameAccessRepository.findGameAccessesByPlayerId(id);
+        return gameAccesses;
     }
 }

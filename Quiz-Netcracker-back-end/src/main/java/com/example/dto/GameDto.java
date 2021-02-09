@@ -29,7 +29,7 @@ public class GameDto {
     UUID player;
     String photo;
 
-    UUID gameCategory;
+   // UUID gameCategory;
     Long averageRating;
     Long views;
     Long ratingCount;

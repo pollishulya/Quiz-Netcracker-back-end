@@ -3,8 +3,10 @@ package com.example.service.impl;
 import com.example.exception.DeleteEntityException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
+import com.example.model.GameAccess;
 import com.example.model.Player;
 import com.example.repository.PlayerRepository;
+import com.example.service.interfaces.GameAccessService;
 import com.example.service.interfaces.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -13,16 +15,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
     private final MessageSource messageSource;
+    private final GameAccessService gameAccessService;
 
     @Autowired
-    public PlayerServiceImpl(PlayerRepository playerRepository, MessageSource messageSource) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, MessageSource messageSource, GameAccessService gameAccessService) {
         this.playerRepository = playerRepository;
         this.messageSource = messageSource;
+        this.gameAccessService = gameAccessService;
     }
 
 
@@ -77,7 +82,19 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public void deletePlayer(UUID id) {
         try {
-            playerRepository.deleteById(id);
+            List<GameAccess> gameAccesses=gameAccessService.getGameAccessesByPlayerId(id);
+            if(gameAccesses==null){
+                playerRepository.deleteById(id);
+            }
+            else {
+                gameAccessService.getGameAccessesByGameId(id)
+                        .stream()
+                        .peek(gameAccess -> {
+                            gameAccessService.delete(gameAccess.getId());
+                        })
+                        .collect(Collectors.toList());
+                playerRepository.deleteById(id);
+            }
         }
         catch (RuntimeException exception) {
             UUID[] args = new UUID[]{ id };
