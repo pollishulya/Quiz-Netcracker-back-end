@@ -32,8 +32,8 @@ public class LevelServiceImpl implements LevelService {
 
     @Override
     public Level findLevelById(UUID id) {
-        UUID[] args = new UUID[]{ id };
-        return levelRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+        UUID[] args = new UUID[]{id};
+        return levelRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
 
@@ -44,12 +44,12 @@ public class LevelServiceImpl implements LevelService {
 
     @Override
     public Level update(UUID id, Level levelRequest) {
-        UUID[] args = new UUID[]{ id };
+        UUID[] args = new UUID[]{id};
         return levelRepository.findById(id).map(level -> {
             level.setTitle(levelRequest.getTitle());
             level.setDescription(levelRequest.getDescription());
             return levelRepository.save(level);
-        }).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+        }).orElseThrow(() -> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
 
@@ -57,9 +57,8 @@ public class LevelServiceImpl implements LevelService {
     public void delete(UUID id) {
         try {
             levelRepository.deleteById(id);
-        }
-        catch (RuntimeException exception) {
-            UUID[] args = new UUID[]{ id };
+        } catch (RuntimeException exception) {
+            UUID[] args = new UUID[]{id};
             throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
                     messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
         }

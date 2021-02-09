@@ -11,11 +11,17 @@ import java.util.UUID;
 public interface PlayerRepository extends JpaRepository<Player, UUID> {
 
     Optional<Player> findPlayerByEmailAndName(String email, String name);
+
     Optional<Player> findById(UUID playerId);
+
     Player findPlayerById(UUID id);
+
     Player findPlayerByName(String id);
+
     Player getPlayerByUserId(UUID id);
+
     Player findPlayerByUserId(UUID uuid);
+
     Player deletePlayerByUserId(UUID id);
 
 }

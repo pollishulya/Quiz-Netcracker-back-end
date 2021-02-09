@@ -7,4 +7,8 @@ import lombok.Data;
 @Data
 public class Photo {
     String photo;
+
+    public Photo(String photo) {
+        this.photo = photo;
+    }
 }

@@ -1,8 +1,9 @@
 package com.example.service.interfaces;
 
+import com.example.dto.GameRoomDto;
 import com.example.model.GameRoom;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface GameRoomService {
@@ -14,5 +15,5 @@ public interface GameRoomService {
 
     void delete(UUID id);
 
-    List<GameRoom> findByGameId(UUID id);
+    Optional<GameRoomDto> getOptionalGameRoom(UUID gameRoomId, UUID playerId);
 }

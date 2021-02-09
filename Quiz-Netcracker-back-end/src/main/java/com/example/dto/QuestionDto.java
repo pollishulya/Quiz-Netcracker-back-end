@@ -4,7 +4,8 @@ import com.example.service.validation.annotation.AnswersSetConstraint;
 import com.example.service.validation.group.Create;
 import com.example.service.validation.group.Update;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.Data;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
@@ -15,9 +16,9 @@ import java.util.UUID;
 @AnswersSetConstraint(groups = {Create.class, Update.class})
 public class QuestionDto {
     UUID id;
-    @NotNull(message = "message.QuestionTitleNotValid", groups = {Create.class, Update.class} )
+    @NotNull(message = "message.QuestionTitleNotValid", groups = {Create.class, Update.class})
     String title;
-    @NotNull(message = "message.QuestionDescriptionNotValid", groups = {Create.class, Update.class} )
+    @NotNull(message = "message.QuestionDescriptionNotValid", groups = {Create.class, Update.class})
     String description;
     @NotNull(message = "message.CategoryNotValid", groups = {Create.class, Update.class})
     UUID category;
