@@ -7,6 +7,8 @@ import com.example.exception.detail.ErrorInfo;
 import com.example.model.*;
 import com.example.repository.GameRepository;
 import com.example.service.interfaces.*;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.CollectionExpression;
 import com.example.service.validation.group.Create;
 import com.example.service.validation.group.Update;
 import com.example.service.validation.validator.CustomValidator;
@@ -76,18 +78,6 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public List<Game> findByFilter(GameFilterRequest request) {
-
-//        GameFilter filter = GameFilter.builder()
-//                .build();
-//
-//        Predicate predicate = QPredicates.builder()
-//                .add(filter.getTitle(), request.title::containsIgnoreCase)
-//                .add(filter.getDescripton(), request.description::containsIgnoreCase)
-//                .add(filter.getViews(), request.views::containsIgnoreCase)
-//                .add(filter.getRatingCount(), request.ratingCount::containsIgnoreCase)
-//                .add(filter.getAverageRating(), request.averageRating::containsIgnoreCase)
-//                .buildAnd();
-//        Iterable<Game> result = GameRepository.findByFilter(predicate);
 
         BooleanBuilder predicate = new BooleanBuilder();
 

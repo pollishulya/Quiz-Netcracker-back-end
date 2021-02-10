@@ -3,6 +3,12 @@ INSERT INTO levels (id, description, title) VALUES ('fdecef96-6ee3-4d25-803b-260
 INSERT INTO levels (id, description, title) VALUES ('0458cc5b-8871-4807-98e8-68451f3b1f0b', 'Средний', 'Средний');
 INSERT INTO levels (id, description, title) VALUES ('d401d941-6883-45c5-9038-4bbd9f63bb3c', 'Сложный', 'Сложный');
 
+-- Заполняем категории для игр
+INSERT INTO game_categories(id, description, name) VALUES ('5ad1b56f-b92e-4a18-883b-495167fe5051', 'Программирование', 'Программирование');
+INSERT INTO game_categories(id, description, name) VALUES ('0f4c92a1-61db-438a-86ca-549c820044b4', 'Общая эрудиция', 'Общая эрудиция');
+INSERT INTO game_categories(id, description, name) VALUES ('2ca00af8-dc19-4b69-9c12-d8f046a946a2', 'Разное', 'Разное');
+
+
 -- Инициализируем админа
 INSERT INTO users (id, activation_code, active, login, mail, password, role)
 VALUES ('365924ba-fe34-412d-99b6-dec9554815d9', NULL, TRUE, 'Administrator', 'admin@mail.ru', '$2a$10$xlS02xL1DHt3gwWCgjTI2.UVNU58EjZkgVYnyS.Y.LFY/tRyMC/Ae', 'ADMIN');
@@ -21,7 +27,7 @@ INSERT INTO categories(id, description, name) VALUES ('feacb6b6-9534-4f1b-9131-2
 
 -- Разрабатываем игру про футбол (запустить может только админ)
 INSERT INTO games(id, description, photo, name, access, views, rating, rating_count, player_id, game_category_id)
-VALUES ('716fb029-148d-4515-8aca-7cb8a604ee24', 'Общие факты о футболе', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1611788079133-myach-futbolnyj-myach-adidas-finale-18-top-training-ball-cw4134.jpg', 'Викторина про футбол', 'PUBLIC', NULL, NULL, NULL, NULL, NULL);
+VALUES ('716fb029-148d-4515-8aca-7cb8a604ee24', 'Общие факты о футболе', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1611788079133-myach-futbolnyj-myach-adidas-finale-18-top-training-ball-cw4134.jpg', 'Викторина про футбол', 'PUBLIC', '185', NULL, NULL, NULL, '2ca00af8-dc19-4b69-9c12-d8f046a946a2');
 
 INSERT INTO players(id, email, name, photo, user_id, game_room_id)
 VALUES ('fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd', 'admin@mail.ru', 'Administrator', NULL, '365924ba-fe34-412d-99b6-dec9554815d9', NULL);
@@ -458,7 +464,7 @@ VALUES('e919b6a7-4c8f-415c-9042-ac6a7ffb1a51', TRUE, '«Мячом и ступн
 
 -- Разрабатываем игру "Кто хочет стать миллионером?" (запускать может только админ)
 insert into games(id, description, photo, name, access, views, rating, rating_count, player_id, game_category_id)
-VALUES ('7e9fffd6-b1e6-4343-bc4d-2930620436b4', '15 интересных вопросов', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1612267962433-dadd84efdf6e0ec53664fe89a32e7283.jpeg', 'Кто хочет стать миллионером?', 'PUBLIC', NULL, NULL, NULL, 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd', NULL);
+VALUES ('7e9fffd6-b1e6-4343-bc4d-2930620436b4', '15 интересных вопросов', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1612267962433-dadd84efdf6e0ec53664fe89a32e7283.jpeg', 'Кто хочет стать миллионером?', 'PUBLIC', '46', NULL, NULL, 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd', '0f4c92a1-61db-438a-86ca-549c820044b4');
 
 INSERT INTO game_access(id, game_id, player_id, access, activation_code)
 VALUES ('8919f74d-5dbc-4624-a965-72b7c8ff9e9d', '7e9fffd6-b1e6-4343-bc4d-2930620436b4', 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd', TRUE, NULL);
@@ -720,7 +726,7 @@ VALUES('8b6e1dbd-ceb9-40f2-87f3-ac55830de456', FALSE, 'Палец', 'b69a5a6b-66
 
 -- Разрабатываем игру "Программирование" (запускать может только админ)
 insert into games(id, description, photo, name, access, views, rating, rating_count, player_id, game_category_id)
-VALUES ('2948956b-6351-40ff-aab8-0556631cb947', 'Неадекватное Java-интервью', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1612368989641-projets.jpg', 'Программирование', 'PUBLIC', NULL, NULL, NULL, 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd', NULL);
+VALUES ('2948956b-6351-40ff-aab8-0556631cb947', 'Неадекватное Java-интервью', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1612368989641-projets.jpg', 'Программирование', 'PUBLIC', '32', NULL, NULL, 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd', '5ad1b56f-b92e-4a18-883b-495167fe5051');
 
 INSERT INTO game_access(id, game_id, player_id, access, activation_code)
 VALUES ('dd8a39ca-2ade-4dd3-8241-188e98ef4f97', '2948956b-6351-40ff-aab8-0556631cb947', 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd', TRUE, NULL);
@@ -897,7 +903,7 @@ VALUES('157c1ecd-cf68-48a1-9bde-818eeee71640', FALSE, 'Все', 'fa62248f-2606-4
 
 -- Разрабатываем игру "Netcracker" (запускать может только админ)
 insert into games(id, description, photo, name, access, views, rating, rating_count, player_id, game_category_id)
-VALUES ('58e183eb-86a3-4b29-acb7-76b593418253', 'Факты о Netcracker', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1611576823716-socialmediacard_homepage.png', 'Netcracker', 'PRIVATE', NULL, NULL, NULL, 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd', NULL);
+VALUES ('58e183eb-86a3-4b29-acb7-76b593418253', 'Факты о Netcracker', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1611576823716-socialmediacard_homepage.png', 'Netcracker', 'PRIVATE', '21', NULL, NULL, 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd', '5ad1b56f-b92e-4a18-883b-495167fe5051');
 
 INSERT INTO game_access(id, game_id, player_id, access, activation_code)
 VALUES ('3bfa6f65-ca19-4653-9515-be0e93b81dc5', '58e183eb-86a3-4b29-acb7-76b593418253', 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd', TRUE, NULL);
