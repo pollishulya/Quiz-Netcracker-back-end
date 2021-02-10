@@ -34,19 +34,15 @@ public class GameController {
     public final GameService gameService;
     public final GamePageService gamePageService;
     public final GameMapper mapper;
-    private final CustomValidator customValidator;
     private final AmazonClient amazonClient;
-    private final MessageSource messageSource;
 
     @Autowired
     public GameController(GameService gameService, GamePageService gamePageService, GameMapper mapper,
-                          CustomValidator customValidator, AmazonClient amazonClient, MessageSource messageSource) {
+                          AmazonClient amazonClient) {
         this.gameService = gameService;
         this.gamePageService = gamePageService;
         this.mapper = mapper;
-        this.customValidator = customValidator;
         this.amazonClient = amazonClient;
-        this.messageSource = messageSource;
     }
 
     @GetMapping("/searchByTitle/{title}")
@@ -146,21 +142,13 @@ public class GameController {
 
     @PostMapping("/save")
     public GameDto createGame(@RequestBody GameDto gameDto) {
-        Map<String, String> propertyViolation = customValidator.validate(gameDto, Create.class);
-        if (!propertyViolation.isEmpty()) {
-            throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
-        }
         Game game = mapper.toEntity(gameDto);
         return mapper.toDto(gameService.createGame(game));
     }
 
     @PutMapping("/update/{id}")
     public GameDto updateGame(@PathVariable UUID id,
-                              @RequestBody GameDto gameDto) throws Error, Exception {
-        Map<String, String> propertyViolation = customValidator.validate(gameDto, Update.class);
-        if (!propertyViolation.isEmpty()) {
-            throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
-        }
+                              @RequestBody GameDto gameDto) {
         Game game = mapper.toEntity(gameDto);
         return mapper.toDto(gameService.updateGame(id, game));
     }

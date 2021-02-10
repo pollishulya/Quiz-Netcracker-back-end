@@ -52,7 +52,7 @@ public class PlayerController {
 
     @GetMapping("/guest/{name}")
     public PlayerDto getGuest(@PathVariable String name) throws InterruptedException {
-        Thread.sleep(500);
+        Thread.sleep(200);
         return mapper.toShortDto(this.playerService.findGuest(name));
     }
 
@@ -97,5 +97,4 @@ public class PlayerController {
                                 @PathVariable UUID gameId) {
         return this.amazonClient.putObjectForPlayer(fileUrl, gameId);
     }
-
 }

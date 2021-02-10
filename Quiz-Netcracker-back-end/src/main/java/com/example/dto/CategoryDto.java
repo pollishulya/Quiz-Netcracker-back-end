@@ -10,8 +10,6 @@ import java.util.UUID;
 @Data
 public class CategoryDto {
     UUID id;
-    @NotBlank(message = "message.")
     String title;
-    @NotBlank
     String description;
 }

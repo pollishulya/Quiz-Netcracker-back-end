@@ -18,13 +18,9 @@ import java.util.UUID;
 @Data
 public class GameDto {
     UUID id;
-    @NotBlank(message = "message.GameTitleNotValid", groups = {Create.class, Update.class})
-    @Size(min = 4, max = 24)
     String title;
-    @NotBlank(message = "message.GameDescriptionNotValid", groups = {Create.class, Update.class})
     String description;
-    Set<@Valid QuestionDto> questions;
-    @NotNull(message = "message.PlayerIdNotValid", groups = {Create.class, Update.class})
+    Set<QuestionDto> questions;
     UUID player;
     String photo;
 
@@ -32,6 +28,5 @@ public class GameDto {
     Long averageRating;
     Long views;
     Long ratingCount;
-    @NotNull(message = "message.AccessNotValid", groups = {Create.class, Update.class})
     String access;
 }

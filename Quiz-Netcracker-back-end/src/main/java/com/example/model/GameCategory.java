@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
 @Entity
@@ -18,10 +19,12 @@ public class GameCategory {
     @Column(name = "id")
     private UUID id;
 
+    @NotBlank(message = "message.InvalidGameCategoryTitle")
     @Column(name = "name")
     @Getter
     public String title;
 
+    @NotBlank(message = "message.InvalidGameCategoryDescription")
     @Column(name = "description")
     private String description;
 }

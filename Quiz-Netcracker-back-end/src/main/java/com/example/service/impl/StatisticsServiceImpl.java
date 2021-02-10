@@ -92,7 +92,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         try {
             List<Statistics> statistics = statisticsRepository.getStatisticsByPlayerId(playerId);
             for (Statistics statistic : statistics) {
-                if (statistic.getAnswer().getQuestion().getGame().getId().equals(gameId)) {
+                if(statistic.getQuestion().getGame().getId().equals(gameId)){
                     statisticsRepository.deleteById(statistic.getId());
                 }
             }

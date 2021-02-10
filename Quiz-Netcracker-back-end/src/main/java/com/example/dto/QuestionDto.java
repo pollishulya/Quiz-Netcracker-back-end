@@ -16,15 +16,11 @@ import java.util.UUID;
 @AnswersSetConstraint(groups = {Create.class, Update.class})
 public class QuestionDto {
     UUID id;
-    @NotNull(message = "message.QuestionTitleNotValid", groups = {Create.class, Update.class})
     String title;
-    @NotNull(message = "message.QuestionDescriptionNotValid", groups = {Create.class, Update.class})
     String description;
-    @NotNull(message = "message.CategoryNotValid", groups = {Create.class, Update.class})
     UUID category;
-    @NotNull(message = "message.LevelNotValid", groups = {Create.class, Update.class})
     UUID level;
     UUID game;
     String photo;
-    Set<@Valid AnswerDto> answersSet;
+    Set<AnswerDto> answersSet;
 }

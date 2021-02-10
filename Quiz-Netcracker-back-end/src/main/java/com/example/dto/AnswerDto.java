@@ -13,9 +13,7 @@ import java.util.UUID;
 @Data
 public class AnswerDto {
     UUID id;
-    @NotEmpty(message = "message.AnswerTitleNotValid", groups = {Create.class, Update.class})
     String title;
-    @NotNull(message = "message.AnswerRightNotValid", groups = {Create.class, Update.class})
     Boolean right;
     UUID question;
 }

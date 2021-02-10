@@ -12,5 +12,5 @@ import java.util.UUID;
 public class GameRoomDto {
     UUID id;
     UUID game;
-    Set<@Valid PlayerDto> players;
+    Set<PlayerDto> players;
 }

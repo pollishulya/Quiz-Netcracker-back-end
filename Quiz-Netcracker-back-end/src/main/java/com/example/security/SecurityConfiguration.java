@@ -2,6 +2,7 @@ package com.example.security;
 
 import com.example.model.RoleList;
 import com.example.service.interfaces.UserService;
+import com.example.service.validation.validator.CustomValidator;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,12 +24,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final UserService userService;
     private final UserPrincipalDetailsService userPrincipalDetailsService;
     private final MessageSource messageSource;
+    private final CustomValidator customValidator;
 
     public SecurityConfiguration(UserService userService, UserPrincipalDetailsService userPrincipalDetailsService,
-                                 MessageSource messageSource) {
+                                 MessageSource messageSource, CustomValidator customValidator) {
         this.userService = userService;
         this.userPrincipalDetailsService = userPrincipalDetailsService;
         this.messageSource = messageSource;
+        this.customValidator = customValidator;
     }
 
     @Override
@@ -38,7 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(),this.userService, messageSource))
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(),this.userService, messageSource, customValidator))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(),this.userService))
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST,"/login").permitAll()
