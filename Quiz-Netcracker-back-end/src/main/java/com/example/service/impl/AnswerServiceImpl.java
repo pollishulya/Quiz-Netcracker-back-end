@@ -72,8 +72,7 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public Answer updateAnswer(UUID id, Answer answerReq)
-    {
+    public Answer updateAnswer(UUID id, Answer answerReq) {
         Map<String, String> propertyViolation = customValidator.validate(answerReq, Update.class);
         if (!propertyViolation.isEmpty()) {
             throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
@@ -118,7 +117,9 @@ public class AnswerServiceImpl implements AnswerService {
         if (answerId.equals("null")) {
             statistics.setAnswer(null);
             statisticsService.save(statistics);
-            return null;
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound",
+                            new Object[]{null, messageSource.getMessage("entity.Answer", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
         }
         Answer answer = answerRepository.findAnswerById(UUID.fromString(answerId));
         if (answer == null) {

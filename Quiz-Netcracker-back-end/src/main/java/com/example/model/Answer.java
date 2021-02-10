@@ -19,7 +19,6 @@ public class Answer {
     @Id
     @GeneratedValue
     @Type(type = "pg-uuid")
-    @NotNull(message = "message.AnswerIdNotValid", groups = {Update.class})
     @Column(name = "id")
     private UUID id;
 
