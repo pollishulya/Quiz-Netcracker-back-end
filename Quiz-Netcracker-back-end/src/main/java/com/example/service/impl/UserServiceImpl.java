@@ -11,7 +11,6 @@ import com.example.exception.detail.ErrorInfo;
 import com.example.model.Player;
 import com.example.model.RoleList;
 import com.example.model.User;
-import com.example.repository.PlayerRepository;
 import com.example.repository.UserRepository;
 import com.example.security.LoginModel;
 import com.example.service.interfaces.GameAccessService;
@@ -34,7 +33,6 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final PlayerRepository playerRepository;
     private final GameAccessService gameAccessService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final PlayerService playerService;
@@ -43,10 +41,10 @@ public class UserServiceImpl implements UserService {
     private final CustomValidator customValidator;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PlayerRepository playerRepository, GameAccessService gameAccessService,
-                           MessageSource messageSource, MailSender mailSender, PlayerService playerService, CustomValidator customValidator) {
+    public UserServiceImpl(UserRepository userRepository,
+                           GameAccessService gameAccessService, MessageSource messageSource,
+                           MailSender mailSender, PlayerService playerService, CustomValidator customValidator) {
         this.userRepository = userRepository;
-        this.playerRepository = playerRepository;
         this.gameAccessService = gameAccessService;
         this.playerService = playerService;
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -66,16 +64,16 @@ public class UserServiceImpl implements UserService {
         if (!propertyViolation.isEmpty()) {
             throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
         }
-        User user = new User(loginModel.getUsername(),
-                loginModel.getMail(),
+        User user = new User(loginModel.getLogin(),
+                loginModel.getEmail(),
                 bCryptPasswordEncoder.encode(loginModel.getPassword())
         );
-        User userFromDb = userRepository.findByLoginOrMail(user.getLogin(), user.getMail());
+        User userFromDb = userRepository.findByLoginOrEmail(user.getLogin(), user.getEmail());
         if (userFromDb != null) {
             throw new ExistingUserException(ErrorInfo.EXISTING_USER_ERROR,
                     messageSource.getMessage("message.ExistingUserError", null, LocaleContextHolder.getLocale()));
         } else {
-            Player player = new Player(user.getMail(), user.getLogin(), user);
+            Player player = new Player(user.getEmail(), user.getLogin(), user);
             user.setRole(RoleList.USER);
             user.setActive(false);
             user.setActivationCode(UUID.randomUUID().toString());
@@ -85,9 +83,9 @@ public class UserServiceImpl implements UserService {
                     user.getLogin(),
                     user.getActivationCode()
             );
-            mailSender.send(user.getMail(), "Activation code", message);
+            mailSender.send(user.getEmail(), "Activation code", message);
             userRepository.save(user);
-            playerRepository.save(player);
+            playerService.savePlayer(player);
             gameAccessService.createGameAccessByPlayer(user.getId());
             return user;
         }
@@ -99,7 +97,7 @@ public class UserServiceImpl implements UserService {
         if (!propertyViolation.isEmpty()) {
             throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
         }
-        if (!customValidator.validateByRegexp(userRequest.getMail(), "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$")) {
+        if (!customValidator.validateByRegexp(userRequest.getEmail(), "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$")) {
             throw new InvalidEmailException(ErrorInfo.INVALID_EMAIL_ERROR,
                     messageSource.getMessage("message.InvalidEmail", null, LocaleContextHolder.getLocale()));
         }
@@ -112,11 +110,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId).map(user -> {
             user.setLogin(userRequest.getLogin());
             user.setPassword(userRequest.getPassword());
-            user.setMail(userRequest.getMail());
+            user.setEmail(userRequest.getEmail());
             user.setRole(userRequest.getRole());
-            Player player1=playerRepository.getPlayerByUserId(userId);
-            Player player2=new Player(user.getLogin(),user.getMail());
-            playerService.updatePlayer(player1.getId(),player2);
+            Player player1 = playerService.findPlayerByUserId(userId);
+            Player player2 = new Player(user.getLogin(), user.getEmail());
+            playerService.updatePlayer(player1.getId(), player2);
             return userRepository.save(user);
         }).orElseThrow(() -> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
@@ -125,8 +123,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(UUID userId) {
         try {
-            Player player=playerRepository.getPlayerByUserId(userId);
-            playerRepository.deleteById(player.getId());
+            Player player = playerService.findPlayerByUserId(userId);
+            playerService.deletePlayer(player.getId());
             userRepository.deleteById(userId);
         } catch (RuntimeException exception) {
             Object[] args = new Object[]{userId, messageSource.getMessage("entity.User", null, LocaleContextHolder.getLocale())};
@@ -149,7 +147,7 @@ public class UserServiceImpl implements UserService {
                     messageSource.getMessage("message.ResourceNotFound",
                             new Object[]{null, messageSource.getMessage("entity.User", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
         }
-        User user = userRepository.findByLoginOrMail(username, username);
+        User user = userRepository.findByLoginOrEmail(username, username);
         if (user == null) {
             throw new AuthorizationException(ErrorInfo.AUTHORIZATION_ERROR,
                     messageSource.getMessage("message.AuthorizationError", null, LocaleContextHolder.getLocale()));

@@ -4,6 +4,7 @@ import com.example.dto.PlayerDto;
 import com.example.model.Photo;
 import com.example.model.Player;
 import com.example.service.impl.AmazonClient;
+import com.example.service.interfaces.GameService;
 import com.example.service.interfaces.PlayerService;
 import com.example.service.mapper.PlayerMapper;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +23,14 @@ public class PlayerController {
     private final PlayerService playerService;
     private final PlayerMapper mapper;
     private final AmazonClient amazonClient;
+    private final GameService gameService;
 
     public PlayerController(PlayerService playerService, PlayerMapper mapper,
-                            AmazonClient amazonClient) {
+                            AmazonClient amazonClient, GameService gameService) {
         this.playerService = playerService;
         this.mapper = mapper;
         this.amazonClient = amazonClient;
+        this.gameService = gameService;
     }
 
     @GetMapping("/id/{id}")
@@ -73,8 +76,14 @@ public class PlayerController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteGame(@PathVariable UUID id) {
+    public ResponseEntity<?> deletePlayer(@PathVariable UUID id) {
         playerService.deletePlayer(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/deleteGame/{gameId}/{playerId}")
+    public ResponseEntity<?> deleteGame(@PathVariable UUID gameId, @PathVariable UUID playerId) {
+        gameService.deleteGame(gameId, playerId);
         return ResponseEntity.ok().build();
     }
 
@@ -83,4 +92,5 @@ public class PlayerController {
                                 @PathVariable UUID gameId) {
         return this.amazonClient.putObjectForPlayer(fileUrl, gameId);
     }
+
 }

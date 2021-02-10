@@ -44,7 +44,7 @@ create table levels (
 create table players (
     id uuid not null,
     email varchar(255),
-    name varchar(255),
+    login varchar(255),
     photo varchar(255),
     user_id uuid,
     game_room_id uuid,
@@ -80,7 +80,7 @@ create table users (
     activation_code varchar(255),
     active boolean,
     login varchar(255),
-    mail varchar(255),
+    email varchar(255),
     password varchar(255),
     role varchar(255),
     primary key (id)

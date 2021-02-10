@@ -29,7 +29,7 @@ public class Player {
 
     @NotBlank(message = "message.UsernameNotValid", groups = {Create.class, Update.class})
     @Column
-    private String name;
+    private String login;
 
     @Column
     private String email;
@@ -41,22 +41,17 @@ public class Player {
     @OneToOne(fetch = FetchType.EAGER)
     private User user;
 
-    public Player(String name, User user) {
-        this.user = user;
-        this.name = name;
-    }
-
     public Player(String name, String email) {
-        this.name = name;
+        this.login = name;
         this.email=email;
     }
 
     public Player(String name) {
-        this.name = name;
+        this.login = name;
     }
 
     public Player(String mail, String login, User user) {
-        this.name = login;
+        this.login = login;
         this.email = mail;
         this.user = user;
     }

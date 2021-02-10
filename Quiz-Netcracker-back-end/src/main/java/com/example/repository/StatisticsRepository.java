@@ -10,4 +10,10 @@ import java.util.UUID;
 @Repository
 public interface StatisticsRepository extends JpaRepository<Statistics, UUID> {
     List<Statistics> getStatisticsByPlayerId(UUID id);
+
+    List<Statistics> getStatisticsByQuestionId(UUID id);
+
+    Statistics getStatisticsByQuestionIdAndPlayerId(UUID questionId, UUID playerId);
+
+    void deleteByQuestionId(UUID id);
 }

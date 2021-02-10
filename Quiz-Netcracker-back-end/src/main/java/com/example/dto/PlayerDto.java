@@ -9,7 +9,7 @@ import java.util.UUID;
 @Data
 public class PlayerDto {
     UUID id;
-    String name;
+    String login;
     String email;
     String photo;
     UUID user;

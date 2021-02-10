@@ -7,6 +7,7 @@ import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.model.GameAccess;
 import com.example.model.Player;
+import com.example.repository.GameAccessRepository;
 import com.example.repository.PlayerRepository;
 import com.example.service.interfaces.GameAccessService;
 import com.example.service.interfaces.PlayerService;
@@ -28,14 +29,21 @@ public class PlayerServiceImpl implements PlayerService {
     private final MessageSource messageSource;
     private final CustomValidator customValidator;
     private final GameAccessService gameAccessService;
+ //   private final GameAccessService gameAccessService;
+    private final GameAccessRepository gameAccessRepository;
 
     @Autowired
-    public PlayerServiceImpl(PlayerRepository playerRepository, MessageSource messageSource, GameAccessService gameAccessService,
-                             CustomValidator customValidator) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, MessageSource messageSource,
+                             GameAccessService gameAccessService,
+                             CustomValidator customValidator,
+                            // GameAccessService gameAccessService,
+                             GameAccessRepository gameAccessRepository) {
         this.playerRepository = playerRepository;
         this.messageSource = messageSource;
         this.customValidator = customValidator;
         this.gameAccessService = gameAccessService;
+     //   this.gameAccessService = gameAccessService;
+        this.gameAccessRepository = gameAccessRepository;
     }
 
     @Override
@@ -62,7 +70,7 @@ public class PlayerServiceImpl implements PlayerService {
                     messageSource.getMessage("message.ResourceNotFound",
                             new Object[]{null, messageSource.getMessage("entity.Player", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
         }
-        Player player = playerRepository.getPlayerByUserId(user);
+        Player player = playerRepository.findPlayerByUserId(user);
         if (player == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                     messageSource.getMessage("message.ResourceNotFound",
@@ -78,7 +86,7 @@ public class PlayerServiceImpl implements PlayerService {
                     messageSource.getMessage("message.ResourceNotFound",
                             new Object[]{null, messageSource.getMessage("entity.Player", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
         }
-        Player player = playerRepository.findPlayerByName(name);
+        Player player = playerRepository.findPlayerByLogin(name);
         if (player == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                     messageSource.getMessage("message.ResourceNotFound",
@@ -90,17 +98,16 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public void deletePlayer(UUID id) {
         try {
-            List<GameAccess> gameAccesses=gameAccessService.getGameAccessesByPlayerId(id);
-            if(gameAccesses==null){
+            List<GameAccess> gameAccesses=gameAccessRepository.findGameAccessesByPlayerId(id);
+           if(gameAccesses==null){
                 playerRepository.deleteById(id);
             }
             else {
-                gameAccessService.getGameAccessesByGameId(id)
+                gameAccessRepository.findGameAccessesByGameId(id)
                         .stream()
                         .peek(gameAccess -> {
-                            gameAccessService.deleteGameAccess(gameAccess.getId());
-                        })
-                        .collect(Collectors.toList());
+                            gameAccessRepository.deleteById(gameAccess.getId());
+                        });
                 playerRepository.deleteById(id);
             }
         }
@@ -133,7 +140,7 @@ public class PlayerServiceImpl implements PlayerService {
         }
         Object[] args = new Object[]{ playerId, messageSource.getMessage("entity.Player", null, LocaleContextHolder.getLocale()) };
         return playerRepository.findById(playerId).map(player -> {
-            player.setName(playerRequest.getName());
+            player.setLogin(playerRequest.getLogin());
             player.setEmail(playerRequest.getEmail());
             player.setPhoto(playerRequest.getPhoto());
             return playerRepository.save(player);

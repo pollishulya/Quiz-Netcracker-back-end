@@ -10,7 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class Response {
-    private List<GameDto> games;
     private int totalPages;
     private int pageNumber;
     private int pageSize;

@@ -13,11 +13,13 @@ import com.example.repository.GameRepository;
 import com.example.service.interfaces.GameAccessService;
 import com.example.service.interfaces.GameService;
 import com.example.service.interfaces.QuestionService;
+import com.example.repository.GameRoomRepository;
+import com.example.repository.StatisticsRepository;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.CollectionExpression;
 import com.example.service.validation.group.Create;
 import com.example.service.validation.group.Update;
 import com.example.service.validation.validator.CustomValidator;
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.CollectionExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -40,6 +42,8 @@ public class GameServiceImpl implements GameService {
     private final GameAccessService gameAccessService;
     private final CustomValidator customValidator;
     private final EntityManager entityManager;
+    private final StatisticsRepository statisticsRepository;
+    private final GameRoomRepository gameRoomRepository;
 
     @Autowired
     public GameServiceImpl(GameRepository gameRepository,
@@ -47,13 +51,15 @@ public class GameServiceImpl implements GameService {
                            MessageSource messageSource,
                            EntityManager entityManager,
                            GameAccessService gameAccessService,
-                           CustomValidator customValidator) {
+                           CustomValidator customValidator, StatisticsRepository statisticsRepository, GameRoomRepository gameRoomRepository) {
         this.gameAccessService = gameAccessService;
         this.gameRepository = gameRepository;
         this.questionService = questionService;
         this.messageSource = messageSource;
         this.customValidator = customValidator;
         this.entityManager = entityManager;
+        this.statisticsRepository = statisticsRepository;
+        this.gameRoomRepository = gameRoomRepository;
     }
 
     @Override
@@ -79,18 +85,6 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public List<Game> findByFilter(GameFilterRequest request) {
-
-//        GameFilter filter = GameFilter.builder()
-//                .build();
-//
-//        Predicate predicate = QPredicates.builder()
-//                .add(filter.getTitle(), request.title::containsIgnoreCase)
-//                .add(filter.getDescripton(), request.description::containsIgnoreCase)
-//                .add(filter.getViews(), request.views::containsIgnoreCase)
-//                .add(filter.getRatingCount(), request.ratingCount::containsIgnoreCase)
-//                .add(filter.getAverageRating(), request.averageRating::containsIgnoreCase)
-//                .buildAnd();
-//        Iterable<Game> result = GameRepository.findByFilter(predicate);
 
         BooleanBuilder predicate = new BooleanBuilder();
 
@@ -181,8 +175,10 @@ public class GameServiceImpl implements GameService {
     @Override
     public void deleteGame(UUID gameId, UUID playerId) {
         try {
-//            statisticsService.delete(playerId, gameId);
-//            gameRoomService.delete(gameId);
+            for(Question q: gameRepository.getOne(gameId).getQuestions()){
+                statisticsRepository.deleteByQuestionId(q.getId());
+            }
+            gameRoomRepository.deleteByGameId(gameId);
             List<GameAccess> gameAccesses = gameAccessService.getGameAccessesByGameId(gameId);
             if (gameAccesses == null) {
                 gameRepository.deleteById(gameId);
