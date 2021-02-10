@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.model.Photo;
-import com.example.service.impl.AmazonClient;
+import com.example.service.interfaces.AmazonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;

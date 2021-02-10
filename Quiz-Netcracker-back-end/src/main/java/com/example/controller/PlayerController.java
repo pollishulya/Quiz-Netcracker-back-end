@@ -3,7 +3,7 @@ package com.example.controller;
 import com.example.dto.PlayerDto;
 import com.example.model.Photo;
 import com.example.model.Player;
-import com.example.service.impl.AmazonClient;
+import com.example.service.interfaces.AmazonClient;
 import com.example.service.interfaces.GameService;
 import com.example.service.interfaces.PlayerService;
 import com.example.service.mapper.PlayerMapper;

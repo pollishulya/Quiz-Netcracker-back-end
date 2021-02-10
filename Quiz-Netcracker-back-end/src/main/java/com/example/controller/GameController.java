@@ -1,21 +1,15 @@
 package com.example.controller;
 
 import com.example.dto.GameDto;
-import com.example.exception.ArgumentNotValidException;
-import com.example.exception.detail.ErrorInfo;
 import com.example.model.Game;
 import com.example.model.GameFilterRequest;
 import com.example.model.Photo;
 import com.example.model.Response;
-import com.example.service.impl.AmazonClient;
+import com.example.service.interfaces.AmazonClient;
 import com.example.service.interfaces.GamePageService;
 import com.example.service.interfaces.GameService;
 import com.example.service.mapper.GameMapper;
-import com.example.service.validation.group.Create;
-import com.example.service.validation.group.Update;
-import com.example.service.validation.validator.CustomValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 

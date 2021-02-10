@@ -12,6 +12,7 @@ import com.example.dto.PlayerDto;
 import com.example.model.Player;
 import com.example.repository.GameRepository;
 import com.example.repository.PlayerRepository;
+import com.example.service.interfaces.AmazonClient;
 import com.example.service.mapper.GameMapper;
 import com.example.service.mapper.PlayerMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,16 +25,16 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
-public class AmazonClient {
+public class AmazonClientImpl implements AmazonClient {
 
     private final GameRepository gameRepository;
     private final GameMapper gameMapper;
     private final PlayerRepository playerRepository;
     private final PlayerMapper playerMapper;
-
 
     private AmazonS3 s3client;
 
@@ -46,7 +47,7 @@ public class AmazonClient {
     @Value("${amazonProperties.secretKey}")
     private String secretKey;
 
-    public AmazonClient(GameRepository gameRepository, GameMapper gameMapper, PlayerRepository playerRepository, PlayerMapper playerMapper) {
+    public AmazonClientImpl(GameRepository gameRepository, GameMapper gameMapper, PlayerRepository playerRepository, PlayerMapper playerMapper) {
         this.gameRepository = gameRepository;
         this.gameMapper = gameMapper;
         this.playerRepository = playerRepository;
@@ -59,6 +60,7 @@ public class AmazonClient {
         this.s3client = new AmazonS3Client(credentials);
     }
 
+    @Override
     public String uploadFile(MultipartFile multipartFile) {
         String fileUrl = "";
         try {
@@ -73,35 +75,42 @@ public class AmazonClient {
         return fileUrl;
     }
 
-    private File convertMultiPartToFile(MultipartFile file) throws IOException {
-        File convFile = new File(file.getOriginalFilename());
+    @Override
+    public File convertMultiPartToFile(MultipartFile file) throws IOException {
+        File convFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
         FileOutputStream fos = new FileOutputStream(convFile);
         fos.write(file.getBytes());
         fos.close();
         return convFile;
     }
 
-    private String generateFileName(MultipartFile multiPart) {
-        return new Date().getTime() + "-" + multiPart.getOriginalFilename().replace(" ", "_");
+    @Override
+    public String generateFileName(MultipartFile multiPart) {
+        return new Date().getTime() + "-" + Objects.requireNonNull(multiPart.getOriginalFilename()).replace(" ", "_");
     }
 
-    private void uploadFileTos3bucket(String fileName, File file) {
+    @Override
+    public void uploadFileTos3bucket(String fileName, File file) {
         s3client.putObject(new PutObjectRequest(bucketName, fileName, file)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
     }
 
+    @Override
     public String deleteFileFromS3Bucket(String fileUrl) {
         String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
         s3client.deleteObject(new DeleteObjectRequest(bucketName, fileName));
         return "Successfully deleted";
     }
 
-    public GameDto putObject(String fileUrl, UUID gameId){
+    @Override
+    public GameDto putObject(String fileUrl, UUID gameId) {
         Game game = gameRepository.findGameById(gameId);
         game.setPhoto(fileUrl);
         return gameMapper.toDto(gameRepository.save(game));
     }
-    public PlayerDto putObjectForPlayer(String fileUrl, UUID playerId){
+
+    @Override
+    public PlayerDto putObjectForPlayer(String fileUrl, UUID playerId) {
         Player player = playerRepository.findPlayerById(playerId);
         player.setPhoto(fileUrl);
         return playerMapper.toDto(playerRepository.save(player));
