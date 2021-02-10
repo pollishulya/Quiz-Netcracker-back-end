@@ -28,8 +28,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/game")
 @CrossOrigin(origins = {"http://localhost:4200"})
+@RequestMapping("/game")
 public class GameController {
     public final GameService gameService;
     public final GamePageService gamePageService;

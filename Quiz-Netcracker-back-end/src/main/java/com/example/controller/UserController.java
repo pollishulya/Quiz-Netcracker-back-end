@@ -8,6 +8,7 @@ import com.example.exception.detail.ErrorInfo;
 import com.example.model.ResponseUser;
 import com.example.model.User;
 import com.example.security.LoginModel;
+import com.example.service.interfaces.GameService;
 import com.example.service.interfaces.UserPageService;
 import com.example.service.interfaces.UserService;
 import com.example.service.mapper.UserMapper;
