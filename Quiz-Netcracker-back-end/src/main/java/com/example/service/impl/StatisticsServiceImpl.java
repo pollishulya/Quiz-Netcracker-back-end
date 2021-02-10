@@ -97,7 +97,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                 }
             }
         } catch (RuntimeException exception) {
-            UUID[] args = new UUID[]{playerId};
+            Object[] args = new Object[]{playerId, messageSource.getMessage("entity.Statistics", null, LocaleContextHolder.getLocale())};
             throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
                     messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
         }

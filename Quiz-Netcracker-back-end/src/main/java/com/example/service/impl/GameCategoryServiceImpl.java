@@ -37,9 +37,10 @@ public class GameCategoryServiceImpl implements GameCategoryService {
     public GameCategory findGameCategoryById(UUID id) {
         if (id == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+                    messageSource.getMessage("message.ResourceNotFound",
+                            new Object[]{null, messageSource.getMessage("entity.GameCategory", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
         }
-        Object[] args = new Object[]{ id };
+        Object[] args = new Object[]{ id, messageSource.getMessage("entity.GameCategory", null, LocaleContextHolder.getLocale()) };
         return gameCategoryRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
@@ -66,9 +67,10 @@ public class GameCategoryServiceImpl implements GameCategoryService {
         }
         if (categoryId == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+                    messageSource.getMessage("message.ResourceNotFound",
+                            new Object[]{null, messageSource.getMessage("entity.GameCategory", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
         }
-        UUID[] args = new UUID[]{ categoryId };
+        Object[] args = new Object[]{ categoryId, messageSource.getMessage("entity.GameCategory", null, LocaleContextHolder.getLocale()) };
         return gameCategoryRepository.findById(categoryId).map(category -> {
             category.setDescription(categoryRequest.getDescription());
             category.setTitle(categoryRequest.getTitle());
@@ -83,7 +85,7 @@ public class GameCategoryServiceImpl implements GameCategoryService {
             gameCategoryRepository.deleteById(categoryId);
         }
         catch (RuntimeException exception) {
-            UUID[] args = new UUID[]{ categoryId };
+            Object[] args = new Object[]{ categoryId, messageSource.getMessage("entity.GameCategory", null, LocaleContextHolder.getLocale()) };
             throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
                     messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
         }

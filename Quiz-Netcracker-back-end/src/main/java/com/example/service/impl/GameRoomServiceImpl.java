@@ -45,7 +45,7 @@ public class GameRoomServiceImpl implements GameRoomService {
 
     @Override
     public GameRoom findById(UUID id) {
-        UUID[] args = new UUID[]{id};
+        Object[] args = new Object[]{id, messageSource.getMessage("entity.GameRoom", null, LocaleContextHolder.getLocale())};
         return gameRoomRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
@@ -91,7 +91,7 @@ public class GameRoomServiceImpl implements GameRoomService {
                 gameRoomRepository.deleteById(gameRoom.getId());
             }
         } catch (RuntimeException exception) {
-            UUID[] args = new UUID[]{gameId};
+            Object[] args = new Object[]{gameId, messageSource.getMessage("entity.GameRoom", null, LocaleContextHolder.getLocale())};
             throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
                     messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
         }

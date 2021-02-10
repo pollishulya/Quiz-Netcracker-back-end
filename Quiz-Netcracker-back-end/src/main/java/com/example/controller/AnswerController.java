@@ -30,9 +30,6 @@ public class AnswerController {
     public AnswerDto getAnswer(@PathVariable UUID questionId, @PathVariable String answerId, @PathVariable UUID playerId,
                                @PathVariable UUID gameRoomId, @PathVariable int numberAnswer) throws JsonProcessingException {
         Answer answer = answerService.saveStatisticsAndReturnAnswer(questionId, answerId, playerId, gameRoomId, numberAnswer);
-        if (answer == null) {
-            return null;
-        }
         return mapper.toDto(answer);
     }
 

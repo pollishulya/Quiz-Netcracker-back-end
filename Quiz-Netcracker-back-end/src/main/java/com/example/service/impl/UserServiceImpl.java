@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import com.example.exception.ArgumentNotValidException;
 import com.example.exception.AuthorizationException;
 import com.example.exception.DeleteEntityException;
 import com.example.exception.ExistingUserException;
@@ -16,6 +17,8 @@ import com.example.security.LoginModel;
 import com.example.service.interfaces.GameAccessService;
 import com.example.service.interfaces.PlayerService;
 import com.example.service.interfaces.UserService;
+import com.example.service.validation.group.Create;
+import com.example.service.validation.group.Update;
 import com.example.service.validation.validator.CustomValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -24,6 +27,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -58,6 +62,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(LoginModel loginModel) {
+        Map<String, String> propertyViolation = customValidator.validate(loginModel, Create.class);
+        if (!propertyViolation.isEmpty()) {
+            throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
+        }
         User user = new User(loginModel.getUsername(),
                 loginModel.getMail(),
                 bCryptPasswordEncoder.encode(loginModel.getPassword())
@@ -87,15 +95,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(UUID userId, User userRequest) {
+        Map<String, String> propertyViolation = customValidator.validate(userRequest, Update.class);
+        if (!propertyViolation.isEmpty()) {
+            throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
+        }
         if (!customValidator.validateByRegexp(userRequest.getMail(), "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$")) {
             throw new InvalidEmailException(ErrorInfo.INVALID_EMAIL_ERROR,
                     messageSource.getMessage("message.InvalidEmail", null, LocaleContextHolder.getLocale()));
         }
         if (userId == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+                    messageSource.getMessage("message.ResourceNotFound",
+                            new Object[]{null, messageSource.getMessage("entity.User", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
         }
-        UUID[] args = new UUID[]{userId};
+        Object[] args = new Object[]{userId, messageSource.getMessage("entity.User", null, LocaleContextHolder.getLocale())};
         return userRepository.findById(userId).map(user -> {
             user.setLogin(userRequest.getLogin());
             user.setPassword(userRequest.getPassword());
@@ -116,7 +129,7 @@ public class UserServiceImpl implements UserService {
             playerRepository.deleteById(player.getId());
             userRepository.deleteById(userId);
         } catch (RuntimeException exception) {
-            UUID[] args = new UUID[]{userId};
+            Object[] args = new Object[]{userId, messageSource.getMessage("entity.User", null, LocaleContextHolder.getLocale())};
             throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
                     messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
         }
@@ -124,7 +137,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(UUID userId) {
-        UUID[] args = new UUID[]{userId};
+        Object[] args = new Object[]{userId, messageSource.getMessage("entity.User", null, LocaleContextHolder.getLocale())};
         return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
@@ -133,7 +146,8 @@ public class UserServiceImpl implements UserService {
     public User findUserByUsername(String username) {
         if (username == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+                    messageSource.getMessage("message.ResourceNotFound",
+                            new Object[]{null, messageSource.getMessage("entity.User", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
         }
         User user = userRepository.findByLoginOrMail(username, username);
         if (user == null) {

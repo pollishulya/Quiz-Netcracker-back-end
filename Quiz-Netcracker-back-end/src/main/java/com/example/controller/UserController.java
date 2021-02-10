@@ -35,20 +35,15 @@ public class UserController {
 
     private final UserService userService;
     private final UserMapper mapper;
-    private final CustomValidator customValidator;
-    private final MessageSource messageSource;
     private final UserPageService userPageService;
 
 
     @Autowired
     public UserController(UserService userService, UserMapper mapper,
-                          CustomValidator customValidator, MessageSource messageSource,
                           UserPageService userPageService) {
         this.userService = userService;
         this.mapper = mapper;
         this.userPageService = userPageService;
-        this.customValidator = customValidator;
-        this.messageSource = messageSource;
     }
 
     @GetMapping("/findAllUsers")
@@ -69,10 +64,6 @@ public class UserController {
     @PutMapping("/update/{userId}")
     public UserDto updateUser(@PathVariable UUID userId,
                               @RequestBody UserDto userDto) {
-        Map<String, String> propertyViolation = customValidator.validate(userDto, Update.class);
-        if (!propertyViolation.isEmpty()) {
-            throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
-        }
         User user = mapper.toEntity(userDto);
         return mapper.toDto(userService.updateUser(userId, user));
     }
@@ -90,10 +81,6 @@ public class UserController {
 
     @PostMapping("/register")
     public UserDto singUp(@RequestBody LoginModel loginModel) {
-        Map<String, String> propertyViolation = customValidator.validate(loginModel, Create.class);
-        if (!propertyViolation.isEmpty()) {
-            throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
-        }
         return mapper.toDto(userService.saveUser(loginModel));
     }
 

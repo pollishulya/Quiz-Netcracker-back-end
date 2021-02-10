@@ -62,7 +62,7 @@ public class AnswerServiceImpl implements AnswerService {
         try {
             answerRepository.deleteById(id);
         } catch (RuntimeException exception) {
-            UUID[] args = new UUID[]{id};
+            Object[] args = new Object[]{id, messageSource.getMessage("entity.Answer", null, LocaleContextHolder.getLocale())};
             throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
                     messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
         }
@@ -77,9 +77,10 @@ public class AnswerServiceImpl implements AnswerService {
         }
         if (id == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+                    messageSource.getMessage("message.ResourceNotFound",
+                            new Object[]{null, messageSource.getMessage("entity.Answer", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
         }
-        UUID[] args = new UUID[]{id};
+        Object[] args = new Object[]{id, messageSource.getMessage("entity.Answer", null, LocaleContextHolder.getLocale())};
         return answerRepository.findById(id).map(answer -> {
             answer.setTitle(answerReq.getTitle());
             answer.setRight(answerReq.getRight());
@@ -92,9 +93,10 @@ public class AnswerServiceImpl implements AnswerService {
     public Answer getAnswerById(UUID id) {
         if (id == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+                    messageSource.getMessage("message.ResourceNotFound",
+                            new Object[]{null, messageSource.getMessage("entity.Answer", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
         }
-        UUID[] args = new UUID[]{id};
+        Object[] args = new Object[]{id, messageSource.getMessage("entity.Answer", null, LocaleContextHolder.getLocale())};
         return answerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
@@ -118,6 +120,11 @@ public class AnswerServiceImpl implements AnswerService {
             return null;
         }
         Answer answer = answerRepository.findAnswerById(UUID.fromString(answerId));
+        if (answer == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound",
+                            new Object[]{null, messageSource.getMessage("entity.Answer", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
+        }
         Player player = playerService.findPlayerById(playerId);
         GameMessage gameMessage = new GameMessage(answer.getRight(), playerId, numberAnswer);
         GameRoom gameRoom = gameRoomService.findById(gameRoomId);

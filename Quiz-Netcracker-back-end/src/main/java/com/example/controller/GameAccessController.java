@@ -27,15 +27,13 @@ public class GameAccessController {
     private final PlayerMapper playerMapper;
     private final GameAccessMapper gameAccessMapper;
     private final GameAccessService gameAccessService;
-    private final MessageSource messageSource;
 
     @Autowired
-    public GameAccessController( PlayerMapper playerMapper, GameAccessMapper gameAccessMapper,
-                                 GameAccessService gameAccessService, MessageSource messageSource) {
+    public GameAccessController(PlayerMapper playerMapper, GameAccessMapper gameAccessMapper,
+                                GameAccessService gameAccessService) {
         this.playerMapper = playerMapper;
         this.gameAccessMapper = gameAccessMapper;
         this.gameAccessService = gameAccessService;
-        this.messageSource = messageSource;
     }
 
     @GetMapping("/sendActivateCode/{gameId}/{playerId}")
@@ -43,12 +41,9 @@ public class GameAccessController {
         gameAccessService.sendActivateCode(gameId, playerId);
     }
 
-        @GetMapping("/activate/{code}")
+    @GetMapping("/activate/{code}")
     public boolean activate(@PathVariable String code) {
-        GameAccess gameAccess=gameAccessService.activateGame(code);
-            if (gameAccess == null) {
-                return false;
-            }
+        GameAccess gameAccess = gameAccessService.activateGame(code);
         return gameAccess.isAccess();
     }
 
@@ -59,21 +54,17 @@ public class GameAccessController {
 
     @GetMapping("/check/{gameId}/{playerId}")
     public boolean checkAccess(@PathVariable UUID playerId, @PathVariable UUID gameId) {
-        GameAccess gameAccess=gameAccessService.checkAccess(gameId, playerId);
-        if (gameAccess == null) {
-            throw new InvalidGameAccessException(ErrorInfo.INVALID_GAME_ACCESS_ERROR,
-                    messageSource.getMessage("message.InvalidGameAccessError", null, LocaleContextHolder.getLocale()));
-        }
+        GameAccess gameAccess = gameAccessService.checkAccess(gameId, playerId);
         return gameAccess.isAccess();
     }
 
     @GetMapping("/findPlayersWithTrueAccess/{gameId}")
-    public List<PlayerDto> getPlayersByGameWithTrueAccess( @PathVariable UUID gameId) {
+    public List<PlayerDto> getPlayersByGameWithTrueAccess(@PathVariable UUID gameId) {
         return gameAccessService.getPlayersWithTrueAccess(gameId).stream().map(playerMapper::toDto).collect(Collectors.toList());
     }
 
     @GetMapping("/findPlayersWithFalseAccess/{gameId}")
-    public List<PlayerDto> getPlayersByGameWithFalseAccess( @PathVariable UUID gameId) {
+    public List<PlayerDto> getPlayersByGameWithFalseAccess(@PathVariable UUID gameId) {
         return gameAccessService.getPlayersWithFalseAccess(gameId).stream().map(playerMapper::toDto).collect(Collectors.toList());
     }
 

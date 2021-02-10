@@ -30,9 +30,10 @@ public class CategoryServiceImpl implements CategoryService {
     public Category findCategoryById(UUID id) {
         if (id == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+                    messageSource.getMessage("message.ResourceNotFound",
+                            new Object[]{null, messageSource.getMessage("entity.Category", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
         }
-        Object[] args = new Object[]{id};
+        Object[] args = new Object[]{id, messageSource.getMessage("entity.Category", null, LocaleContextHolder.getLocale())};
         return categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
@@ -51,9 +52,10 @@ public class CategoryServiceImpl implements CategoryService {
     public Category updateCategory(UUID categoryId, Category categoryRequest) {
         if (categoryId == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+                    messageSource.getMessage("message.ResourceNotFound",
+                            new Object[]{null, messageSource.getMessage("entity.Category", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
         }
-        UUID[] args = new UUID[]{categoryId};
+        Object[] args = new Object[]{categoryId, messageSource.getMessage("entity.Category", null, LocaleContextHolder.getLocale())};
         return categoryRepository.findById(categoryId).map(category -> {
             category.setDescription(categoryRequest.getDescription());
             category.setTitle(categoryRequest.getTitle());
@@ -67,7 +69,7 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             categoryRepository.deleteById(categoryId);
         } catch (RuntimeException exception) {
-            UUID[] args = new UUID[]{categoryId};
+            Object[] args = new Object[]{categoryId, messageSource.getMessage("entity.Category", null, LocaleContextHolder.getLocale())};
             throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
                     messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
         }

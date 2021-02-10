@@ -47,7 +47,8 @@ public class PlayerServiceImpl implements PlayerService {
     public Player findPlayerById(UUID id) {
         if (id == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+                    messageSource.getMessage("message.ResourceNotFound",
+                            new Object[]{null, messageSource.getMessage("entity.Player", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
         }
         UUID[] args = new UUID[]{ id };
         return playerRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
@@ -58,12 +59,14 @@ public class PlayerServiceImpl implements PlayerService {
     public Player findPlayerByUserId(UUID user) {
         if (user == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+                    messageSource.getMessage("message.ResourceNotFound",
+                            new Object[]{null, messageSource.getMessage("entity.Player", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
         }
         Player player = playerRepository.getPlayerByUserId(user);
         if (player == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+                    messageSource.getMessage("message.ResourceNotFound",
+                            new Object[]{null, messageSource.getMessage("entity.Player", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
         }
         return player;
     }
@@ -72,12 +75,14 @@ public class PlayerServiceImpl implements PlayerService {
     public Player findGuest(String name) {
         if (name == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+                    messageSource.getMessage("message.ResourceNotFound",
+                            new Object[]{null, messageSource.getMessage("entity.Player", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
         }
         Player player = playerRepository.findPlayerByName(name);
         if (player == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+                    messageSource.getMessage("message.ResourceNotFound",
+                            new Object[]{null, messageSource.getMessage("entity.Player", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
         }
         return player;
     }
@@ -100,7 +105,7 @@ public class PlayerServiceImpl implements PlayerService {
             }
         }
         catch (RuntimeException exception) {
-            UUID[] args = new UUID[]{ id };
+            Object[] args = new Object[]{ id, messageSource.getMessage("entity.Player", null, LocaleContextHolder.getLocale()) };
             throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
                     messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
         }
@@ -123,9 +128,10 @@ public class PlayerServiceImpl implements PlayerService {
         }
         if (playerId == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+                    messageSource.getMessage("message.ResourceNotFound",
+                            new Object[]{null, messageSource.getMessage("entity.Player", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
         }
-        UUID[] args = new UUID[]{ playerId };
+        Object[] args = new Object[]{ playerId, messageSource.getMessage("entity.Player", null, LocaleContextHolder.getLocale()) };
         return playerRepository.findById(playerId).map(player -> {
             player.setName(playerRequest.getName());
             player.setEmail(playerRequest.getEmail());

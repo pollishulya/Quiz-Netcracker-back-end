@@ -4,23 +4,26 @@ import com.example.exception.ArgumentNotValidException;
 import com.example.exception.DeleteEntityException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
-import com.example.model.*;
+import com.example.model.Game;
+import com.example.model.GameAccess;
+import com.example.model.GameFilterRequest;
+import com.example.model.QGame;
+import com.example.model.Question;
 import com.example.repository.GameRepository;
-import com.example.service.interfaces.*;
+import com.example.service.interfaces.GameAccessService;
+import com.example.service.interfaces.GameService;
+import com.example.service.interfaces.QuestionService;
 import com.example.service.validation.group.Create;
 import com.example.service.validation.group.Update;
 import com.example.service.validation.validator.CustomValidator;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.CollectionExpression;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.example.model.QGame;
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Map;
@@ -155,7 +158,7 @@ public class GameServiceImpl implements GameService {
 
 //    @Override
 //    public Game updateGameRating(UUID id, Game game) {
-//        UUID[] args = new UUID[]{ id };
+//        Object[] args = new Object[]{ id, messageSource.getMessage("entity.Game", null, LocaleContextHolder.getLocale()) };
 //        return gameRepository.findById(id).map(game->{
 //            game.setPhoto(game.getPhoto());
 //
@@ -190,7 +193,7 @@ public class GameServiceImpl implements GameService {
                 gameRepository.deleteById(gameId);
             }
         } catch (RuntimeException exception) {
-            UUID[] args = new UUID[]{gameId};
+            Object[] args = new Object[]{gameId, messageSource.getMessage("entity.Game", null, LocaleContextHolder.getLocale())};
             throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
                     messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
         }
@@ -204,7 +207,7 @@ public class GameServiceImpl implements GameService {
         if (!propertyViolation.isEmpty()) {
             throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
         }
-        UUID[] args = new UUID[]{ id };
+        Object[] args = new Object[]{ id, messageSource.getMessage("entity.Game", null, LocaleContextHolder.getLocale()) };
         return gameRepository.findById(id).map(game -> {
             game.setTitle(gameReq.getTitle());
             game.setDescription(gameReq.getDescription());
@@ -234,7 +237,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Game findGameById(UUID id) {
-        UUID[] args = new UUID[]{id};
+        Object[] args = new Object[]{id, messageSource.getMessage("entity.Game", null, LocaleContextHolder.getLocale())};
         return gameRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
