@@ -4,6 +4,7 @@ import com.example.dto.GameDto;
 import com.example.dto.GameStatisticsDto;
 import com.example.exception.DeleteEntityException;
 import com.example.exception.detail.ErrorInfo;
+import com.example.model.Game;
 import com.example.model.Player;
 import com.example.model.Question;
 import com.example.model.Statistics;
@@ -59,23 +60,18 @@ public class StatisticsServiceImpl implements StatisticsService {
     public List<GameStatisticsDto> findStatisticsByPlayerIdAndGameId(UUID gameId, UUID id) {
         List<GameStatisticsDto> gameStatisticsDto = new ArrayList<>();
 
-        Set<Question> questions = gameService.findGameById(gameId).getQuestions();
+        List<Statistics> statistics = new ArrayList<>();
+        for (Question q : gameService.findGameById(gameId).getQuestions()) {
+            statistics.add(statisticsRepository.getStatisticsByQuestionIdAndPlayerId(q.getId(), id));
+        }
 
-        UUID playerId = playerService.findPlayerById(id).getId();
-
-        for (Statistics s : findStatisticsByPlayerId(playerId)) {
-            if (s.getQuestion().getGame().getId().equals(gameId)) {
-                for (Question question : questions) {
-                    if (s.getQuestion().getId().equals(question.getId())) {
-                        if (s.getAnswer() == null) {
-                            gameStatisticsDto.add(new GameStatisticsDto(questionMapper.toDto(question),
-                                    null, getPercent(question.getId())));
-                        } else {
-                            gameStatisticsDto.add(new GameStatisticsDto(questionMapper.toDto(question),
-                                    answerMapper.toDto(s.getAnswer()), getPercent(question.getId())));
-                        }
-                    }
-                }
+        for (Statistics s : statistics) {
+            if (s.getAnswer() == null) {
+                gameStatisticsDto.add(new GameStatisticsDto(questionMapper.toDto(s.getQuestion()),
+                        null, getPercent(s.getQuestion())));
+            } else {
+                gameStatisticsDto.add(new GameStatisticsDto(questionMapper.toDto(s.getQuestion()),
+                        answerMapper.toDto(s.getAnswer()), getPercent(s.getQuestion())));
             }
         }
         return gameStatisticsDto;
@@ -92,7 +88,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         try {
             List<Statistics> statistics = statisticsRepository.getStatisticsByPlayerId(playerId);
             for (Statistics statistic : statistics) {
-                if(statistic.getQuestion().getGame().getId().equals(gameId)){
+                if (statistic.getQuestion().getGame().getId().equals(gameId)) {
                     statisticsRepository.deleteById(statistic.getId());
                 }
             }
@@ -144,19 +140,21 @@ public class StatisticsServiceImpl implements StatisticsService {
                         collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
-    public double getPercent(UUID questionId) {
-        double number = 0;
-        double all = 0;
-        Question question = questionService.getQuestionById(questionId);
-        List<Statistics> statistics = statisticsRepository.findAll();
+    public double getPercent(Question question) {
+        double rightAnswers = 0;
+        double allAnswers = 0;
+        List<Statistics> statistics = new ArrayList<>();
+        for (Question q : question.getGame().getQuestions()) {
+            statistics.addAll(statisticsRepository.getStatisticsByQuestionId(q.getId()));
+        }
         for (Statistics s : statistics) {
             if (s.getQuestion().equals(question)) {
-                all++;
+                allAnswers++;
                 if (s.getAnswer() != null && s.getAnswer().getRight()) {
-                    number++;
+                    rightAnswers++;
                 }
             }
         }
-        return number / all * 100;
+        return rightAnswers / allAnswers * 100;
     }
 }
