@@ -1,11 +1,15 @@
 package com.example.service.impl;
 
+import com.example.exception.ArgumentNotValidException;
 import com.example.exception.DeleteEntityException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.model.*;
 import com.example.repository.GameRepository;
 import com.example.service.interfaces.*;
+import com.example.service.validation.group.Create;
+import com.example.service.validation.group.Update;
+import com.example.service.validation.validator.CustomValidator;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.CollectionExpression;
 import org.springframework.context.MessageSource;
@@ -19,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.model.QGame;
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -30,21 +35,28 @@ public class GameServiceImpl implements GameService {
     private final QuestionService questionService;
     private final MessageSource messageSource;
     private final GameAccessService gameAccessService;
+    private final CustomValidator customValidator;
 
     @Autowired
     public GameServiceImpl(GameRepository gameRepository,
                            QuestionService questionService,
                            MessageSource messageSource,
                            EntityManager entityManager,
-                           GameAccessService gameAccessService) {
+                           GameAccessService gameAccessService,
+                           CustomValidator customValidator) {
         this.gameAccessService = gameAccessService;
         this.gameRepository = gameRepository;
         this.questionService = questionService;
         this.messageSource = messageSource;
+        this.customValidator = customValidator;
     }
 
     @Override
     public Game createGame(Game game) {
+        Map<String, String> propertyViolation = customValidator.validate(game, Create.class);
+        if (!propertyViolation.isEmpty()) {
+            throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
+        }
         Game game1 = gameRepository.save(game);
         Set<Question> questions = game1.getQuestions()
                 .stream()
@@ -204,6 +216,10 @@ public class GameServiceImpl implements GameService {
     @Override
     public Game updateGame(UUID id, Game gameReq)
     {
+        Map<String, String> propertyViolation = customValidator.validate(gameReq, Update.class);
+        if (!propertyViolation.isEmpty()) {
+            throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
+        }
         UUID[] args = new UUID[]{ id };
         return gameRepository.findById(id).map(game->{
             game.setTitle(gameReq.getTitle());

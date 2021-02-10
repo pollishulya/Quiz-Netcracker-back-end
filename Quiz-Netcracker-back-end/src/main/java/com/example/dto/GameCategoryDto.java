@@ -11,9 +11,7 @@ import java.util.UUID;
 @Data
 public class GameCategoryDto {
     UUID id;
-    @NotBlank(message = "message.InvalidGameCategoryTitle")
     String title;
-    @NotBlank(message = "message.InvalidGameCategoryDescription")
     String description;
 }
 

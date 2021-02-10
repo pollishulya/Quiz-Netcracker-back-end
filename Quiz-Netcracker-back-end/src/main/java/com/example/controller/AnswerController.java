@@ -29,28 +29,23 @@ import java.util.stream.Collectors;
 public class AnswerController {
     private final AnswerService answerService;
     private final AnswerMapper mapper;
-    private final CustomValidator customValidator;
     private final PlayerService playerService;
     private final StatisticsService statisticsService;
     private final GameRoomService gameRoomService;
     private final SimpMessagingTemplate simpMessagingTemplate;
-    private final MessageSource messageSource;
     private final QuestionService questionService;
 
     @Autowired
     public AnswerController(AnswerService answerService, AnswerMapper mapper,
-                            CustomValidator customValidator, PlayerService playerService,
-                            StatisticsService statisticsService, GameRoomService gameRoomService,
-                            SimpMessagingTemplate simpMessagingTemplate, MessageSource messageSource,
+                            PlayerService playerService, StatisticsService statisticsService,
+                            GameRoomService gameRoomService, SimpMessagingTemplate simpMessagingTemplate,
                             QuestionService questionService) {
         this.answerService = answerService;
         this.mapper = mapper;
-        this.customValidator = customValidator;
         this.playerService = playerService;
         this.statisticsService = statisticsService;
         this.gameRoomService = gameRoomService;
         this.simpMessagingTemplate = simpMessagingTemplate;
-        this.messageSource = messageSource;
         this.questionService = questionService;
     }
 
@@ -86,10 +81,6 @@ public class AnswerController {
 
     @PostMapping("/answer")
     public AnswerDto createAnswer(@RequestBody AnswerDto answerDto) {
-        Map<String, String> propertyViolation = customValidator.validate(answerDto, Create.class);
-        if (!propertyViolation.isEmpty()) {
-            throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
-        }
         Answer answer = mapper.toEntity(answerDto);
         return mapper.toDto(answerService.createAnswer(answer));
     }
@@ -97,10 +88,6 @@ public class AnswerController {
     @PutMapping("/{id}")
     public AnswerDto updateAnswer(@PathVariable UUID id,
                                   @RequestBody AnswerDto answerDto) {
-        Map<String, String> propertyViolation = customValidator.validate(answerDto, Update.class);
-        if (!propertyViolation.isEmpty()) {
-            throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
-        }
         Answer answer = mapper.toEntity(answerDto);
         return mapper.toDto(answerService.updateAnswer(id, answer));
     }

@@ -3,6 +3,7 @@ package com.example.service.impl;
 import com.example.exception.AuthorizationException;
 import com.example.exception.DeleteEntityException;
 import com.example.exception.ExistingUserException;
+import com.example.exception.InvalidEmailException;
 import com.example.exception.InvalidUserActivationException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
@@ -14,6 +15,7 @@ import com.example.repository.UserRepository;
 import com.example.service.interfaces.GameAccessService;
 import com.example.service.interfaces.PlayerService;
 import com.example.service.interfaces.UserService;
+import com.example.service.validation.validator.CustomValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -33,9 +35,11 @@ public class UserServiceImpl implements UserService {
     private final PlayerService playerService;
     private final MailSender mailSender;
     private final MessageSource messageSource;
+    private final CustomValidator customValidator;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PlayerRepository playerRepository, GameAccessService gameAccessService, MessageSource messageSource, MailSender mailSender, PlayerService playerService) {
+    public UserServiceImpl(UserRepository userRepository, PlayerRepository playerRepository, GameAccessService gameAccessService,
+                           MessageSource messageSource, MailSender mailSender, PlayerService playerService, CustomValidator customValidator) {
         this.userRepository = userRepository;
         this.playerRepository = playerRepository;
         this.gameAccessService = gameAccessService;
@@ -43,6 +47,7 @@ public class UserServiceImpl implements UserService {
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
         this.messageSource = messageSource;
         this.mailSender = mailSender;
+        this.customValidator = customValidator;
     }
 
     @Override
@@ -77,6 +82,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(UUID userId, User userRequest) {
+        if (!customValidator.validateByRegexp(userRequest.getMail(), "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$")) {
+            throw new InvalidEmailException(ErrorInfo.INVALID_EMAIL_ERROR,
+                    messageSource.getMessage("message.InvalidEmail", null, LocaleContextHolder.getLocale()));
+        }
         if (userId == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                     messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));

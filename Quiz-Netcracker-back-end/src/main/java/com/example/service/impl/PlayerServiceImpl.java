@@ -1,28 +1,35 @@
 package com.example.service.impl;
 
+import com.example.exception.ArgumentNotValidException;
 import com.example.exception.DeleteEntityException;
+import com.example.exception.InvalidEmailException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.model.Player;
 import com.example.repository.PlayerRepository;
 import com.example.service.interfaces.PlayerService;
+import com.example.service.validation.group.Update;
+import com.example.service.validation.validator.CustomValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
     private final MessageSource messageSource;
+    private final CustomValidator customValidator;
 
     @Autowired
-    public PlayerServiceImpl(PlayerRepository playerRepository, MessageSource messageSource) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, MessageSource messageSource, CustomValidator customValidator) {
         this.playerRepository = playerRepository;
         this.messageSource = messageSource;
+        this.customValidator = customValidator;
     }
 
 
@@ -57,7 +64,12 @@ public class PlayerServiceImpl implements PlayerService {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                     messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
         }
-        return playerRepository.getPlayerByUserId(user);
+        Player player = playerRepository.getPlayerByUserId(user);
+        if (player == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
+        return player;
     }
 
     @Override
@@ -93,6 +105,18 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player updatePlayer(UUID playerId, Player playerRequest) {
+        Map<String, String> propertyViolation = customValidator.validate(playerRequest, Update.class);
+        if (!propertyViolation.isEmpty()) {
+            throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
+        }
+        if (!customValidator.validateByRegexp(playerRequest.getEmail(), "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$")) {
+            throw new InvalidEmailException(ErrorInfo.INVALID_EMAIL_ERROR,
+                    messageSource.getMessage("message.InvalidEmail", null, LocaleContextHolder.getLocale()));
+        }
+        if (playerId == null) {
+            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
+        }
         UUID[] args = new UUID[]{ playerId };
         return playerRepository.findById(playerId).map(player -> {
             player.setName(playerRequest.getName());

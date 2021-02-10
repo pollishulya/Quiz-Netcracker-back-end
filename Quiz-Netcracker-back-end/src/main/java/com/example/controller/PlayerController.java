@@ -1,17 +1,25 @@
 package com.example.controller;
 
 import com.example.dto.PlayerDto;
+import com.example.exception.ArgumentNotValidException;
+import com.example.exception.InvalidEmailException;
+import com.example.exception.detail.ErrorInfo;
 import com.example.model.Photo;
 import com.example.model.Player;
 import com.example.service.impl.AmazonClient;
 import com.example.service.interfaces.PlayerService;
 import com.example.service.mapper.PlayerMapper;
+import com.example.service.validation.group.Update;
+import com.example.service.validation.validator.CustomValidator;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -58,7 +66,7 @@ public class PlayerController {
 
     @PutMapping("/update/{playerId}")
     public PlayerDto updatePlayer(@PathVariable UUID playerId,
-                                  @Valid @RequestBody PlayerDto playerDto) {
+                                  @RequestBody PlayerDto playerDto) {
         Player player = mapper.toEntity(playerDto);
         return mapper.toDto(playerService.updatePlayer(playerId, player));
     }
@@ -91,11 +99,4 @@ public class PlayerController {
                                 @PathVariable UUID gameId) {
         return this.amazonClient.putObjectForPlayer(fileUrl, gameId);
     }
-
-//    @PostMapping("/register")
-//    UUID singUp(@RequestBody LoginModel loginModel/*, HttpServletRequest request*/){
-//        Player player = new Player(loginModel.getUsername());
-//        playerService.savePlayer(player);
-//        return player.getId();
-//    }
 }

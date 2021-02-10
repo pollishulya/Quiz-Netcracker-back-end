@@ -1,11 +1,13 @@
 package com.example.model;
 
+import com.example.service.validation.group.Update;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,13 +27,16 @@ public class User {
     @Column(name = "mail")
     private String mail;
 
+    @NotBlank(message = "message.LoginNotValid", groups = {Update.class})
     @Column(name = "login")
     private String login;
 
     @JsonIgnore
+    @NotBlank(message = "message.PasswordTitleNotValid", groups = {Update.class})
     @Column(name = "password")
     private String password;
 
+    @NotBlank(message = "message.RoleNotValid", groups = {Update.class})
     private String role;
 
     @Column(name = "activation_code")

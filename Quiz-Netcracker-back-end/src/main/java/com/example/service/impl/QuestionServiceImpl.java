@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import com.example.exception.ArgumentNotValidException;
 import com.example.exception.DeleteEntityException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
@@ -7,12 +8,16 @@ import com.example.model.Answer;
 import com.example.model.Question;
 import com.example.repository.QuestionRepository;
 import com.example.service.interfaces.QuestionService;
+import com.example.service.validation.group.Create;
+import com.example.service.validation.group.Update;
+import com.example.service.validation.validator.CustomValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -21,11 +26,13 @@ import java.util.stream.Collectors;
 public class QuestionServiceImpl implements QuestionService {
     private final QuestionRepository questionRepository;
     private final MessageSource messageSource;
+    private final CustomValidator customValidator;
 
     @Autowired
-    public QuestionServiceImpl(QuestionRepository questionRepository, MessageSource messageSource) {
+    public QuestionServiceImpl(QuestionRepository questionRepository, MessageSource messageSource, CustomValidator customValidator) {
         this.questionRepository = questionRepository;
         this.messageSource = messageSource;
+        this.customValidator = customValidator;
     }
 
     @Override
@@ -35,6 +42,10 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Question saveQuestion(Question question) {
+        Map<String, String> propertyViolation = customValidator.validate(question, Create.class);
+        if (!propertyViolation.isEmpty()) {
+            throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
+        }
         Question question1 = questionRepository.save(question);
         setQuestionToAnswers(question1);
         return question1;
@@ -42,6 +53,10 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Question updateQuestion(UUID questionId, Question questionRequest) {
+        Map<String, String> propertyViolation = customValidator.validate(questionRequest, Update.class);
+        if (!propertyViolation.isEmpty()) {
+            throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
+        }
         if (questionId == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                     messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));

@@ -24,11 +24,4 @@ public class Category {
 
     @Column(name = "description")
     private String description;
-
-    @Builder
-    public Category(UUID id, String name, String description) {
-        this.id = id;
-        this.title = name;
-        this.description = description;
-    }
 }

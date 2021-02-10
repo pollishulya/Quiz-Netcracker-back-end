@@ -41,14 +41,14 @@ public class GameCategoryController {
 //    }
 
     @PostMapping("/save")
-    public GameCategoryDto createGameCategory(@Valid @RequestBody GameCategoryDto gameCategoryDto) {
+    public GameCategoryDto createGameCategory(@RequestBody GameCategoryDto gameCategoryDto) {
         GameCategory gameCategory = mapper.toEntity(gameCategoryDto);
         return mapper.toDto(gameCategoryService.saveGameCategory(gameCategory));
     }
 
     @PutMapping("/update/{gameCategoryId}")
     public GameCategoryDto updateGameCategory(@PathVariable UUID gameCategoryId,
-                                      @Valid @RequestBody GameCategoryDto gameCategoryDto) {
+                                              @RequestBody GameCategoryDto gameCategoryDto) {
         GameCategory gameCategory = mapper.toEntity(gameCategoryDto);
         return mapper.toDto(gameCategoryService.updateGameCategory(gameCategoryId, gameCategory));
     }

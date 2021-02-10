@@ -1,11 +1,15 @@
 package com.example.model;
 
+import com.example.service.validation.group.Create;
+import com.example.service.validation.group.Update;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Entity
@@ -18,9 +22,11 @@ public class Player {
     @Id
     @GeneratedValue
     @Type(type = "pg-uuid")
+    @NotNull(message = "message.PlayerIdNotValid", groups = {Update.class})
     @Column(name = "id")
     private UUID id;
 
+    @NotBlank(message = "message.UsernameNotValid", groups = {Create.class, Update.class})
     @Column
     private String name;
 
@@ -30,6 +36,7 @@ public class Player {
     @Column
     private String photo;
 
+    @NotNull(message = "message.UserIdNotValid", groups = {Update.class})
     @OneToOne(fetch = FetchType.EAGER)
     private User user;
 

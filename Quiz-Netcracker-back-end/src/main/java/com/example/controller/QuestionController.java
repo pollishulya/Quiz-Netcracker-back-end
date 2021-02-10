@@ -25,18 +25,12 @@ import java.util.stream.Collectors;
 public class QuestionController {
     private final QuestionService questionService;
     private final QuestionMapper mapper;
-    private final CustomValidator customValidator;
-    private final MessageSource messageSource;
 
     @Autowired
     public QuestionController(QuestionService questionService,
-                              QuestionMapper mapper,
-                              CustomValidator customValidator,
-                              MessageSource messageSource) {
+                              QuestionMapper mapper) {
         this.questionService = questionService;
         this.mapper = mapper;
-        this.customValidator = customValidator;
-        this.messageSource = messageSource;
     }
 
     @GetMapping()
@@ -60,10 +54,6 @@ public class QuestionController {
 
     @PostMapping("/save")
     public QuestionDto createQuestion(@RequestBody QuestionDto questionDto) {
-        Map<String, String> propertyViolation = customValidator.validate(questionDto, Create.class);
-        if (!propertyViolation.isEmpty()) {
-            throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
-        }
         Question question = mapper.toEntity(questionDto);
         return mapper.toDto(questionService.saveQuestion(question));
     }
@@ -71,10 +61,6 @@ public class QuestionController {
     @PutMapping("/update/{questionId}")
     public QuestionDto updateQuestion(@PathVariable UUID questionId,
                                       @RequestBody QuestionDto questionRequest) {
-        Map<String, String> propertyViolation = customValidator.validate(questionRequest, Update.class);
-        if (!propertyViolation.isEmpty()) {
-            throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
-        }
         Question question = mapper.toEntity(questionRequest);
         return mapper.toDto(questionService.updateQuestion(questionId, question));
     }
