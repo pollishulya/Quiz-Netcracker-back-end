@@ -19,11 +19,11 @@ public class LoginModel {
     @Size(max = 20, min = 6, message = "message.PasswordTitleNotValid.size")
     @NotBlank(message = "message.PasswordTitleNotValid", groups = {Create.class, Update.class})
     private String password;
-    private String mail;
+    private String email;
     private String login;
 
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getLogin() {
@@ -50,7 +50,7 @@ public class LoginModel {
         this.password = password;
     }
 
-    public String getMail() {
-        return mail;
+    public String getEmail() {
+        return email;
     }
 }

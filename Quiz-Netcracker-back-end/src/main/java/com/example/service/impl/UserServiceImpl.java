@@ -3,20 +3,17 @@ package com.example.service.impl;
 import com.example.exception.AuthorizationException;
 import com.example.exception.DeleteEntityException;
 import com.example.exception.ExistingUserException;
-import com.example.exception.InvalidEmailException;
 import com.example.exception.InvalidUserActivationException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.model.Player;
 import com.example.model.RoleList;
 import com.example.model.User;
-import com.example.repository.PlayerRepository;
 import com.example.repository.UserRepository;
 import com.example.security.LoginModel;
 import com.example.service.interfaces.GameAccessService;
 import com.example.service.interfaces.PlayerService;
 import com.example.service.interfaces.UserService;
-import com.example.service.validation.validator.CustomValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -30,25 +27,22 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final PlayerRepository playerRepository;
     private final GameAccessService gameAccessService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final PlayerService playerService;
     private final MailSender mailSender;
     private final MessageSource messageSource;
-    private final CustomValidator customValidator;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PlayerRepository playerRepository, GameAccessService gameAccessService,
-                           MessageSource messageSource, MailSender mailSender, PlayerService playerService, CustomValidator customValidator) {
+    public UserServiceImpl(UserRepository userRepository,
+                           GameAccessService gameAccessService, MessageSource messageSource,
+                           MailSender mailSender, PlayerService playerService) {
         this.userRepository = userRepository;
-        this.playerRepository = playerRepository;
         this.gameAccessService = gameAccessService;
         this.playerService = playerService;
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
         this.messageSource = messageSource;
         this.mailSender = mailSender;
-        this.customValidator = customValidator;
     }
 
     @Override
@@ -59,15 +53,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public User saveUser(LoginModel loginModel) {
         User user = new User(loginModel.getUsername(),
-                loginModel.getMail(),
+                loginModel.getEmail(),
                 bCryptPasswordEncoder.encode(loginModel.getPassword())
         );
-        User userFromDb = userRepository.findByLoginOrMail(user.getLogin(), user.getMail());
+        User userFromDb = userRepository.findByLoginOrEmail(user.getLogin(), user.getEmail());
         if (userFromDb != null) {
             throw new ExistingUserException(ErrorInfo.EXISTING_USER_ERROR,
                     messageSource.getMessage("message.ExistingUserError", null, LocaleContextHolder.getLocale()));
         } else {
-            Player player = new Player(user.getMail(), user.getLogin(), user);
+            Player player = new Player(user.getEmail(), user.getLogin(), user);
             user.setRole(RoleList.USER);
             user.setActive(false);
             user.setActivationCode(UUID.randomUUID().toString());
@@ -77,9 +71,9 @@ public class UserServiceImpl implements UserService {
                     user.getLogin(),
                     user.getActivationCode()
             );
-            mailSender.send(user.getMail(), "Activation code", message);
+            mailSender.send(user.getEmail(), "Activation code", message);
             userRepository.save(user);
-            playerRepository.save(player);
+            playerService.savePlayer(player);
             gameAccessService.createGameAccessByPlayer(user.getId());
             return user;
         }
@@ -87,10 +81,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(UUID userId, User userRequest) {
-        if (!customValidator.validateByRegexp(userRequest.getMail(), "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$")) {
-            throw new InvalidEmailException(ErrorInfo.INVALID_EMAIL_ERROR,
-                    messageSource.getMessage("message.InvalidEmail", null, LocaleContextHolder.getLocale()));
-        }
         if (userId == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                     messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
@@ -99,11 +89,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId).map(user -> {
             user.setLogin(userRequest.getLogin());
             user.setPassword(userRequest.getPassword());
-            user.setMail(userRequest.getMail());
+            user.setEmail(userRequest.getEmail());
             user.setRole(userRequest.getRole());
-            Player player1=playerRepository.getPlayerByUserId(userId);
-            Player player2=new Player(user.getLogin(),user.getMail());
-            playerService.updatePlayer(player1.getId(),player2);
+            Player player1 = playerService.findPlayerByUserId(userId);
+            Player player2 = new Player(user.getLogin(), user.getEmail());
+            playerService.updatePlayer(player1.getId(), player2);
             return userRepository.save(user);
         }).orElseThrow(() -> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
@@ -112,8 +102,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(UUID userId) {
         try {
-            Player player=playerRepository.getPlayerByUserId(userId);
-            playerRepository.deleteById(player.getId());
+            Player player = playerService.findPlayerByUserId(userId);
+            playerService.deletePlayer(player.getId());
             userRepository.deleteById(userId);
         } catch (RuntimeException exception) {
             UUID[] args = new UUID[]{userId};
@@ -135,7 +125,7 @@ public class UserServiceImpl implements UserService {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                     messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
         }
-        User user = userRepository.findByLoginOrMail(username, username);
+        User user = userRepository.findByLoginOrEmail(username, username);
         if (user == null) {
             throw new AuthorizationException(ErrorInfo.AUTHORIZATION_ERROR,
                     messageSource.getMessage("message.AuthorizationError", null, LocaleContextHolder.getLocale()));

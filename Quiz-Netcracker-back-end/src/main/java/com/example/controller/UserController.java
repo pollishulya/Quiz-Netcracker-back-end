@@ -73,6 +73,10 @@ public class UserController {
         if (!propertyViolation.isEmpty()) {
             throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
         }
+        if (!customValidator.validateByRegexp(userDto.getEmail(), "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$")) {
+            throw new InvalidEmailException(ErrorInfo.INVALID_EMAIL_ERROR,
+                    messageSource.getMessage("message.InvalidEmail", null, LocaleContextHolder.getLocale()));
+        }
         User user = mapper.toEntity(userDto);
         return mapper.toDto(userService.updateUser(userId, user));
     }

@@ -12,4 +12,6 @@ public interface GameRoomRepository extends JpaRepository<GameRoom, UUID> {
     List<GameRoom> findGameRoomByGameId(UUID gameId);
 
     GameRoom findGameRoomById(UUID id);
+
+    void deleteByGameId(UUID id);
 }

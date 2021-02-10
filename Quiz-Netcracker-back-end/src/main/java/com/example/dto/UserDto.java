@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 public class UserDto {
     UUID id;
-    String mail;
+    String email;
     String password;
     String login;
     String role;

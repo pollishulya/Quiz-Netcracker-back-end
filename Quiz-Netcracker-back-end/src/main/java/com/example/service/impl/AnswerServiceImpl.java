@@ -5,7 +5,10 @@ import com.example.dto.GameMessage;
 import com.example.exception.DeleteEntityException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
-import com.example.model.*;
+import com.example.model.Answer;
+import com.example.model.Player;
+import com.example.model.Question;
+import com.example.model.Statistics;
 import com.example.repository.AnswerRepository;
 import com.example.service.interfaces.AnswerService;
 import com.example.service.validation.group.Create;
@@ -108,30 +111,22 @@ public class AnswerServiceImpl implements AnswerService {
     public Answer saveStatisticsAndReturnAnswer(UUID questionId, String answerId, UUID playerId,
                                                 UUID gameRoomId, int numberAnswer) throws JsonProcessingException {
         Question question = questionService.getQuestionById(questionId);
+        Player player = playerService.findPlayerById(playerId);
+        Statistics statistics = new Statistics(player, question);
         if (answerId.equals("null")) {
-            Player player = playerService.findPlayerById(playerId);
-            Statistics statistics = new Statistics();
-            statistics.setQuestion(question);
             statistics.setAnswer(null);
-            statistics.setPlayer(player);
             statisticsService.save(statistics);
             return null;
         }
         Answer answer = answerRepository.findAnswerById(UUID.fromString(answerId));
-        Player player = playerService.findPlayerById(playerId);
         GameMessage gameMessage = new GameMessage(answer.getRight(), playerId, numberAnswer);
-        GameRoom gameRoom = gameRoomService.findById(gameRoomId);
         ObjectMapper objectMapper = new ObjectMapper();
-        for (Player fielder : gameRoom.getPlayers()) {
+        for (Player fielder : gameRoomService.findById(gameRoomId).getPlayers()) {
             if (!player.getId().equals(fielder.getId())) {
                 simpMessagingTemplate.convertAndSend("/topic/game/" + fielder.getId(), objectMapper.writeValueAsString(gameMessage));
             }
         }
-
-        Statistics statistics = new Statistics();
-        statistics.setQuestion(question);
         statistics.setAnswer(answer);
-        statistics.setPlayer(player);
         statisticsService.save(statistics);
         return answer;
     }

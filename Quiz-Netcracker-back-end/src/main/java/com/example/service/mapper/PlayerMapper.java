@@ -20,7 +20,7 @@ public class PlayerMapper implements Mapper<Player, PlayerDto> {
     public PlayerDto toDto(Player entity) {
         PlayerDto playerDto = new PlayerDto();
         playerDto.setId(entity.getId());
-        playerDto.setName(entity.getName());
+        playerDto.setLogin(entity.getLogin());
         if(entity.getUser()==null){
             return playerDto;
         }
@@ -35,7 +35,7 @@ public class PlayerMapper implements Mapper<Player, PlayerDto> {
         Player player = new Player();
         User user = userRepository.findUserById(dto.getUser());
         player.setId(dto.getId());
-        player.setName(dto.getName());
+        player.setLogin(dto.getLogin());
         player.setEmail(dto.getEmail());
         player.setPhoto(dto.getPhoto());
         player.setUser(user);
@@ -46,7 +46,7 @@ public class PlayerMapper implements Mapper<Player, PlayerDto> {
     public PlayerDto toShortDto(Player entity) {
         PlayerDto playerDto = new PlayerDto();
         playerDto.setId(entity.getId());
-        playerDto.setName(entity.getName());
+        playerDto.setLogin(entity.getLogin());
         return playerDto;
     }
 }
