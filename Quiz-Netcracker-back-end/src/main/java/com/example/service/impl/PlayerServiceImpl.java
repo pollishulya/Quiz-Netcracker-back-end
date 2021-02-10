@@ -5,8 +5,10 @@ import com.example.exception.DeleteEntityException;
 import com.example.exception.InvalidEmailException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
+import com.example.model.GameAccess;
 import com.example.model.Player;
 import com.example.repository.PlayerRepository;
+import com.example.service.interfaces.GameAccessService;
 import com.example.service.interfaces.PlayerService;
 import com.example.service.validation.group.Update;
 import com.example.service.validation.validator.CustomValidator;
@@ -18,33 +20,27 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
     private final MessageSource messageSource;
     private final CustomValidator customValidator;
+    private final GameAccessService gameAccessService;
 
     @Autowired
-    public PlayerServiceImpl(PlayerRepository playerRepository, MessageSource messageSource, CustomValidator customValidator) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, MessageSource messageSource, GameAccessService gameAccessService,
+                             CustomValidator customValidator) {
         this.playerRepository = playerRepository;
         this.messageSource = messageSource;
         this.customValidator = customValidator;
+        this.gameAccessService = gameAccessService;
     }
-
 
     @Override
     public List<Player> findAllPlayers() {
         return playerRepository.findAll();
-    }
-
-    @Override
-    public Player findPlayer(String property) {
-        if (property == null) {
-            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
-        }
-        return playerRepository.findPlayerByEmailAndName(property, property).get();
     }
 
     @Override
@@ -89,7 +85,19 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public void deletePlayer(UUID id) {
         try {
-            playerRepository.deleteById(id);
+            List<GameAccess> gameAccesses=gameAccessService.getGameAccessesByPlayerId(id);
+            if(gameAccesses==null){
+                playerRepository.deleteById(id);
+            }
+            else {
+                gameAccessService.getGameAccessesByGameId(id)
+                        .stream()
+                        .peek(gameAccess -> {
+                            gameAccessService.deleteGameAccess(gameAccess.getId());
+                        })
+                        .collect(Collectors.toList());
+                playerRepository.deleteById(id);
+            }
         }
         catch (RuntimeException exception) {
             UUID[] args = new UUID[]{ id };

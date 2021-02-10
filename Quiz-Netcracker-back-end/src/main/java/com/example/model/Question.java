@@ -2,11 +2,11 @@ package com.example.model;
 
 import com.example.service.validation.group.Create;
 import com.example.service.validation.group.Update;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -17,9 +17,10 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "questions")
 @Data
+@Table(name = "questions")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Question {
     @Id
     @GeneratedValue
@@ -36,12 +37,13 @@ public class Question {
     private String description;
 
     @EqualsAndHashCode.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
     @NotNull(message = "message.CategoryNotValid", groups = {Create.class, Update.class})
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "categoryId")
     private Category category;
 
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull(message = "message.LevelNotValid", groups = {Create.class, Update.class})
     @JoinColumn(name = "levelId")

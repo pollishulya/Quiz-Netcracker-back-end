@@ -1,7 +1,7 @@
 package com.example.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
@@ -12,8 +12,9 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "levels")
 @Data
+@Table(name = "levels")
+@AllArgsConstructor
 @NoArgsConstructor
 public class Level {
     @Id
@@ -29,6 +30,6 @@ public class Level {
     private String description;
 
     @JsonIgnore
-    @OneToMany(cascade = {CascadeType.ALL},mappedBy = "level",fetch = FetchType.LAZY)
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "level", fetch = FetchType.EAGER)
     private Set<Question> questions = new HashSet<>();
 }

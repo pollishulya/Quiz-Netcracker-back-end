@@ -2,7 +2,6 @@ package com.example.service.mapper;
 
 import com.example.dto.QuestionDto;
 import com.example.model.*;
-import com.example.service.interfaces.AnswerService;
 import com.example.service.interfaces.CategoryService;
 import com.example.service.interfaces.GameService;
 import com.example.service.interfaces.LevelService;

@@ -7,8 +7,12 @@ import java.util.UUID;
 
 public interface LevelService {
     List<Level> findAll();
+
     Level findLevelById(UUID id);
+
     Level save(Level level);
+
     Level update(UUID id, Level level);
+
     void delete(UUID id);
 }

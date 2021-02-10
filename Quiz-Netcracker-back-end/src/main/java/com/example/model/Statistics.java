@@ -1,7 +1,6 @@
 package com.example.model;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
@@ -18,7 +17,6 @@ public class Statistics {
     @Type(type = "pg-uuid")
     @Column(name = "id")
     private UUID id;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Player player;

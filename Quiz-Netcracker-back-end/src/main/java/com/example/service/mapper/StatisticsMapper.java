@@ -3,12 +3,9 @@ package com.example.service.mapper;
 import com.example.dto.StatisticsDto;
 import com.example.model.Statistics;
 import com.example.service.interfaces.AnswerService;
-import com.example.service.interfaces.GameService;
 import com.example.service.interfaces.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.stream.Collectors;
 
 @Component
 public class StatisticsMapper implements Mapper<Statistics, StatisticsDto> {
@@ -24,7 +21,7 @@ public class StatisticsMapper implements Mapper<Statistics, StatisticsDto> {
 
     @Override
     public StatisticsDto toDto(Statistics entity) {
-        if(entity == null){
+        if (entity == null) {
             return null;
         }
         StatisticsDto dto = new StatisticsDto();

@@ -17,6 +17,7 @@ import java.util.UUID;
 @Table(name = "games")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Game {
     @Id
     @GeneratedValue
@@ -39,7 +40,6 @@ public class Game {
     @Column(name = "rating")
     private Long averageRating;
 
-    //Счётчик оценок игры
     @Column(name = "ratingCount")
     private Long ratingCount;
 
@@ -63,17 +63,4 @@ public class Game {
     @NotNull(message = "message.AccessNotValid", groups = {Create.class, Update.class})
     @Column(name = "access")
     private String access;
-
-    public Game(UUID id, String name, String description, Player player, GameRoom gameRoom,
-                Long views, Long averageRating, Long ratingCount, GameCategory gameCategory) {
-        this.id = id;
-        this.title = name;
-        this.description = description;
-        this.views = views;
-        this.averageRating = averageRating;
-        this.ratingCount = ratingCount;
-        this.gameCategory = gameCategory;
-        this.player = player;
-        this.access=access;
-    }
 }

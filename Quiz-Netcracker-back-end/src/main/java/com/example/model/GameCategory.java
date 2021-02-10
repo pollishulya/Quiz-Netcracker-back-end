@@ -1,9 +1,6 @@
 package com.example.model;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -14,6 +11,7 @@ import java.util.UUID;
 @Table(name = "gameCategories")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class GameCategory {
     @Id
     @GeneratedValue
@@ -29,11 +27,4 @@ public class GameCategory {
     @NotBlank(message = "message.InvalidGameCategoryDescription")
     @Column(name = "description")
     private String description;
-
-    @Builder
-    public GameCategory(UUID id, String name, String description) {
-        this.id = id;
-        this.title = name;
-        this.description = description;
-    }
 }

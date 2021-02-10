@@ -48,7 +48,7 @@ public class CategoryController {
 
     @PutMapping("/update/{categoryId}")
     public CategoryDto updateCategory(@PathVariable UUID categoryId,
-                                   @Valid @RequestBody CategoryDto categoryDto) {
+                                      @Valid @RequestBody CategoryDto categoryDto) {
         Category category = mapper.toEntity(categoryDto);
         return mapper.toDto(categoryService.updateCategory(categoryId, category));
     }

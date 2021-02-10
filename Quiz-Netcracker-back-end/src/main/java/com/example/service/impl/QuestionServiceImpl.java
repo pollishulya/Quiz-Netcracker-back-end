@@ -105,15 +105,6 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<Question> getQuestionsByCategoryId(UUID categoryId) {
-        if (categoryId == null) {
-            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
-        }
-        return questionRepository.getQuestionByCategoryId(categoryId);
-    }
-
-    @Override
     public List<Question> getQuestionsByGameId(UUID id) {
         if (id == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
@@ -129,5 +120,10 @@ public class QuestionServiceImpl implements QuestionService {
                 .collect(Collectors.toSet());
         question1.getAnswersSet().clear();
         question1.getAnswersSet().addAll(answersSet);
+    }
+
+    @Override
+    public Question getQuestionByTitle(String title) {
+        return questionRepository.findQuestionByTitle(title);
     }
 }

@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
 @Data
+@Table(name = "users")
 @NoArgsConstructor
 public class User {
     @Id
@@ -40,7 +40,7 @@ public class User {
     private String role;
 
     @Column(name = "activation_code")
-    private String  activationCode;
+    private String activationCode;
     
     @Column(name = "active")
     private Boolean  active;

@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import com.example.dto.GameRoomDto;
 import com.example.dto.PlayerDto;
 import com.example.exception.DeleteEntityException;
 import com.example.exception.ResourceNotFoundException;
@@ -10,12 +11,13 @@ import com.example.repository.GameRoomRepository;
 import com.example.service.interfaces.GameRoomService;
 import com.example.service.interfaces.GameService;
 import com.example.service.interfaces.PlayerService;
+import com.example.service.mapper.GameRoomMapper;
 import com.example.service.mapper.PlayerMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -28,28 +30,24 @@ public class GameRoomServiceImpl implements GameRoomService {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final MessageSource messageSource;
     private final PlayerMapper playerMapper;
+    private final GameRoomMapper mapper;
 
     public GameRoomServiceImpl(GameRoomRepository gameRoomRepository, PlayerService playerService, GameService gameService,
-                               SimpMessagingTemplate simpMessagingTemplate, MessageSource messageSource, PlayerMapper playerMapper) {
+                               SimpMessagingTemplate simpMessagingTemplate, MessageSource messageSource, PlayerMapper playerMapper, GameRoomMapper mapper) {
         this.gameRoomRepository = gameRoomRepository;
         this.playerService = playerService;
         this.gameService = gameService;
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.messageSource = messageSource;
         this.playerMapper = playerMapper;
+        this.mapper = mapper;
     }
 
     @Override
     public GameRoom findById(UUID id) {
-        UUID[] args = new UUID[]{ id };
-        return gameRoomRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+        UUID[] args = new UUID[]{id};
+        return gameRoomRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
-    }
-
-    @Override
-    public List<GameRoom> findByGameId(UUID id) {
-        UUID[] args = new UUID[]{ id };
-        return gameRoomRepository.findGameRoomByGameId(id);
     }
 
     @Override
@@ -63,12 +61,12 @@ public class GameRoomServiceImpl implements GameRoomService {
         Player player = playerService.findPlayerById(playerId);
         List<GameRoom> gameRooms = gameRoomRepository.findGameRoomByGameId(gameId);
         for (GameRoom gameRoom : gameRooms) {
-            if (gameRoom.getPlayers().size() < 3) {
+            if (gameRoom.getPlayers().size() < 2) {
                 gameRoom.getPlayers().add(player);
                 ObjectMapper mapper = new ObjectMapper();
                 Set<PlayerDto> dtoSet = new HashSet<>();
-                for (Player entity: gameRoom.getPlayers()) {
-                    if(entity.getUser() == null){
+                for (Player entity : gameRoom.getPlayers()) {
+                    if (entity.getUser() == null) {
                         dtoSet.add(playerMapper.toShortDto(entity));
                     } else {
                         dtoSet.add(playerMapper.toDto(entity));
@@ -86,14 +84,27 @@ public class GameRoomServiceImpl implements GameRoomService {
     }
 
     @Override
-    public void delete(UUID id) {
+    public void delete(UUID gameId) {
         try {
-            gameRoomRepository.deleteById(id);
-        }
-        catch (RuntimeException exception) {
-            UUID[] args = new UUID[]{ id };
+            List<GameRoom> gameRooms = gameRoomRepository.findGameRoomByGameId(gameId);
+            for (GameRoom gameRoom : gameRooms) {
+                gameRoomRepository.deleteById(gameRoom.getId());
+            }
+        } catch (RuntimeException exception) {
+            UUID[] args = new UUID[]{gameId};
             throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
                     messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
         }
+    }
+
+    @Override
+    public Optional<GameRoomDto> getOptionalGameRoom(UUID gameRoomId, UUID playerId) {
+        GameRoom gameRoom = gameRoomRepository.findGameRoomById(gameRoomId);
+        gameRoom.getPlayers().removeIf(player -> player.getId().equals(playerId));
+        if (gameRoom.getPlayers().size() == 0) {
+            gameRoomRepository.deleteById(gameRoomId);
+            return Optional.empty();
+        }
+        return Optional.ofNullable(mapper.toDto(gameRoomRepository.save(gameRoom)));
     }
 }

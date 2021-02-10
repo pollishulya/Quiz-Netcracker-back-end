@@ -1,12 +1,9 @@
 package com.example.dto;
 
-import com.example.service.validation.group.Update;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data

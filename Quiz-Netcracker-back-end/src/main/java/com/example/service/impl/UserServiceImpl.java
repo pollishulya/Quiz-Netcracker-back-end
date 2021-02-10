@@ -12,6 +12,7 @@ import com.example.model.RoleList;
 import com.example.model.User;
 import com.example.repository.PlayerRepository;
 import com.example.repository.UserRepository;
+import com.example.security.LoginModel;
 import com.example.service.interfaces.GameAccessService;
 import com.example.service.interfaces.PlayerService;
 import com.example.service.interfaces.UserService;
@@ -56,7 +57,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(User user/*, String urlAddress*/) {
+    public User saveUser(LoginModel loginModel) {
+        User user = new User(loginModel.getUsername(),
+                loginModel.getMail(),
+                bCryptPasswordEncoder.encode(loginModel.getPassword())
+        );
         User userFromDb = userRepository.findByLoginOrMail(user.getLogin(), user.getMail());
         if (userFromDb != null) {
             throw new ExistingUserException(ErrorInfo.EXISTING_USER_ERROR,
@@ -70,12 +75,12 @@ public class UserServiceImpl implements UserService {
                     "Hello, %s! \n" +
                             "Welcome to localhost. Please, visit next link: http://localhost:4200/activate/%s",
                     user.getLogin(),
-                    // urlAddress,
                     user.getActivationCode()
             );
             mailSender.send(user.getMail(), "Activation code", message);
             userRepository.save(user);
             playerRepository.save(player);
+            gameAccessService.createGameAccessByPlayer(user.getId());
             return user;
         }
     }
@@ -138,16 +143,6 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-//    @Override
-//    public boolean activateUser(String mail, String code) {
-//        User user = userRepository.findUserByMail(mail);
-//        if (user == null || !user.getActivationCode().equals(code)) {
-//            return false;
-//        }
-//        user.setActive(true);
-//        userRepository.save(user);
-//        return true;
-//    }
     @Override
     public boolean activateUser(String code) {
         User user = userRepository.findUserByActivationCode(code);

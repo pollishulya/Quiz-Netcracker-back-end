@@ -29,7 +29,7 @@ public class LevelController {
     @GetMapping()
     public List<LevelDto> getLevels() {
         return levelService.findAll().stream()
-                .map(mapper:: toDto)
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -40,15 +40,15 @@ public class LevelController {
 
     @PostMapping("save")
     public LevelDto createLevel(@Valid @RequestBody LevelDto levelDto) {
-        Level level= mapper.toEntity(levelDto);
+        Level level = mapper.toEntity(levelDto);
         return mapper.toDto(levelService.save(level));
     }
 
     @PutMapping("/update/{levelId}")
     public LevelDto updateLevel(@PathVariable UUID levelId,
-                             @Valid @RequestBody LevelDto levelDto) {
-        Level level= mapper.toEntity(levelDto);
-        return mapper.toDto(levelService.update(levelId,level));
+                                @Valid @RequestBody LevelDto levelDto) {
+        Level level = mapper.toEntity(levelDto);
+        return mapper.toDto(levelService.update(levelId, level));
     }
 
     @DeleteMapping("/delete/{levelId}")

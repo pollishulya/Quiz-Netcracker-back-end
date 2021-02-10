@@ -4,7 +4,8 @@ import com.example.service.validation.annotation.AnswersSetConstraint;
 import com.example.service.validation.group.Create;
 import com.example.service.validation.group.Update;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.Data;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Set;

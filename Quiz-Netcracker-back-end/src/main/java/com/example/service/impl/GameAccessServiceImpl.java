@@ -44,6 +44,12 @@ public class GameAccessServiceImpl implements GameAccessService {
     }
 
     @Override
+    public List<GameAccess> getGameAccessesByPlayerId(UUID gameId) {
+        List<GameAccess> gameAccesses=gameAccessRepository.findGameAccessesByPlayerId(gameId);
+        return gameAccesses;
+    }
+
+    @Override
     public Game createGameAccessByGame(UUID id) {
         if (id == null) {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
@@ -55,7 +61,7 @@ public class GameAccessServiceImpl implements GameAccessService {
             throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                     messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale()));
         }
-        List<Player> players = playerRepository.findAll()
+       playerRepository.findAll()
                 .stream()
                 .peek(player -> {
                     GameAccess gameAccess = new GameAccess();
@@ -70,8 +76,7 @@ public class GameAccessServiceImpl implements GameAccessService {
                     gameAccessRepository.save(gameAccess);
                 })
                 .collect(Collectors.toList());
-//        if (game.getAccess().equals("PRIVATE")) {
-//        }
+
         return game;
     }
 
@@ -105,18 +110,6 @@ public class GameAccessServiceImpl implements GameAccessService {
         return player;
     }
 
-//    @Override
-//    public GameAccess activate(UUID gameId, UUID playerId) {
-//        GameAccess gameAccess = gameAccessRepository.findGameAccessesByGameIdAndPlayerId(gameId, playerId);
-//        if (gameAccess == null) {
-//            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-//                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
-//        }
-//        gameAccess.setAccess(!gameAccess.isAccess());
-//        gameAccessRepository.save(gameAccess);
-//        return gameAccess;
-//    }
-
     @Override
     public GameAccess activateGame(String code) {
         GameAccess gameAccess = gameAccessRepository.findGameAccessesByActivationCode(code);
@@ -146,11 +139,6 @@ public class GameAccessServiceImpl implements GameAccessService {
         return gameAccess;
     }
 
-    @Override
-    public GameAccess getGameAccess(UUID gameId, UUID playerId) {
-        GameAccess gameAccess = gameAccessRepository.findGameAccessesByGameIdAndPlayerId(gameId, playerId);
-        return gameAccess;
-    }
 
     @Override
     public String sendActivateCode(UUID gameId, UUID playerId) {
@@ -239,17 +227,7 @@ public class GameAccessServiceImpl implements GameAccessService {
     }
 
     @Override
-    public  List<GameAccess> deleteGameAccess(UUID gameId) {
-        if (gameId == null) {
-            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound", new Object[]{null}, LocaleContextHolder.getLocale()));
-        }
-        List<GameAccess> gameAccesses = gameAccessRepository.deleteAllByGameId(gameId);
-        return gameAccesses;
-    }
-
-    @Override
-    public void delete(UUID id) {
+    public void deleteGameAccess(UUID id) {
         try {
             GameAccess gameAccess=gameAccessRepository.findGameAccessById(id);
             gameAccessRepository.deleteById(gameAccess.getId());

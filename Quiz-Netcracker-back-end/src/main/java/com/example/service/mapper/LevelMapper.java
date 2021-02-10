@@ -2,18 +2,10 @@ package com.example.service.mapper;
 
 import com.example.dto.LevelDto;
 import com.example.model.Level;
-import com.example.service.interfaces.QuestionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LevelMapper implements Mapper<Level, LevelDto> {
-    private final QuestionService questionService;
-
-    @Autowired
-    public LevelMapper(QuestionService questionService) {
-        this.questionService = questionService;
-    }
 
     @Override
     public LevelDto toDto(Level entity) {

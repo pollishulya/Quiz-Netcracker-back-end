@@ -25,34 +25,17 @@ import java.util.stream.Collectors;
 @RequestMapping("/game-access")
 public class GameAccessController {
     private final PlayerMapper playerMapper;
-    private final GameMapper gameMapper;
     private final GameAccessMapper gameAccessMapper;
     private final GameAccessService gameAccessService;
     private final MessageSource messageSource;
 
     @Autowired
-    public GameAccessController( PlayerMapper playerMapper, GameMapper gameMapper, GameAccessMapper gameAccessMapper,
+    public GameAccessController( PlayerMapper playerMapper, GameAccessMapper gameAccessMapper,
                                  GameAccessService gameAccessService, MessageSource messageSource) {
-        this.gameMapper = gameMapper;
         this.playerMapper = playerMapper;
         this.gameAccessMapper = gameAccessMapper;
         this.gameAccessService = gameAccessService;
         this.messageSource = messageSource;
-    }
-
-    @GetMapping("/players/{userId}")
-    public PlayerDto findPlayers(@PathVariable UUID userId) {
-        return playerMapper.toDto(gameAccessService.createGameAccessByPlayer(userId));
-    }
-
-    @GetMapping("/games/{userId}")
-    public GameDto findGames(@PathVariable UUID userId) {
-        return gameMapper.toDto(gameAccessService.createGameAccessByGame(userId));
-    }
-
-    @GetMapping("/{gameId}/{playerId}")
-    public GameAccessDto getGameAccess(@PathVariable UUID playerId, @PathVariable UUID gameId) {
-        return gameAccessMapper.toDto(gameAccessService.getGameAccess(gameId, playerId));
     }
 
     @GetMapping("/sendActivateCode/{gameId}/{playerId}")

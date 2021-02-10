@@ -36,6 +36,7 @@ public class GameServiceImpl implements GameService {
     private final MessageSource messageSource;
     private final GameAccessService gameAccessService;
     private final CustomValidator customValidator;
+    private final EntityManager entityManager;
 
     @Autowired
     public GameServiceImpl(GameRepository gameRepository,
@@ -49,6 +50,7 @@ public class GameServiceImpl implements GameService {
         this.questionService = questionService;
         this.messageSource = messageSource;
         this.customValidator = customValidator;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -108,26 +110,19 @@ public class GameServiceImpl implements GameService {
             predicate.and(QGame.game.gameCategory.title.in((CollectionExpression<?, ? extends String>) request.getGameCategory()));
         }
 
-
-
         return (List<Game>) gameRepository.findAll(predicate);
-
     }
-
-    @Override
-    public void saveImage(MultipartFile imageFile) throws Exception {
-
-    }
-
 
     @Override
     public List<Game> searchGamesByTitle(String title) {
         return gameRepository.findAllByTitleContaining(title);
     }
+
     @Override
     public List<Game> findGamesByCategory(UUID gameCategoryId) {
         return gameRepository.findAllByGameCategoryId(gameCategoryId);
     }
+
     @Override
     public List<Game> findAllGamesFilteredByTitle(){
         return gameRepository.findByOrderByTitleAsc();
@@ -139,9 +134,10 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public List<Game> findAllGamesFilteredByRating(){
+    public List<Game> findAllGamesFilteredByRating() {
         return gameRepository.findAllByOrderByAverageRating();
     }
+
     @Override
     public List<Game> findAllGamesFilteredByViews(){
         //return gameRepository.findByOrderByViewsDesc();
@@ -180,33 +176,21 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public void deleteGame(UUID id) {
+    public void deleteGame(UUID gameId, UUID playerId) {
         try {
-            List<GameAccess> gameAccesses=gameAccessService.getGameAccessesByGameId(id);
-            if(gameAccesses==null/*&&gameRooms==null*/){
-                gameRepository.deleteById(id);
+//            statisticsService.delete(playerId, gameId);
+//            gameRoomService.delete(gameId);
+            List<GameAccess> gameAccesses = gameAccessService.getGameAccessesByGameId(gameId);
+            if (gameAccesses == null) {
+                gameRepository.deleteById(gameId);
+            } else {
+                for(GameAccess gameAccess: gameAccesses){
+                    gameAccessService.deleteGameAccess(gameAccess.getId());
+                }
+                gameRepository.deleteById(gameId);
             }
-           else {
-                gameAccessService.getGameAccessesByGameId(id)
-                        .stream()
-                        .peek(gameAccess -> {
-                           gameAccessService.delete(gameAccess.getId());
-                        })
-                        .collect(Collectors.toList());
-//                gameRoomService.findByGameId(id)
-//                        .stream()
-//                        .peek(gameRoom -> {
-//                            gameRoomService.delete(gameRoom.getId());
-//                        })
-//                        .collect(Collectors.toList());
-
-               gameRepository.deleteById(id);
-            }
-
-
-        }
-        catch (RuntimeException exception) {
-            UUID[] args = new UUID[]{ id };
+        } catch (RuntimeException exception) {
+            UUID[] args = new UUID[]{gameId};
             throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
                     messageSource.getMessage("message.DeleteEntityError", args, LocaleContextHolder.getLocale()));
         }
@@ -221,7 +205,7 @@ public class GameServiceImpl implements GameService {
             throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
         }
         UUID[] args = new UUID[]{ id };
-        return gameRepository.findById(id).map(game->{
+        return gameRepository.findById(id).map(game -> {
             game.setTitle(gameReq.getTitle());
             game.setDescription(gameReq.getDescription());
 
@@ -244,14 +228,14 @@ public class GameServiceImpl implements GameService {
                 game.getQuestions().addAll(questions);
             }
             return gameRepository.save(game);
-        }).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+        }).orElseThrow(() -> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
 
     @Override
     public Game findGameById(UUID id) {
-        UUID[] args = new UUID[]{ id };
-        return gameRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+        UUID[] args = new UUID[]{id};
+        return gameRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
     }
 

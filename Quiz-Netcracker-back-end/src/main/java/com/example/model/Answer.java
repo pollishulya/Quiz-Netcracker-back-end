@@ -14,6 +14,7 @@ import java.util.UUID;
 @Data
 @Table(name = "answers")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Answer {
     @Id
     @GeneratedValue
@@ -33,12 +34,4 @@ public class Answer {
     @ToString.Exclude
     @ManyToOne
     private Question question;
-
-    @Builder
-    public Answer(UUID id, String title, Boolean right, Question question) {
-        this.id = id;
-        this.title = title;
-        this.right = right;
-        this.question = question;
-    }
 }

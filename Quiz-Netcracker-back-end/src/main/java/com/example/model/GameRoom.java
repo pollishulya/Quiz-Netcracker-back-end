@@ -11,14 +11,12 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class GameRoom {
     @Id
     @GeneratedValue
     @Type(type = "pg-uuid")
     @Column(name = "id")
     private UUID id;
-
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
