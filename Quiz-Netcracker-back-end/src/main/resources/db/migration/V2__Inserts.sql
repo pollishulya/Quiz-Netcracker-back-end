@@ -4,7 +4,7 @@ INSERT INTO levels (id, description, title) VALUES ('0458cc5b-8871-4807-98e8-684
 INSERT INTO levels (id, description, title) VALUES ('d401d941-6883-45c5-9038-4bbd9f63bb3c', 'Сложный', 'Сложный');
 
 -- Инициализируем админа
-INSERT INTO users (id, activation_code, active, login, mail, password, role)
+INSERT INTO users (id, activation_code, active, login, email, password, role)
 VALUES ('365924ba-fe34-412d-99b6-dec9554815d9', NULL, TRUE, 'Administrator', 'admin@mail.ru', '$2a$10$xlS02xL1DHt3gwWCgjTI2.UVNU58EjZkgVYnyS.Y.LFY/tRyMC/Ae', 'ADMIN');
 
 -- Заполняем категории
@@ -23,7 +23,7 @@ INSERT INTO categories(id, description, name) VALUES ('feacb6b6-9534-4f1b-9131-2
 INSERT INTO games(id, description, photo, name, access, views, rating, rating_count, player_id, game_category_id)
 VALUES ('716fb029-148d-4515-8aca-7cb8a604ee24', 'Общие факты о футболе', 'https://quiz-netcracker-basket.s3.eu-north-1.amazonaws.com/1611788079133-myach-futbolnyj-myach-adidas-finale-18-top-training-ball-cw4134.jpg', 'Викторина про футбол', 'PUBLIC', NULL, NULL, NULL, NULL, NULL);
 
-INSERT INTO players(id, email, name, photo, user_id, game_room_id)
+INSERT INTO players(id, email, login, photo, user_id, game_room_id)
 VALUES ('fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd', 'admin@mail.ru', 'Administrator', NULL, '365924ba-fe34-412d-99b6-dec9554815d9', NULL);
 
 UPDATE games SET player_id = 'fe51e1e3-60e5-4c4b-800f-1ede7d7eb6dd' WHERE id = '716fb029-148d-4515-8aca-7cb8a604ee24';

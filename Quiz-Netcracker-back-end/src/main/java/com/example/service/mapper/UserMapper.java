@@ -13,7 +13,7 @@ public class UserMapper implements Mapper<User, UserDto> {
     public UserDto toDto(User entity) {
         UserDto userDto = new UserDto();
         userDto.setId(entity.getId());
-        userDto.setMail(entity.getMail());
+        userDto.setEmail(entity.getEmail());
         userDto.setLogin(entity.getLogin());
         userDto.setPassword(entity.getPassword());
         userDto.setRole(entity.getRole());
@@ -26,7 +26,7 @@ public class UserMapper implements Mapper<User, UserDto> {
     public User toEntity(UserDto dto) {
         User user = new User();
         user.setId(dto.getId());
-        user.setMail(dto.getMail());
+        user.setEmail(dto.getEmail());
         user.setLogin(dto.getLogin());
         user.setPassword(dto.getPassword());
         user.setRole(dto.getRole());
@@ -38,7 +38,7 @@ public class UserMapper implements Mapper<User, UserDto> {
     public UserDto toShortDto(User entity) {
         UserDto userDto = new UserDto();
         userDto.setId(entity.getId());
-        userDto.setMail(entity.getMail());
+        userDto.setEmail(entity.getEmail());
         userDto.setLogin(entity.getLogin());
         userDto.setPassword(entity.getPassword());
         userDto.setRole(entity.getRole());

@@ -22,8 +22,8 @@ public class User {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "mail")
-    private String mail;
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "login")
     private String login;
@@ -40,36 +40,10 @@ public class User {
     @Column(name = "active")
     private Boolean  active;
 
-    public User(UUID id, String mail, String login, String password, String role, Boolean active) {
-        this.id = id;
-        this.mail = mail;
-        this.login = login;
-        this.password = password;
-        this.role = role;
-        this.active = active;
-    }
-
-    public User(UUID id, String mail, String login, String password, String role) {
-        this.id = id;
-        this.mail = mail;
-        this.login = login;
-        this.password = password;
-        this.role = role;
-    }
-
-    public User(String username, String password) {
+    public User(String username, String email, String password) {
         this.login = username;
+        this.email = email;
         this.password = password;
-    }
-
-    public User(String username, String mail, String password) {
-        this.login = username;
-        this.mail = mail;
-        this.password = password;
-    }
-
-    public User(String username) {
-        this.login = username;
     }
 
     public List<String> getRoleList() {

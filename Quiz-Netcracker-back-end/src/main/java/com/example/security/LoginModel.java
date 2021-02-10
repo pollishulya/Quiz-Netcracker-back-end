@@ -7,23 +7,20 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
 
 public class LoginModel {
-//    @Size(min = 3)
+
     @NotBlank(message = "message.UsernameNotValid", groups = {Create.class, Update.class})
     private String username;
 
-//    @Size(max = 20, min = 6, message = "message.PasswordTitleNotValid.size")
     @NotBlank(message = "message.PasswordTitleNotValid", groups = {Create.class, Update.class})
     private String password;
-    private String mail;
+    private String email;
     private String login;
 
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getLogin() {
@@ -50,7 +47,7 @@ public class LoginModel {
         this.password = password;
     }
 
-    public String getMail() {
-        return mail;
+    public String getEmail() {
+        return email;
     }
 }

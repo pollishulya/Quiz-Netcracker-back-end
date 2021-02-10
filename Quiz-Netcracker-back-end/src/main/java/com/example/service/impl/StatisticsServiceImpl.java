@@ -135,7 +135,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     Player p = playerService.findPlayerByUserId(u.getId());
                     double value = getTotalPercentByPlayerId(p.getId());
                     if (value <= 1 || value >= 0) {
-                        map.put(p.getName(), value);
+                        map.put(p.getLogin(), value);
                     }
                 });
         return map.entrySet()
