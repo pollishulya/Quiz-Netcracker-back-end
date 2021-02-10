@@ -3,20 +3,17 @@ package com.example.service.impl;
 import com.example.exception.AuthorizationException;
 import com.example.exception.DeleteEntityException;
 import com.example.exception.ExistingUserException;
-import com.example.exception.InvalidEmailException;
 import com.example.exception.InvalidUserActivationException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
 import com.example.model.Player;
 import com.example.model.RoleList;
 import com.example.model.User;
-import com.example.repository.PlayerRepository;
 import com.example.repository.UserRepository;
 import com.example.security.LoginModel;
 import com.example.service.interfaces.GameAccessService;
 import com.example.service.interfaces.PlayerService;
 import com.example.service.interfaces.UserService;
-import com.example.service.validation.validator.CustomValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -94,9 +91,9 @@ public class UserServiceImpl implements UserService {
             user.setPassword(userRequest.getPassword());
             user.setEmail(userRequest.getEmail());
             user.setRole(userRequest.getRole());
-            Player player1=playerService.findPlayerByUserId(userId);
-            Player player2=new Player(user.getLogin(),user.getEmail());
-            playerService.updatePlayer(player1.getId(),player2);
+            Player player1 = playerService.findPlayerByUserId(userId);
+            Player player2 = new Player(user.getLogin(), user.getEmail());
+            playerService.updatePlayer(player1.getId(), player2);
             return userRepository.save(user);
         }).orElseThrow(() -> new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
                 messageSource.getMessage("message.ResourceNotFound", args, LocaleContextHolder.getLocale())));
@@ -105,7 +102,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(UUID userId) {
         try {
-            Player player=playerService.findPlayerByUserId(userId);
+            Player player = playerService.findPlayerByUserId(userId);
             playerService.deletePlayer(player.getId());
             userRepository.deleteById(userId);
         } catch (RuntimeException exception) {
