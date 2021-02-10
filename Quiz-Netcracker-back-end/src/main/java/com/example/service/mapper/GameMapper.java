@@ -82,10 +82,10 @@ public class GameMapper implements Mapper<Game, GameDto> {
         gameDto.setPhoto(entity.getPhoto());
         gameDto.setPlayer(entity.getPlayer().getId());
         gameDto.setAccess(entity.getAccess());
-        gameDto.setQuestions(entity.getQuestions()
-                .stream()
-                .map(questionMapper::toShortDto)
-                .collect(Collectors.toSet()));
+//        gameDto.setQuestions(entity.getQuestions()
+//                .stream()
+//                .map(questionMapper::toShortDto)
+//                .collect(Collectors.toSet()));
         return gameDto;
     }
 }

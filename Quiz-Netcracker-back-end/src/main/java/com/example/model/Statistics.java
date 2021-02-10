@@ -26,4 +26,9 @@ public class Statistics {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Answer answer;
+
+    public Statistics(Player player, Question question) {
+        this.player = player;
+        this.question = question;
+    }
 }

@@ -109,8 +109,7 @@ public class GameController {
                          @RequestParam(name = "size", defaultValue = "3") int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Game> pageResult = gamePageService.findAll(pageRequest);
-        List<GameDto> gameDtoList = pageResult.getContent().stream().map(mapper::toShortDto).collect(Collectors.toList());
-        return new Response(gameDtoList, pageResult.getTotalPages(),
+        return new Response(pageResult.getTotalPages(),
                 pageResult.getNumber(), pageResult.getSize());
     }
 
