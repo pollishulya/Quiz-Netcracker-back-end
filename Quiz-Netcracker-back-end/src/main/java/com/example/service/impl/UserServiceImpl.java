@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(LoginModel loginModel) {
-        User user = new User(loginModel.getUsername(),
+        User user = new User(loginModel.getLogin(),
                 loginModel.getEmail(),
                 bCryptPasswordEncoder.encode(loginModel.getPassword())
         );
