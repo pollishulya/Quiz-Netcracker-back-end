@@ -117,9 +117,10 @@ public class AnswerServiceImpl implements AnswerService {
         if (answerId.equals("null")) {
             statistics.setAnswer(null);
             statisticsService.save(statistics);
-            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
-                    messageSource.getMessage("message.ResourceNotFound",
-                            new Object[]{null, messageSource.getMessage("entity.Answer", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
+//            throw new ResourceNotFoundException(ErrorInfo.RESOURCE_NOT_FOUND,
+//                    messageSource.getMessage("message.ResourceNotFound",
+//                            new Object[]{null, messageSource.getMessage("entity.Answer", null, LocaleContextHolder.getLocale())}, LocaleContextHolder.getLocale()));
+            return null;
         }
         Answer answer = answerRepository.findAnswerById(UUID.fromString(answerId));
         if (answer == null) {

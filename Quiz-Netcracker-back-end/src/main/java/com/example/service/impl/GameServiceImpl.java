@@ -4,11 +4,7 @@ import com.example.exception.ArgumentNotValidException;
 import com.example.exception.DeleteEntityException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.detail.ErrorInfo;
-import com.example.model.Game;
-import com.example.model.GameAccess;
-import com.example.model.GameFilterRequest;
-import com.example.model.QGame;
-import com.example.model.Question;
+import com.example.model.*;
 import com.example.repository.GameRepository;
 import com.example.service.interfaces.GameAccessService;
 import com.example.service.interfaces.GameService;
@@ -121,7 +117,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public List<Game> findAllGamesFilteredByTitle(){
+    public List<Game> findAllGamesFilteredByTitle() {
         return gameRepository.findByOrderByTitleAsc();
     }
 
@@ -136,7 +132,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public List<Game> findAllGamesFilteredByViews(){
+    public List<Game> findAllGamesFilteredByViews() {
         //return gameRepository.findByOrderByViewsDesc();
         return gameRepository.findAll(Sort.by(Sort.Direction.DESC, "views"));
     }
@@ -175,19 +171,27 @@ public class GameServiceImpl implements GameService {
     @Override
     public void deleteGame(UUID gameId, UUID playerId) {
         try {
-            for(Question q: gameRepository.getOne(gameId).getQuestions()){
-                statisticsRepository.deleteByQuestionId(q.getId());
+            for (Question q : gameRepository.findGameById(gameId).getQuestions()) {
+                List<Statistics> statistics = statisticsRepository.getStatisticsByQuestionId(q.getId());
+                if (statistics.size() != 0) {
+                    for (Statistics s : statistics) {
+                        statisticsRepository.deleteById(s.getId());
+                    }
+                }
             }
-            gameRoomRepository.deleteByGameId(gameId);
+            List<GameRoom> gameRoom = gameRoomRepository.findGameRoomByGameId(gameId);
+            if (gameRoom.size() != 0) {
+                for(GameRoom gR: gameRoom){
+                    gameRoomRepository.deleteById(gR.getId());
+                }
+            }
             List<GameAccess> gameAccesses = gameAccessService.getGameAccessesByGameId(gameId);
-            if (gameAccesses == null) {
-                gameRepository.deleteById(gameId);
-            } else {
-                for(GameAccess gameAccess: gameAccesses){
+            if (gameAccesses != null) {
+                for (GameAccess gameAccess : gameAccesses) {
                     gameAccessService.deleteGameAccess(gameAccess.getId());
                 }
-                gameRepository.deleteById(gameId);
             }
+            gameRepository.deleteById(gameId);
         } catch (RuntimeException exception) {
             Object[] args = new Object[]{gameId, messageSource.getMessage("entity.Game", null, LocaleContextHolder.getLocale())};
             throw new DeleteEntityException(ErrorInfo.DELETE_ENTITY_ERROR,
@@ -197,13 +201,12 @@ public class GameServiceImpl implements GameService {
 
 
     @Override
-    public Game updateGame(UUID id, Game gameReq)
-    {
+    public Game updateGame(UUID id, Game gameReq) {
         Map<String, String> propertyViolation = customValidator.validate(gameReq, Update.class);
         if (!propertyViolation.isEmpty()) {
             throw new ArgumentNotValidException(ErrorInfo.ARGUMENT_NOT_VALID, propertyViolation, messageSource);
         }
-        Object[] args = new Object[]{ id, messageSource.getMessage("entity.Game", null, LocaleContextHolder.getLocale()) };
+        Object[] args = new Object[]{id, messageSource.getMessage("entity.Game", null, LocaleContextHolder.getLocale())};
         return gameRepository.findById(id).map(game -> {
             game.setTitle(gameReq.getTitle());
             game.setDescription(gameReq.getDescription());
@@ -215,7 +218,7 @@ public class GameServiceImpl implements GameService {
 
             game.setPhoto(gameReq.getPhoto());
             game.setAccess(gameReq.getAccess());
-             gameAccessService.updateGameAccess(game);
+            gameAccessService.updateGameAccess(game);
             if (gameReq.getQuestions() != null) {
                 Set<Question> questions = gameReq.getQuestions()
                         .stream()
