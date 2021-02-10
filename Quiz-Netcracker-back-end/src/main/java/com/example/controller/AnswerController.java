@@ -41,8 +41,11 @@ public class AnswerController {
     @GetMapping("/{questionId}/{answerId}/{playerId}/{gameRoomId}/{numberAnswer}")
     public AnswerDto getAnswer(@PathVariable UUID questionId, @PathVariable String answerId, @PathVariable UUID playerId,
                                @PathVariable UUID gameRoomId, @PathVariable int numberAnswer) throws JsonProcessingException {
-        return mapper.toDto(answerService.saveStatisticsAndReturnAnswer(questionId, answerId, playerId,
-                gameRoomId, numberAnswer));
+        Answer answer = answerService.saveStatisticsAndReturnAnswer(questionId, answerId, playerId, gameRoomId, numberAnswer);
+        if (answer == null) {
+            return null;
+        }
+        return mapper.toDto(answer);
     }
 
     @GetMapping("/{id}")

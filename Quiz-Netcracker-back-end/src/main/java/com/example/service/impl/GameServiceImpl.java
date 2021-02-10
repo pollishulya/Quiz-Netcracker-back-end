@@ -177,7 +177,7 @@ public class GameServiceImpl implements GameService {
                 gameRepository.deleteById(gameId);
             } else {
                 for(GameAccess gameAccess: gameAccesses){
-                    gameAccessService.delete(gameAccess.getId());
+                    gameAccessService.deleteGameAccess(gameAccess.getId());
                 }
                 gameRepository.deleteById(gameId);
             }

@@ -34,7 +34,7 @@ public class GameMapper implements Mapper<Game, GameDto> {
         gameDto.setId(entity.getId());
         gameDto.setTitle(entity.getTitle());
         gameDto.setAverageRating(entity.getAverageRating());
-        //gameDto.setGameCategory(entity.getGameCategory().getId());
+//        gameDto.setGameCategory(entity.getGameCategory().getId());
         gameDto.setViews(entity.getViews());
         gameDto.setRatingCount(entity.getRatingCount());
         gameDto.setPhoto(entity.getPhoto());
@@ -53,13 +53,13 @@ public class GameMapper implements Mapper<Game, GameDto> {
         Player player = playerService.findPlayerByUserId(dto.getPlayer());
         Game game = new Game();
 
-        //GameCategory gameCategory = gameCategoryService.findGameCategoryById(dto.getGameCategory());
+//        GameCategory gameCategory = gameCategoryService.findGameCategoryById(dto.getGameCategory());
         game.setId(dto.getId());
         game.setDescription(dto.getDescription());
         game.setTitle(dto.getTitle());
 
         game.setAverageRating(dto.getAverageRating());
-        //game.setGameCategory(gameCategory);
+//        game.setGameCategory(gameCategory);
         game.setViews(dto.getViews());
         game.setRatingCount(dto.getRatingCount());
 
